@@ -8,6 +8,8 @@ from tests._test_types_boolean import TestBooleanGuarantee
 from tests._test_types_other import TestOther
 
 # TODO(snimu) include tests for 'callback' in all TestCases
+# TODO(snimu) test collections
+# TODO(snimu) implement enforcement & tests for binary types
 
 
 if __name__ == '__main__':

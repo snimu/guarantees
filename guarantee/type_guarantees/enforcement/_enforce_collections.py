@@ -5,36 +5,42 @@ from guarantee.type_guarantees.guarantees import IsList, IsTuple, IsDict, \
     IsSet, IsFrozenSet, IsRange, TypeGuarantee, CollectionType
 from guarantee.type_guarantees.signals.base import SignalTypeError
 from guarantee.type_guarantees.signals.collections import \
-    SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated
+    SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
+    SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
 
 
 def enforce_islist(arg: list, guarantee: IsList) -> list:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
+    _check_contains(arg, guarantee)
     return arg
 
 
 def enforce_istuple(arg: tuple, guarantee: IsTuple) -> tuple:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
+    _check_contains(arg, guarantee)
     return arg
 
 
 def enforce_isdict(arg: dict, guarantee: IsDict) -> dict:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
+    _check_has_keys_values(arg, guarantee)
     return arg
 
 
 def enforce_isset(arg: set, guarantee: IsSet) -> set:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
+    _check_contains(arg, guarantee)
     return arg
 
 
 def enforce_isfrozenset(arg: frozenset, guarantee: IsFrozenSet) -> frozenset:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
+    _check_contains(arg, guarantee)
     return arg
 
 
@@ -77,7 +83,7 @@ def _check_type(
             arg = type_should(arg)
         except ValueError:
             err = True
-    elif not isinstance(type_should, type(arg)):
+    elif type(arg) is not type_should:
         err = True
 
     if err:
@@ -247,4 +253,119 @@ def _check_max_len(
             else:
                 raise ValueError(err_msg)
 
-# TODO(snimu): enforce_contains, enforce_has_keys, enforce_has_values
+
+def _check_contains(
+        arg: Union[list, tuple, set, frozenset],
+        guarantee: Union[IsList, IsTuple, IsSet, IsFrozenSet]
+) -> None:
+    global guarantee_type_dict
+    if type(arg) is not guarantee_type_dict[type(guarantee)]:
+        return
+
+    if guarantee.contains is None:
+        return
+
+    for item in guarantee.contains:
+        if item not in arg:
+            global guarantee_type_name_dict
+            arg_type_str = guarantee_type_name_dict[type(guarantee)]
+            if guarantee.callback is not None:
+                guarantee.callback(
+                    SignalContainsViolated(
+                        arg_name=guarantee.name,
+                        arg_type=arg_type_str,
+                        arg=arg,
+                        contains=guarantee.contains
+                    )
+                )
+            else:
+                err_msg = f"You guaranteed that parameter {guarantee.name} " \
+                          f"contains one of the following items: " \
+                          f"{guarantee.contains}. However, " \
+                          f"at least item {item} is missing from parameter " \
+                          f"with value {arg}. "
+                if guarantee.warnings_only:
+                    warnings.warn(err_msg + "Ignoring")
+                else:
+                    raise ValueError(err_msg)
+
+
+def _check_has_keys_values(
+        arg: dict,
+        guarantee: IsDict
+) -> None:
+    global guarantee_type_dict
+    if type(arg) is not guarantee_type_dict[type(guarantee)]:
+        return
+
+    _check_has_keys(arg, guarantee)
+    _check_has_values(arg, guarantee)
+
+
+def _check_has_keys(arg: dict, guarantee: IsDict) -> None:
+    if guarantee.has_keys is None:
+        return
+
+    kerr = None
+
+    for key in guarantee.has_keys:
+        if key not in arg.keys():
+            kerr = key
+            break
+
+    global guarantee_type_name_dict
+    arg_type_str = guarantee_type_name_dict[type(guarantee)]
+    if kerr is not None:
+        if guarantee.callback is not None:
+            guarantee.callback(
+                SignalHasKeysViolated(
+                    arg_name=guarantee.name,
+                    arg_type=arg_type_str,
+                    arg=arg,
+                    has_keys=guarantee.has_values
+                )
+            )
+        else:
+            err_msg = f"Parameter {guarantee.name} of value {arg} " \
+                      f"had a guarantee for " \
+                      f"has_keys: {guarantee.has_keys}, but key " \
+                      f"{kerr} is not contained in {guarantee.name}. "
+            if guarantee.warnings_only:
+                warnings.warn(err_msg + "Ignoring.")
+            else:
+                raise ValueError(err_msg)
+
+
+def _check_has_values(arg: dict, guarantee: IsDict) -> None:
+    if guarantee.has_values is None:
+        return
+
+    verr = None
+
+    for val in guarantee.has_values:
+        if val not in arg.values():
+            verr = val
+            break
+
+    global guarantee_type_name_dict
+    arg_type_str = guarantee_type_name_dict[type(guarantee)]
+
+    if verr is not None:
+        if guarantee.callback is not None:
+            guarantee.callback(
+                SignalHasValuesViolated(
+                    arg_name=guarantee.name,
+                    arg_type=arg_type_str,
+                    arg=arg,
+                    has_values=guarantee.has_values
+                )
+            )
+        else:
+            err_msg = f"Parameter {guarantee.name} of value {arg} " \
+                      f"had a guarantee for " \
+                      f"has_values: {guarantee.has_values}, but key " \
+                      f"{verr} is not contained in {guarantee.name}. "
+            if guarantee.warnings_only:
+                warnings.warn(err_msg + "Ignoring.")
+            else:
+                raise ValueError(err_msg)

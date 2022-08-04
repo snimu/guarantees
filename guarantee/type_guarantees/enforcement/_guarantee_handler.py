@@ -9,7 +9,7 @@ from ._enforce_numeric import enforce_isint, enforce_isfloat, \
 from ._enforce_string import enforce_isstr
 from ._enforce_boolean import enforce_isbool
 from ._enforce_collections import enforce_islist, enforce_istuple, \
-    enforce_isdict, enforce_isset, enforce_isfrozenset
+    enforce_isdict, enforce_isset, enforce_isfrozenset, enforce_isrange
 from ._enforce_other import enforce_isclass
 
 
@@ -107,7 +107,8 @@ guarantee_enforcer_mapping = {
     IsTuple: enforce_istuple,
     IsDict: enforce_isdict,
     IsSet: enforce_isset,
-    IsFrozenSet: enforce_isfrozenset
+    IsFrozenSet: enforce_isfrozenset,
+    IsRange: enforce_isrange
 }
 
 

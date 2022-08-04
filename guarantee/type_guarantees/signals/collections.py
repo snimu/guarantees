@@ -23,3 +23,24 @@ class SignalMaxLenViolated(Signal):
     arg_type: str
     arg: Union[list, tuple, dict, set, frozenset, range]
     maximum_len: int
+
+
+@dataclass
+class SignalContainsViolated(Signal):
+    arg_type: str
+    arg: Union[list, tuple, set, frozenset]
+    contains: list
+
+
+@dataclass
+class SignalHasKeysViolated(Signal):
+    arg_type: str
+    arg: dict
+    has_keys: list
+
+
+@dataclass
+class SignalHasValuesViolated(Signal):
+    arg_type: str
+    arg: dict
+    has_values: list

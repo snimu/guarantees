@@ -7,7 +7,7 @@ from typing import Callable
 
 @dataclass
 class Guarantee:
-    name: str
+    parameter_name: str
 
 
 @dataclass

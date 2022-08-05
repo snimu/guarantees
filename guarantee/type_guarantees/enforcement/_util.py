@@ -1,57 +1,111 @@
 import warnings
+from typing import Any
 
-import guarantee
+from guarantee.type_guarantees.guarantees import TypeGuarantee, IsInt, \
+    IsFloat, IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, \
+    IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView
+from guarantee.type_guarantees.signals.base import SignalTypeError
 
 
 guarantee_to_type_dict = {
-    guarantee.IsInt: int,
-    guarantee.IsFloat: float,
-    guarantee.IsComplex: complex,
-    guarantee.IsBool: bool,
-    guarantee.IsStr: str,
-    guarantee.IsList: list,
-    guarantee.IsTuple: tuple,
-    guarantee.IsDict: dict,
-    guarantee.IsSet: set,
-    guarantee.IsFrozenSet: frozenset,
-    guarantee.IsRange: range,
-    guarantee.IsClass: object,
-    guarantee.IsBytes: bytes,
-    guarantee.IsByteArray: bytearray,
-    guarantee.IsMemoryView: memoryview
+    IsInt: int,
+    IsFloat: float,
+    IsComplex: complex,
+    IsBool: bool,
+    IsStr: str,
+    IsList: list,
+    IsTuple: tuple,
+    IsDict: dict,
+    IsSet: set,
+    IsFrozenSet: frozenset,
+    IsRange: range,
+    IsClass: object,
+    IsBytes: bytes,
+    IsByteArray: bytearray,
+    IsMemoryView: memoryview
 }
 
 
 guarantee_to_type_name_dict = {
-    guarantee.IsInt: "int",
-    guarantee.IsFloat: "float",
-    guarantee.IsComplex: "complex",
-    guarantee.IsBool: "bool",
-    guarantee.IsStr: "str",
-    guarantee.IsList: "list",
-    guarantee.IsTuple: "tuple",
-    guarantee.IsDict: "dict",
-    guarantee.IsSet: "set",
-    guarantee.IsFrozenSet: "frozenset",
-    guarantee.IsRange: "range",
-    guarantee.IsClass: "object",
-    guarantee.IsBytes: "bytes",
-    guarantee.IsByteArray: "bytearray",
-    guarantee.IsMemoryView: "memoryview"
+    IsInt: "int",
+    IsFloat: "float",
+    IsComplex: "complex",
+    IsBool: "bool",
+    IsStr: "str",
+    IsList: "list",
+    IsTuple: "tuple",
+    IsDict: "dict",
+    IsSet: "set",
+    IsFrozenSet: "frozenset",
+    IsRange: "range",
+    IsClass: "object",
+    IsBytes: "bytes",
+    IsByteArray: "bytearray",
+    IsMemoryView: "memoryview"
 }
 
 
-def get_guaranteed_type(type_guarantee: guarantee.TypeGuarantee):
+def get_guaranteed_type(type_guarantee: TypeGuarantee):
     global guarantee_to_type_dict
     return guarantee_to_type_dict[type(type_guarantee)]
 
 
-def get_guaranteed_type_name(type_guarantee: guarantee.TypeGuarantee):
+def get_guaranteed_type_name(type_guarantee: TypeGuarantee):
     global guarantee_to_type_name_dict
     return guarantee_to_type_name_dict[type(type_guarantee)]
 
 
-def get_type_err_msg(signal: guarantee.signals.base.SignalTypeError) -> str:
+type_to_str_dict = {
+    int: "int",
+    float: "float",
+    complex: "complex",
+    bool: "bool",
+    str: "str",
+    list: "list",
+    tuple: "tuple",
+    dict: "dict",
+    set: "set",
+    frozenset: "frozenset",
+    bytes: "bytes",
+    bytearray: "bytearray",
+    memoryview: "memoryview",
+    range: "range"
+}
+
+
+def get_type_name(parameter: Any) -> str:
+    try:
+        global type_to_str_dict
+        return type_to_str_dict[type(parameter)]
+    except KeyError:
+        return str(type(parameter))
+
+
+guarantee_name_dict = {
+    IsInt: "IsInt",
+    IsFloat: "IsFloat",
+    IsComplex: "IsComplex",
+    IsBool: "IsBool",
+    IsStr: "IsStr",
+    IsList: "IsList",
+    IsTuple: "IsTuple",
+    IsDict: "IsDict",
+    IsSet: "IsSet",
+    IsFrozenSet: "IsFrozenSet",
+    IsRange: "IsRange",
+    IsClass: "IsClass",
+    IsBytes: "IsBytes",
+    IsByteArray: "IsByteArray",
+    IsMemoryView: "IsMemoryView"
+}
+
+
+def get_guarantee_name(type_guarantee: TypeGuarantee) -> str:
+    global guarantee_name_dict
+    return guarantee_name_dict[type(type_guarantee)]
+
+
+def get_err_msg_type(signal: SignalTypeError) -> str:
     err_str = f"parameter: {signal.parameter_name} \n" \
               f"\t guarantee: type \n" \
               f"\t type should: {signal.should_type_name} \n" \
@@ -61,12 +115,32 @@ def get_type_err_msg(signal: guarantee.signals.base.SignalTypeError) -> str:
     return err_str
 
 
-def type_warning_or_exception(
+def get_err_msg_minimum_len_type(
+        type_guarantee: TypeGuarantee
+) -> str:
+    err_str = f"parameter: {get_guarantee_name(type_guarantee)}.mimimum_len\n" \
+              f"\t type should: {int} \"" \
+              f"\t type is:     {get_guaranteed_type(type_guarantee)} \n"
+
+    return err_str
+
+
+def get_err_msg_maximum_len_type(
+        type_guarantee: TypeGuarantee
+) -> str:
+    err_str = f"parameter: {get_guarantee_name(type_guarantee)}.maximum_len\n" \
+              f"\t type should: {int} \"" \
+              f"\t type is:     {get_guaranteed_type(type_guarantee)} \n"
+
+    return err_str
+
+
+def raise_warning_or_exception(
         err_msg: str,
-        type_guarantee: guarantee.TypeGuarantee
+        type_guarantee: TypeGuarantee
 ) -> None:
     if type_guarantee.warnings_only:
-        warnings.warn(err_msg + " \n\t **Ignoring**")
+        warnings.warn(err_msg + "\t **Ignoring**")
     else:
         raise TypeError(err_msg)
 

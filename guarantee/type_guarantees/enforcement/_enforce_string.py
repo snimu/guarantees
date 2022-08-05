@@ -30,14 +30,14 @@ def _check_type(arg: str, guarantee: IsStr) -> str:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalTypeError(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     type_should="str",
                     type_is=str(type(arg)),
                     force_conversion=guarantee.force_conversion
                 )
             )
         else:
-            err_msg = f"Parameter {guarantee.name} is guaranteed to be " \
+            err_msg = f"Parameter {guarantee.parameter_name} is guaranteed to be " \
                       f"of type str but is of type {str(type(arg))}. "
             if guarantee.warnings_only:
                 warnings.warn(err_msg + "Ignoring this parameter.")
@@ -64,14 +64,14 @@ def _check_min_ge_max(guarantee: IsStr) -> None:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalMinimumLenGEMaximumLen(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg_type="str",
                     minimum_len=guarantee.minimum_len,
                     maximum_len=guarantee.maximum_len
                 )
             )
         else:
-            err_msg = f"Parameter {guarantee.name} has " \
+            err_msg = f"Parameter {guarantee.parameter_name} has " \
                       f"minimum_len {guarantee.minimum_len} and maximum_len " \
                       f"{guarantee.maximum_len} guaranteed; minimum_len " \
                       f"must be less than maximum_len!"
@@ -102,13 +102,13 @@ def _check_min(arg, guarantee: IsStr) -> None:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalMinimumLenViolated(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg=arg,
                     minimum_len=guarantee.minimum_len
                 )
             )
         else:
-            err_msg = f"Parameter {guarantee.name} violated guarantee " \
+            err_msg = f"Parameter {guarantee.parameter_name} violated guarantee " \
                       f"'minimum_len': {len(arg)} < {guarantee.minimum_len}. "
 
             if guarantee.warnings_only:
@@ -139,13 +139,13 @@ def _check_max(arg, guarantee: IsStr) -> None:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalMaximumLenViolated(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg=arg,
                     maximum_len=guarantee.maximum_len
                 )
             )
         else:
-            err_msg = f"Parameter {guarantee.name} violated guarantee " \
+            err_msg = f"Parameter {guarantee.parameter_name} violated guarantee " \
                       f"'maximum_len': {len(arg)} > {guarantee.maximum_len}. "
 
             if guarantee.warnings_only:
@@ -175,13 +175,13 @@ def _check_isin(arg: str, guarantee: IsStr) -> None:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalNotIn(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg=arg,
                     isin=guarantee.isin
                 )
             )
         else:
-            err_msg = f"Parameter {guarantee.name} was guaranteed to be in " \
+            err_msg = f"Parameter {guarantee.parameter_name} was guaranteed to be in " \
                       f"{guarantee.isin} but is not. "
             if guarantee.warnings_only:
                 warnings.warn(err_msg + "Ignoring.")

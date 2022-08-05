@@ -60,17 +60,17 @@ def register_guarantees(fct, param_guarantees: List[Guarantee]):
 
     for param_guarantee in param_guarantees:
         Handler.handles[fct]["args"].append(param_guarantee)
-        Handler.handles[fct]["kwargs"][param_guarantee.name] = param_guarantee
+        Handler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
 
 
 def _check_duplicate_names(param_guarantees):
     names = []
     for param_guarantee in param_guarantees:
-        if param_guarantee.name in names:
+        if param_guarantee.parameter_name in names:
             raise ValueError("@guarantee.type_guarantees: "
                              "Duplicate guarantee name: "
-                             f"'{param_guarantee.name}'")
-        names.append(param_guarantee.name)
+                             f"'{param_guarantee.parameter_name}'")
+        names.append(param_guarantee.parameter_name)
 
 
 def enforce_guarantees(

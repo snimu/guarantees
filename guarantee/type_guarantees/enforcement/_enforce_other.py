@@ -24,7 +24,7 @@ def _check_type(arg: object, guarantee: IsClass) -> object:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalTypeError(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     type_should=str(type(guarantee.class_type)),
                     type_is=str(type(arg)),
                     force_conversion=False
@@ -32,7 +32,7 @@ def _check_type(arg: object, guarantee: IsClass) -> object:
             )
         else:
             err_msg = f"Guaranteed type {guarantee.class_type} " \
-                      f"for parameter {guarantee.name}, " \
+                      f"for parameter {guarantee.parameter_name}, " \
                       f"but received type {type(arg)}. " \
                       f"force_conversion parameter ignored. "
             if guarantee.warnings_only:

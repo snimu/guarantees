@@ -8,5 +8,4 @@ from ._base import TypeGuarantee
 class IsStr(TypeGuarantee):
     minimum_len: int = None
     maximum_len: int = None
-    callback: Callable = None
     isin: List = None

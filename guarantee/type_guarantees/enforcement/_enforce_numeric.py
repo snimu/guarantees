@@ -129,7 +129,7 @@ def _check_type(
     if guarantee.callback is not None:
         guarantee.callback(
             SignalTypeError(
-                arg_name=guarantee.name,
+                arg_name=guarantee.parameter_name,
                 type_should=type_should_str,
                 type_is=type_is_str,
                 force_conversion=guarantee.force_conversion
@@ -137,7 +137,7 @@ def _check_type(
         )
     else:
         err_msg = f"Guaranteed type {type_should_str} " \
-                  f"for parameter {guarantee.name}, " \
+                  f"for parameter {guarantee.parameter_name}, " \
                   f"but received type {type_is_str}. " \
                   f"Called with force_conversion={guarantee.force_conversion}"
         if guarantee.warnings_only:
@@ -163,7 +163,7 @@ def _check_min_ge_max(
 
             guarantee.callback(
                 sig(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg_type=arg_type,
                     minimum=minimum,
                     maximum=maximum
@@ -213,7 +213,7 @@ def _check_min(
 
             guarantee.callback(
                 sig(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg_type=arg_type,
                     arg=arg,
                     minimum=minimum
@@ -225,7 +225,7 @@ def _check_min(
             minstr = "minimum_im" if min_type == "im" else minstr
 
             err_msg = f"You guaranteed parameter type {arg_type} with " \
-                      f"{minstr} {minimum}. Argument {guarantee.name} " \
+                      f"{minstr} {minimum}. Argument {guarantee.parameter_name} " \
                       f"has been received with value {arg} < {minimum}."
             if guarantee.warnings_only:
                 warnings.warn(err_msg)
@@ -261,7 +261,7 @@ def _check_max(
 
             guarantee.callback(
                 sig(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     arg_type=arg_type,
                     arg=arg,
                     maximum=maximum
@@ -273,7 +273,7 @@ def _check_max(
             maxstr = "maximum_im" if max_type == "im" else maxstr
 
             err_msg = f"You guaranteed parameter type {arg_type} with " \
-                      f"{maxstr} {maximum}. Argument {guarantee.name} " \
+                      f"{maxstr} {maximum}. Argument {guarantee.parameter_name} " \
                       f"has been received with value {arg} > {maximum}."
             if guarantee.warnings_only:
                 warnings.warn(err_msg)
@@ -300,13 +300,13 @@ def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):
     if guarantee.callback is not None:
         guarantee.callback(
             SignalNotIn(
-                arg_name=guarantee.name,
+                arg_name=guarantee.parameter_name,
                 arg=arg,
                 isin=guarantee.isin
             )
         )
     else:
-        err_msg = f"The parameter {guarantee.name} " \
+        err_msg = f"The parameter {guarantee.parameter_name} " \
                   f"must be in {guarantee.isin}. " \
                   f"It is not. Value: {arg}"
         if guarantee.warnings_only:

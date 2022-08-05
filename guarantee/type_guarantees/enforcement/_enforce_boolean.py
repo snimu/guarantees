@@ -25,7 +25,7 @@ def _check_type(arg: bool, guarantee: IsBool) -> bool:
         if guarantee.callback is not None:
             guarantee.callback(
                 SignalTypeError(
-                    arg_name=guarantee.name,
+                    arg_name=guarantee.parameter_name,
                     type_should="bool",
                     type_is=str(type(arg)),
                     force_conversion=guarantee.force_conversion
@@ -33,7 +33,7 @@ def _check_type(arg: bool, guarantee: IsBool) -> bool:
             )
         else:
             err_msg = f"Guaranteed type bool " \
-                      f"for parameter {guarantee.name}, " \
+                      f"for parameter {guarantee.parameter_name}, " \
                       f"but received type {type(arg)}. " \
                       f"Called with " \
                       f"force_conversion={guarantee.force_conversion}. "

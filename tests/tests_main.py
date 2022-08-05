@@ -8,9 +8,11 @@ from tests._test_types_boolean import TestBooleanGuarantee
 from tests._test_types_other import TestOther
 from tests._test_types_collections import TestCollectionsGuarantee
 
-# TODO(snimu) include tests for 'callback' in all TestCases
-# TODO(snimu) test collections
-# TODO(snimu) implement enforcement & tests for binary types
+# TODO (snimu) include tests for 'callback' in all TestCases
+# TODO (snimu) implement enforcement & tests for binary types
+# TODO (snimu) improve error messages
+# TODO (snimu) instead of finding out the type_str manually every time,
+#   make fcts 'type_from_guarantee' and 'type_name_from_guarantee'
 
 
 if __name__ == '__main__':

@@ -105,6 +105,30 @@ def get_guarantee_name(type_guarantee: TypeGuarantee) -> str:
     return guarantee_name_dict[type(type_guarantee)]
 
 
+# TODO (snimu) Redesign Signals:
+#   SignalSettingError for things like min_ge_max
+#       - parameter_name
+#       - should     (the should-value)
+#       - actual     (the is-value)
+#   SignalParameterError for things like arg < minimum
+# TODO (snimu) Redesign getting of error-msg:
+#   All necessary information in Signal
+#   For SignalSettingError: just receive Signal
+#   For SignalParameterError: also receive arg
+#   Error msg design:
+#       For SignalSettingError:
+#           "settings:
+#                   - ...
+#                   - ...
+#               should:     (in text form)
+#               actual:     (in text form)"
+#       For SignalParameterError:
+#           "parameter:
+#                   - <parameter name>
+#               should: ...
+#               actual:     ..."
+
+
 def get_err_msg_type(signal: SignalTypeError) -> str:
     err_msg = f"parameter: {signal.parameter_name} \n" \
               f"\t guarantee: type \n" \

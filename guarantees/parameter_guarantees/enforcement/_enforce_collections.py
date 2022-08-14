@@ -9,8 +9,10 @@ from guarantees.parameter_guarantees.signals.collections import \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
 from guarantees.parameter_guarantees.enforcement._util import \
     get_guaranteed_type, get_guaranteed_type_name, get_err_msg_type, \
-    raise_warning_or_exception, get_type_name, get_guarantee_name, \
-    get_err_msg_maximum_len_type, get_err_msg_minimum_len_type
+    raise_type_warning_or_exception, get_type_name, get_guarantee_name, \
+    get_err_msg_maximum_len_type, get_err_msg_minimum_len_type, \
+    get_err_msg_minimum_ge_maximum, raise_value_warning_or_exception, \
+    get_err_msg_minimum_len, get_err_msg_maximum_len
 
 
 def enforce_islist(arg: list, guarantee: IsList) -> list:
@@ -79,7 +81,7 @@ def _check_type(
             guarantee.callback(type_signal)
         else:
             err_msg = get_err_msg_type(type_signal)
-            raise_warning_or_exception(err_msg, guarantee)
+            raise_type_warning_or_exception(err_msg, guarantee)
 
     return arg
 
@@ -104,7 +106,7 @@ def _min_len_is_legitimate(guarantee: CollectionType) -> bool:
 
     if type(guarantee.minimum_len) is not int:
         err_msg = get_err_msg_minimum_len_type(guarantee)
-        raise_warning_or_exception(err_msg, guarantee)
+        raise_type_warning_or_exception(err_msg, guarantee)
         return False   # in case of warning instead of exception
 
     return True
@@ -116,13 +118,12 @@ def _max_len_is_legitimate(guarantee: CollectionType) -> bool:
 
     if type(guarantee.maximum_len) is not int:
         err_msg = get_err_msg_maximum_len_type(guarantee)
-        raise_warning_or_exception(err_msg, guarantee)
+        raise_type_warning_or_exception(err_msg, guarantee)
         return False   # in case of warning instead of exception
 
     return True
 
 
-# TODO (snimu) continue simplifying this with utils
 def _check_min_ge_max(guarantee: CollectionType) -> None:
     if not _min_len_is_legitimate(guarantee):
         return
@@ -131,24 +132,18 @@ def _check_min_ge_max(guarantee: CollectionType) -> None:
         return
 
     if guarantee.minimum_len >= guarantee.maximum_len:
-        arg_type = get_guaranteed_type_name(guarantee)
+        signal_minlen_ge_maxlen = SignalMinLenGEMaxLen(
+            parameter_name=guarantee.parameter_name,
+            arg_type=get_guaranteed_type_name(guarantee),
+            minimum_len=guarantee.minimum_len,
+            maximum_len=guarantee.maximum_len
+        )
         if guarantee.callback is not None:
-            guarantee.callback(
-                SignalMinLenGEMaxLen(
-                    parameter_name=guarantee.parameter_name,
-                    arg_type=arg_type,
-                    minimum_len=guarantee.minimum_len,
-                    maximum_len=guarantee.maximum_len
-                )
-            )
+            guarantee.callback(signal_minlen_ge_maxlen)
         else:
-            err_msg = f"You guaranteed minimum_len and maximum_len, but " \
-                      f"minimum_len >= maximum_len: {guarantee.minimum_len} " \
-                      f">= {guarantee.maximum_len}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_minimum_ge_maximum(
+                guarantee, guarantee.minimum_len, guarantee.maximum_len)
+            raise_value_warning_or_exception(err_msg)
 
 
 def _check_min_len(
@@ -159,24 +154,18 @@ def _check_min_len(
         return
 
     if len(arg) < guarantee.minimum_len:
+        signal_min = SignalMinLenViolated(
+            parameter_name=guarantee.parameter_name,
+            arg_type=get_guaranteed_type_name(guarantee),
+            arg=arg,
+            minimum_len=guarantee.minimum_len
+        )
         if guarantee.callback is not None:
-            arg_type = get_guaranteed_type_name(guarantee)
-            guarantee.callback(
-                SignalMinLenViolated(
-                    parameter_name=guarantee.parameter_name,
-                    arg_type=arg_type,
-                    arg=arg,
-                    minimum_len=guarantee.minimum_len
-                )
-            )
+            guarantee.callback(signal_min)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} had a guarantee for " \
-                      f"minimum_len of {guarantee.minimum_len}, but has " \
-                      f"length {len(arg)}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_minimum_len(guarantee, guarantee.minimum_len,
+                                              len(arg))
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_max_len(
@@ -187,24 +176,18 @@ def _check_max_len(
         return
 
     if len(arg) > guarantee.maximum_len:
+        signal_max = SignalMaxLenViolated(
+            parameter_name=guarantee.parameter_name,
+            arg_type=get_guaranteed_type_name(guarantee),
+            arg=arg,
+            maximum_len=guarantee.maximum_len
+        )
         if guarantee.callback is not None:
-            arg_type = get_guaranteed_type_name(guarantee)
-            guarantee.callback(
-                SignalMaxLenViolated(
-                    parameter_name=guarantee.parameter_name,
-                    arg_type=arg_type,
-                    arg=arg,
-                    maximum_len=guarantee.maximum_len
-                )
-            )
+            guarantee.callback(signal_max)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} had a guarantee for " \
-                      f"maximum_len of {guarantee.maximum_len}, but has " \
-                      f"length {len(arg)}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_maximum_len(guarantee, guarantee.maximum_len,
+                                              len(arg))
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_contains(

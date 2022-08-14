@@ -106,36 +106,73 @@ def get_guarantee_name(type_guarantee: TypeGuarantee) -> str:
 
 
 def get_err_msg_type(signal: SignalTypeError) -> str:
-    err_str = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"parameter: {signal.parameter_name} \n" \
               f"\t guarantee: type \n" \
               f"\t type should: {signal.should_type_name} \n" \
               f"\t type is:     {signal.is_type_name} \n" \
               f"\t force_conversion: {signal.force_conversion} \n"
 
-    return err_str
+    return err_msg
 
 
 def get_err_msg_minimum_len_type(
         type_guarantee: TypeGuarantee
 ) -> str:
-    err_str = f"parameter: {get_guarantee_name(type_guarantee)}.mimimum_len\n" \
+    err_msg = f"parameter: {get_guarantee_name(type_guarantee)}.mimimum_len\n" \
               f"\t type should: {int} \"" \
               f"\t type is:     {get_guaranteed_type(type_guarantee)} \n"
 
-    return err_str
+    return err_msg
 
 
 def get_err_msg_maximum_len_type(
         type_guarantee: TypeGuarantee
 ) -> str:
-    err_str = f"parameter: {get_guarantee_name(type_guarantee)}.maximum_len\n" \
+    err_msg = f"parameter: {get_guarantee_name(type_guarantee)}.maximum_len\n" \
               f"\t type should: {int} \"" \
               f"\t type is:     {get_guaranteed_type(type_guarantee)} \n"
 
-    return err_str
+    return err_msg
 
 
-def raise_warning_or_exception(
+def get_err_msg_minimum_ge_maximum(
+        type_guarantee: TypeGuarantee,
+        minimum_len: int,
+        maximum_len: int
+) -> str:
+    err_msg = f"paramter: {get_guarantee_name(type_guarantee)}.minimum_len " \
+              f"and {get_guarantee_name(type_guarantee)}.maximum_len \"" \
+              f"\t minimum_len ({minimum_len}) " \
+              f">= maximum_len ({maximum_len}) \n"
+
+    return err_msg
+
+
+def get_err_msg_minimum_len(
+        type_guarantee: TypeGuarantee,
+        minimum_len: int,
+        actual_len: int
+) -> str:
+    err_msg = f"parameter: {get_guarantee_name(type_guarantee)}.minimum_len " \
+              f"\t len should : >= {minimum_len} \n" \
+              f"\t len is     :    {actual_len}"
+
+    return err_msg
+
+
+def get_err_msg_maximum_len(
+        type_guarantee: TypeGuarantee,
+        maximum_len: int,
+        actual_len: int
+) -> str:
+    err_msg = f"parameter: {get_guarantee_name(type_guarantee)}.maximum_len " \
+              f"\t len should : >= {maximum_len} \n" \
+              f"\t len is     :    {actual_len}"
+
+    return err_msg
+
+
+def raise_type_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee
 ) -> None:
@@ -143,4 +180,14 @@ def raise_warning_or_exception(
         warnings.warn(err_msg + "\t **Ignoring**")
     else:
         raise TypeError(err_msg)
+
+
+def raise_value_warning_or_exception(
+        err_msg: str,
+        type_guarantee: TypeGuarantee
+) -> None:
+    if type_guarantee.warnings_only:
+        warnings.warn(err_msg + "\t **Ignoring**")
+    else:
+        raise ValueError(err_msg)
 

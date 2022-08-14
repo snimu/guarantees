@@ -1,4 +1,4 @@
-"""Includes the numeric guarantees float, int, and complex."""
+"""Includes the numeric classes float, int, and complex."""
 
 
 from dataclasses import dataclass

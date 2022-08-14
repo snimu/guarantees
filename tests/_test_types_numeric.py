@@ -1,13 +1,13 @@
 import unittest
-import guarantee
+import guarantees
 
 
 class TestNumericGuarantee(unittest.TestCase):
     def test_basic(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a"),
-            guarantee.IsFloat("b"),
-            guarantee.IsComplex("c")
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a"),
+            guarantees.IsFloat("b"),
+            guarantees.IsComplex("c")
         ])
         def fct(a, b, c):
             return a, b, c
@@ -36,10 +36,10 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a", force_conversion=True),
-            guarantee.IsFloat("b", force_conversion=True),
-            guarantee.IsComplex("c", force_conversion=True)
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a", force_conversion=True),
+            guarantees.IsFloat("b", force_conversion=True),
+            guarantees.IsComplex("c", force_conversion=True)
         ])
         def fct(a, b, c):
             return a, b, c
@@ -75,11 +75,11 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)     # successfully raised exception
 
     def test_minmax(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a", minimum=0, maximum=5),
-            guarantee.IsFloat("b", minimum=0., maximum=5.),
-            guarantee.IsComplex("c", minimum=0., maximum=5., minimum_re=0.,
-                                maximum_re=5., minimum_im=0., maximum_im=5.)
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a", minimum=0, maximum=5),
+            guarantees.IsFloat("b", minimum=0., maximum=5.),
+            guarantees.IsComplex("c", minimum=0., maximum=5., minimum_re=0.,
+                                 maximum_re=5., minimum_im=0., maximum_im=5.)
         ])
         def fct(a, b, c):
             return a, b, c
@@ -146,10 +146,10 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)     # successfully raised exception
 
     def test_isin(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a", isin=[1, 2]),
-            guarantee.IsFloat("b", isin=[1., 2.]),
-            guarantee.IsComplex("c", isin=[complex(0., 0.), complex(1., 1.)])
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a", isin=[1, 2]),
+            guarantees.IsFloat("b", isin=[1., 2.]),
+            guarantees.IsComplex("c", isin=[complex(0., 0.), complex(1., 1.)])
         ])
         def fct(a, b, c):
             return a, b, c
@@ -190,8 +190,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_min(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a", minimum="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a", minimum="nope")
         ])
         def fct(a):
             return a
@@ -203,8 +203,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_min(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsFloat("a", minimum="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsFloat("a", minimum="nope")
         ])
         def fct(a):
             return a
@@ -216,8 +216,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", minimum="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", minimum="nope")
         ])
         def fct(a):
             return a
@@ -229,8 +229,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min_re(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", minimum_re="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", minimum_re="nope")
         ])
         def fct(a):
             return a
@@ -242,8 +242,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min_im(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", minimum_im="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", minimum_im="nope")
         ])
         def fct(a):
             return a
@@ -255,8 +255,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_max(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a", maximum="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a", maximum="nope")
         ])
         def fct(a):
             return a
@@ -268,8 +268,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_max(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsFloat("a", maximum="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsFloat("a", maximum="nope")
         ])
         def fct(a):
             return a
@@ -281,8 +281,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", maximum="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", maximum="nope")
         ])
         def fct(a):
             return a
@@ -294,8 +294,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max_re(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", maximum_re="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", maximum_re="nope")
         ])
         def fct(a):
             return a
@@ -307,8 +307,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max_im(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", maximum_im="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", maximum_im="nope")
         ])
         def fct(a):
             return a
@@ -320,8 +320,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_isin(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsInt("a", isin="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsInt("a", isin="nope")
         ])
         def fct(a):
             return a
@@ -333,8 +333,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_isin(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsFloat("a", isin="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsFloat("a", isin="nope")
         ])
         def fct(a):
             return a
@@ -346,8 +346,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_isin(self):
-        @guarantee.parameter_guarantees([
-            guarantee.IsComplex("a", isin="nope")
+        @guarantees.parameter_guarantees([
+            guarantees.IsComplex("a", isin="nope")
         ])
         def fct(a):
             return a

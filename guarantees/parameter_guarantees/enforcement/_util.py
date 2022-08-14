@@ -1,10 +1,10 @@
 import warnings
 from typing import Any
 
-from guarantee.type_guarantees.guarantees import TypeGuarantee, IsInt, \
+from guarantees.parameter_guarantees.classes import TypeGuarantee, IsInt, \
     IsFloat, IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, \
     IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView
-from guarantee.type_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.base import SignalTypeError
 
 
 guarantee_to_type_dict = {

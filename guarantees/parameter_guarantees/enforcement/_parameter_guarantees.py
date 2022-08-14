@@ -1,4 +1,4 @@
-"""Defines the @guarantee.type_guarantees decorator."""
+"""Defines the @guarantees.parameter_guarantees decorator."""
 
 
 from ._guarantee_handler import enforce_guarantees, register_guarantees, Handler

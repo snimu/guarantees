@@ -1,7 +1,7 @@
 import warnings
 
-from guarantee.type_guarantees.guarantees import IsClass
-from guarantee.type_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.classes import IsClass
+from guarantees.parameter_guarantees.signals.base import SignalTypeError
 
 
 # NoOp needs no enforcement; it is handled in the guarantee_handler

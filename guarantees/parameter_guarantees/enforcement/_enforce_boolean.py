@@ -1,7 +1,7 @@
 import warnings
 
-from guarantee.type_guarantees.guarantees import IsBool
-from guarantee.type_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.classes import IsBool
+from guarantees.parameter_guarantees.signals.base import SignalTypeError
 
 
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:

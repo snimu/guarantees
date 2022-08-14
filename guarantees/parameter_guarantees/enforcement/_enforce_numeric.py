@@ -1,10 +1,10 @@
 import warnings
 from typing import Union
 
-from guarantee.type_guarantees.guarantees import IsInt, IsFloat, IsComplex, \
+from guarantees.parameter_guarantees.classes import IsInt, IsFloat, IsComplex, \
     NumericGuarantee
-from guarantee.type_guarantees.signals.base import SignalTypeError
-from guarantee.type_guarantees.signals.numeric import \
+from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.numeric import \
     SignalMinGEMax, SignalMinReGEMaxRe, SignalMinImGEMaxIm,\
     SignalMinViolated, SignalMinReViolated, SignalMinImViolated, \
     SignalMaxViolated, SignalMaxReViolated, SignalMaxImViolated, \
@@ -97,7 +97,7 @@ def _check_type(
         type_should_str = "complex"
         type_should = complex
     else:
-        raise TypeError("Error in library: wrong guarantee given.")
+        raise TypeError("Error in library: wrong guarantees given.")
 
     if type(arg) is int:
         type_is_str = "int"

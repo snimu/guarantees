@@ -1,4 +1,4 @@
-"""The base of the guarantees."""
+"""The base of the classes."""
 
 
 from dataclasses import dataclass

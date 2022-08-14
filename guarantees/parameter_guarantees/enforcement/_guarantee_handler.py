@@ -1,6 +1,6 @@
 from typing import List, Tuple, Dict
 
-from guarantee.type_guarantees.guarantees import Guarantee, IsInt, IsFloat, \
+from guarantees.parameter_guarantees.classes import Guarantee, IsInt, IsFloat, \
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
     IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp
 
@@ -17,15 +17,15 @@ class Handler:
     """
     Since it is possible to call functions and methods with a mixture of
     args and kwargs (and a different mixture at different calls!), and kwargs
-    can be used in any order, figuring out which kwarg is given which guarantee
-    from the function call + guarantee-ordering alone is impossible.
+    can be used in any order, figuring out which kwarg is given which guarantees
+    from the function call + guarantees-ordering alone is impossible.
 
     Instead, a dict has to be created with an entry for every function and
-    method. For each fct, all guarantees will be entered into an args-list
+    method. For each fct, all classes will be entered into an args-list
     responsible for handling args (the order is determined by the order in
-    which the guarantees appear in the list given to @guarantee.type_guarantees()),
+    which the classes appear in the list given to @guarantees.parameter_guarantees()),
     and a kwargs-dict responsible for handling kwargs (where the key is the
-    name given to the guarantee  ->  the parameter-names and guarantee-names
+    name given to the guarantees  ->  the parameter-names and guarantees-names
     must match for this library to handle keyword arguments!
     """
     handles = {}
@@ -38,18 +38,18 @@ class Handler:
 
 
 def register_guarantees(fct, param_guarantees: List[Guarantee]):
-    """Register the guarantees for the function."""
+    """Register the classes for the function."""
     if fct in Handler.handles.keys():
         # only need to register once
-        #   -> when more than one call to @guarantee.type_guarantees is made
+        #   -> when more than one call to @guarantees.parameter_guarantees is made
         #   on the same function / method, only the first will be used
         #   and the rest will be ignored.
         return
 
     if type(param_guarantees) is not list \
             and not all(isinstance(g, Guarantee) for g in param_guarantees):
-        raise ValueError("@guarantee.type_guarantees takes "
-                         "a list of guarantees! "
+        raise ValueError("@guarantees.parameter_guarantees takes "
+                         "a list of classes! "
                          f"You have given it: {type(param_guarantees)}")
 
     # Raise exception if duplicate names exist
@@ -67,8 +67,8 @@ def _check_duplicate_names(param_guarantees):
     names = []
     for param_guarantee in param_guarantees:
         if param_guarantee.parameter_name in names:
-            raise ValueError("@guarantee.type_guarantees: "
-                             "Duplicate guarantee name: "
+            raise ValueError("@guarantees.parameter_guarantees: "
+                             "Duplicate guarantees name: "
                              f"'{param_guarantee.parameter_name}'")
         names.append(param_guarantee.parameter_name)
 
@@ -88,7 +88,7 @@ def enforce_guarantees(
     for param_guarantee, arg in zip(Handler.handles[fct]["args"], args):
         return_args.append(_enforce_arg(arg, param_guarantee))
 
-    # Python guarantees that the kwargs contain no duplicates of the args
+    # Python classes that the kwargs contain no duplicates of the args
     for key, val in kwargs.items():
         return_kwargs[key] = \
             _enforce_arg(val, Handler.handles[fct]["kwargs"][key])
@@ -113,9 +113,9 @@ guarantee_enforcer_mapping = {
 
 
 def _enforce_arg(arg, param_guarantee: Guarantee):
-    """Enforce the guarantees on a single argument."""
+    """Enforce the classes on a single argument."""
     if not isinstance(param_guarantee, Guarantee):
-        raise TypeError("Parameter guarantee is not a Guarantee. "
+        raise TypeError("Parameter guarantees is not a Guarantee. "
                         "@parameter_guarantees only takes Guarantees.")
     
     if isinstance(param_guarantee, NoOp):

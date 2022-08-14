@@ -1,13 +1,13 @@
 import warnings
 from typing import Union
 
-from guarantee.type_guarantees.guarantees import IsList, IsTuple, IsDict, \
+from guarantees.parameter_guarantees.classes import IsList, IsTuple, IsDict, \
     IsSet, IsFrozenSet, IsRange, TypeGuarantee, CollectionType
-from guarantee.type_guarantees.signals.base import SignalTypeError
-from guarantee.type_guarantees.signals.collections import \
+from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.collections import \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
-from guarantee.type_guarantees.enforcement._util import \
+from guarantees.parameter_guarantees.enforcement._util import \
     get_guaranteed_type, get_guaranteed_type_name, get_err_msg_type, \
     raise_warning_or_exception, get_type_name, get_guarantee_name, \
     get_err_msg_maximum_len_type, get_err_msg_minimum_len_type
@@ -88,7 +88,7 @@ def _check_minmax_len(
         arg: Union[list, tuple, dict, set, frozenset],
         guarantee: CollectionType
 ) -> None:
-    # if guarantee.warnings_only, this functon may be called even though
+    # if guarantees.warnings_only, this functon may be called even though
     #   the type-check failed --> check again and return if previous test failed
     if type(arg) is not get_guaranteed_type(guarantee):
         return

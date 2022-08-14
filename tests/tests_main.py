@@ -8,8 +8,6 @@ from tests._test_types_boolean import TestBooleanGuarantee
 from tests._test_types_other import TestOther
 from tests._test_types_collections import TestCollectionsGuarantee
 
-# TODO (snimu) Rename 'guarantee' to 'guarantees' (mirror repo name)
-
 # TODO (snimu) include tests for 'callback' in all TestCases
 
 # TODO (snimu) implement enforcement & tests for binary types
@@ -23,9 +21,9 @@ from tests._test_types_collections import TestCollectionsGuarantee
 
 # TODO (snimu) "const" parameter in Guarantees?
 
-# TODO (snimu) guarantees for return values
+# TODO (snimu) classes for return values
 
-# TODO (snimu) guarantees for other languages: Rust, C++, Java, etc.
+# TODO (snimu) classes for other languages: Rust, C++, Java, etc.
 #   -> one branch per language.
 #   Subbranches in naming style: <language>-<branch>
 

@@ -1,5 +1,5 @@
 import unittest
-import guarantee
+import guarantees
 
 
 class TestOther(unittest.TestCase):
@@ -11,9 +11,9 @@ class TestOther(unittest.TestCase):
         self.test_class_instance = TestClass()
 
     def test_base(self):
-        @guarantee.parameter_guarantees([
-            guarantee.NoOp("a"),
-            guarantee.IsClass("b", class_type=self.test_class)
+        @guarantees.parameter_guarantees([
+            guarantees.NoOp("a"),
+            guarantees.IsClass("b", class_type=self.test_class)
         ])
         def fct(a, b):
             return a, b
@@ -34,9 +34,9 @@ class TestOther(unittest.TestCase):
             if arg.a != 1:
                 raise ValueError("check_fct raised ValueError")
 
-        @guarantee.parameter_guarantees([
-            guarantee.IsClass("a", class_type=self.test_class,
-                              check_fct=check_fct)
+        @guarantees.parameter_guarantees([
+            guarantees.IsClass("a", class_type=self.test_class,
+                               check_fct=check_fct)
         ])
         def fct(a):
             return a

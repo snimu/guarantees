@@ -1,10 +1,10 @@
 import warnings
 
-from guarantee.type_guarantees.guarantees import IsStr
-from guarantee.type_guarantees.signals.string \
+from guarantees.parameter_guarantees.classes import IsStr
+from guarantees.parameter_guarantees.signals.string \
     import SignalMaximumLenViolated, SignalMinimumLenViolated,\
     SignalMinimumLenGEMaximumLen, SignalNotIn
-from guarantee.type_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.base import SignalTypeError
 
 
 def enforce_isstr(arg: str, guarantee: IsStr) -> str:
@@ -48,7 +48,7 @@ def _check_type(arg: str, guarantee: IsStr) -> str:
 
 
 def _check_len(arg, guarantee: IsStr) -> None:
-    if type(arg) is not str:   # Can happen if guarantee.warnings_only is True
+    if type(arg) is not str:   # Can happen if guarantees.warnings_only is True
         return
 
     _check_min_ge_max(guarantee)

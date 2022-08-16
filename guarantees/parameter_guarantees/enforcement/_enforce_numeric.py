@@ -9,6 +9,11 @@ from guarantees.parameter_guarantees.signals.numeric import \
     SignalMinViolated, SignalMinReViolated, SignalMinImViolated, \
     SignalMaxViolated, SignalMaxReViolated, SignalMaxImViolated, \
     SignalNotIn
+from guarantees.parameter_guarantees.enforcement._util import \
+    raise_value_warning_or_exception, raise_type_warning_or_exception, \
+    get_guaranteed_type, get_guaranteed_type_name, get_guarantee_name, \
+    get_type_name, get_err_msg_type, get_err_msg_minimum_ge_maximum, \
+    get_err_msg_minimum, get_err_msg_maximum, get_err_msg_isin
 
 
 def enforce_isint(arg: int, guarantee: IsInt) -> int:
@@ -16,7 +21,6 @@ def enforce_isint(arg: int, guarantee: IsInt) -> int:
 
     _check_min_ge_max(
         guarantee=guarantee,
-        arg_type="int",
         minimum=guarantee.minimum,
         maximum=guarantee.maximum
     )
@@ -34,13 +38,12 @@ def enforce_isfloat(arg: float, guarantee: IsFloat) -> float:
 
     _check_min_ge_max(
         guarantee=guarantee,
-        arg_type="float",
         minimum=guarantee.minimum,
         maximum=guarantee.maximum
     )
 
-    _check_min(arg, guarantee.minimum, guarantee, "float")
-    _check_max(arg, guarantee.maximum, guarantee, "float")
+    _check_min(arg, guarantee.minimum, guarantee)
+    _check_max(arg, guarantee.maximum, guarantee)
 
     _check_isin(arg, guarantee)
 
@@ -52,31 +55,28 @@ def enforce_iscomplex(arg: complex, guarantee: IsComplex) -> complex:
 
     _check_min_ge_max(
         guarantee=guarantee,
-        arg_type="complex",
         minimum=guarantee.minimum,
         maximum=guarantee.maximum
     )
     _check_min_ge_max(
         guarantee=guarantee,
-        arg_type="complex",
         minimum=guarantee.minimum_re,
         maximum=guarantee.maximum_re,
         minmax_type="re"
     )
     _check_min_ge_max(
         guarantee=guarantee,
-        arg_type="complex",
         minimum=guarantee.minimum_im,
         maximum=guarantee.maximum_im,
         minmax_type="im"
     )
 
-    _check_min(abs(arg), guarantee.minimum, guarantee, "complex")
-    _check_max(abs(arg), guarantee.maximum, guarantee, "complex")
-    _check_min(arg.real, guarantee.minimum_re, guarantee, "complex", "re")
-    _check_max(arg.real, guarantee.maximum_re, guarantee, "complex", "re")
-    _check_min(arg.imag, guarantee.minimum_im, guarantee, "complex", "im")
-    _check_max(arg.imag, guarantee.maximum_im, guarantee, "complex", "im")
+    _check_min(abs(arg), guarantee.minimum, guarantee)
+    _check_max(abs(arg), guarantee.maximum, guarantee)
+    _check_min(arg.real, guarantee.minimum_re, guarantee, "re")
+    _check_max(arg.real, guarantee.maximum_re, guarantee, "re")
+    _check_min(arg.imag, guarantee.minimum_im, guarantee, "im")
+    _check_max(arg.imag, guarantee.maximum_im, guarantee, "im")
 
     _check_isin(arg, guarantee)
 
@@ -87,27 +87,9 @@ def _check_type(
         arg: Union[int, float, complex],
         guarantee: NumericGuarantee
 ) -> Union[int, float, complex]:
-    if isinstance(guarantee, IsInt):
-        type_should_str = "int"
-        type_should = int
-    elif isinstance(guarantee, IsFloat):
-        type_should_str = "float"
-        type_should = float
-    elif isinstance(guarantee, IsComplex):
-        type_should_str = "complex"
-        type_should = complex
-    else:
-        raise TypeError("Error in library: wrong guarantees given.")
-
-    if type(arg) is int:
-        type_is_str = "int"
-    elif type(arg) is float:
-        type_is_str = "float"
-    elif type(arg) is complex:
-        type_is_str = "complex"
-    else:
-        # The following produces an ugly string but works
-        type_is_str = str(type(arg))
+    type_should_str = get_guaranteed_type_name(guarantee)
+    type_should = get_guaranteed_type(guarantee)
+    type_is_str = get_type_name(arg)
 
     # Do tests
     err = False
@@ -126,190 +108,159 @@ def _check_type(
         return arg
 
     # Error occurred
+
+    signal = SignalTypeError(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guaranteed_type_name(guarantee),
+        should_type_name=type_should_str,
+        is_type_name=type_is_str,
+        force_conversion=guarantee.force_conversion
+    )
     if guarantee.callback is not None:
-        guarantee.callback(
-            SignalTypeError(
-                arg_name=guarantee.parameter_name,
-                type_should=type_should_str,
-                type_is=type_is_str,
-                force_conversion=guarantee.force_conversion
-            )
-        )
+        guarantee.callback(signal)
     else:
-        err_msg = f"Guaranteed type {type_should_str} " \
-                  f"for parameter {guarantee.parameter_name}, " \
-                  f"but received type {type_is_str}. " \
-                  f"Called with force_conversion={guarantee.force_conversion}"
-        if guarantee.warnings_only:
-            warnings.warn(err_msg)
-        else:
-            raise TypeError(err_msg)
+        err_msg = get_err_msg_type(signal)
+        raise_type_warning_or_exception(err_msg, guarantee)
+
+
+def _check_minimum_type(
+        minimum: Union[int, float, complex],
+        guarantee: NumericGuarantee
+) -> None:
+    if type(minimum) is not get_guaranteed_type(guarantee):
+        err_msg = f"parameter: {get_guarantee_name(guarantee)}.minimum \n" \
+                  f"\t violated: type -- guarantee parameter \n" \
+                  f"\t should: {get_guaranteed_type_name(guarantee)} \n" \
+                  f"\t actual: {get_type_name(minimum)} \n"
+        raise_type_warning_or_exception(err_msg, guarantee)
+
+
+def _check_maximum_type(
+        maximum: Union[int, float, complex],
+        guarantee: NumericGuarantee
+) -> None:
+    if type(maximum) is not get_guaranteed_type(guarantee):
+        err_msg = f"parameter: {get_guarantee_name(guarantee)}.maximum \n" \
+                  f"\t violated: type -- guarantee parameter \n" \
+                  f"\t should: {get_guaranteed_type_name(guarantee)} \n" \
+                  f"\t actual: {get_type_name(maximum)} \n"
+        raise_type_warning_or_exception(err_msg, guarantee)
 
 
 def _check_min_ge_max(
         guarantee: NumericGuarantee,
-        arg_type: str,
         minimum: Union[int, float, complex],
         maximum: Union[int, float, complex],
         minmax_type: str = "abs"
 ) -> None:
     if minimum is not None and maximum is not None and minimum >= maximum:
+        _check_minimum_type(minimum, guarantee)
+        _check_maximum_type(maximum, guarantee)
+
+        signal = SignalMinGEMax
+        if minmax_type == "re":
+            signal = SignalMinReGEMaxRe
+        elif minmax_type == "im":
+            signal = SignalMinImGEMaxIm
+        signal = signal(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guaranteed_type_name(guarantee),
+            minimum=minimum,
+            maximum=maximum
+        )
+
         if guarantee.callback is not None:
-            sig = SignalMinGEMax
-            if minmax_type == "re":
-                sig = SignalMinReGEMaxRe
-            elif minmax_type == "im":
-                sig = SignalMinImGEMaxIm
-
-            guarantee.callback(
-                sig(
-                    arg_name=guarantee.parameter_name,
-                    arg_type=arg_type,
-                    minimum=minimum,
-                    maximum=maximum
-                )
-            )
+            guarantee.callback(signal)
         else:
-            minstr, maxstr = "minimum", "maximum"
-            if minmax_type == "re":
-                minstr, maxstr = "minimum_re", "maximum_re"
-            if minmax_type == "im":
-                minstr, maxstr = "minimum_im", "maximum_im"
-
-            err_msg = f"You guaranteed parameter type {arg_type} with " \
-                      f"{minstr} {minimum} >= {maxstr} {maximum}; " \
-                      f"{minstr} must be smaller than {maxstr}."
-            if guarantee.warnings_only:
-                warnings.warn(err_msg)
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_minimum_ge_maximum(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_min(
         arg: Union[int, float, complex],
         minimum: Union[int, float, complex],
         guarantee: NumericGuarantee,
-        arg_type: str,
         min_type: str = "abs"
 ) -> None:
     if minimum is None:
         return
 
-    if type(minimum) not in [int, float, complex]:
-        err_msg = f"The parameter 'minimum' must be of type {type(arg)} " \
-                  f"but is of type {type(minimum)}. "
-        if guarantee.warnings_only:
-            warnings.warn(err_msg + "Minimum will not be checked.")
-        else:
-            raise TypeError(err_msg)
+    _check_minimum_type(minimum, guarantee)
 
     if arg < minimum:
+        signal = SignalMinViolated
+        if min_type == "re":
+            signal = SignalMinReViolated
+        if min_type == "im":
+            signal = SignalMinImViolated
+
+        signal = signal(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            arg=arg,
+            minimum=minimum
+        )
+
         if guarantee.callback is not None:
-            sig = SignalMinViolated
-            if min_type == "re":
-                sig = SignalMinReViolated
-            if min_type == "im":
-                sig = SignalMinImViolated
-
-            guarantee.callback(
-                sig(
-                    arg_name=guarantee.parameter_name,
-                    arg_type=arg_type,
-                    arg=arg,
-                    minimum=minimum
-                )
-            )
+            guarantee.callback(signal)
         else:
-            minstr = "minimum"
-            minstr = "minimum_re" if min_type == "re" else minstr
-            minstr = "minimum_im" if min_type == "im" else minstr
-
-            err_msg = f"You guaranteed parameter type {arg_type} with " \
-                      f"{minstr} {minimum}. Argument {guarantee.parameter_name} " \
-                      f"has been received with value {arg} < {minimum}."
-            if guarantee.warnings_only:
-                warnings.warn(err_msg)
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_minimum(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_max(
         arg: Union[int, float, complex],
         maximum: Union[int, float, complex],
         guarantee: NumericGuarantee,
-        arg_type: str,
         max_type: str = "abs"
 ) -> None:
     if maximum is None:
         return
 
-    if type(maximum) not in [int, float, complex]:
-        err_msg = f"The parameter 'maximum' must be of type {type(arg)} " \
-                  f"but is of type {type(maximum)}. "
-        if guarantee.warnings_only:
-            warnings.warn(err_msg + "Maximum will not be checked.")
-        else:
-            raise TypeError(err_msg)
+    _check_maximum_type(maximum, guarantee)
 
     if arg > maximum:
+        signal = SignalMaxViolated
+        if max_type == "re":
+            signal = SignalMaxReViolated
+        if max_type == "im":
+            signal = SignalMaxImViolated
+
+        signal = signal(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            arg=arg,
+            maximum=maximum
+        )
         if guarantee.callback is not None:
-            sig = SignalMaxViolated
-            if max_type == "re":
-                sig = SignalMaxReViolated
-            if max_type == "im":
-                sig = SignalMaxImViolated
-
-            guarantee.callback(
-                sig(
-                    arg_name=guarantee.parameter_name,
-                    arg_type=arg_type,
-                    arg=arg,
-                    maximum=maximum
-                )
-            )
+            guarantee.callback(signal)
         else:
-            maxstr = "maximum"
-            maxstr = "maximum_re" if max_type == "re" else maxstr
-            maxstr = "maximum_im" if max_type == "im" else maxstr
-
-            err_msg = f"You guaranteed parameter type {arg_type} with " \
-                      f"{maxstr} {maximum}. Argument {guarantee.parameter_name} " \
-                      f"has been received with value {arg} > {maximum}."
-            if guarantee.warnings_only:
-                warnings.warn(err_msg)
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_maximum(signal)
+            raise_value_warning_or_exception(err_msg)
 
 
 def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):
     if guarantee.isin is None:
         return
 
-    if type(guarantee.isin) not in [list, tuple]:
-        err_msg = "The parameter 'isin' must be of type list or tuple. " \
-                  "Returning."
-        if guarantee.warnings_only:
-            warnings.warn(err_msg)
-            return
-        else:
-            raise TypeError(err_msg)
+    if type(guarantee.isin) is not list:
+        err_msg = f"parameter: {get_guarantee_name(guarantee)}.isin \n" \
+                  f"\t violated: type -- guarantee parameter \n" \
+                  f"\t should: list \n" \
+                  f"\t actual: {get_type_name(guarantee.isin)} \n"
+        raise_type_warning_or_exception(err_msg, guarantee)
 
     if arg in guarantee.isin:
         return
 
+    signal = SignalNotIn(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(guarantee),
+        arg=arg,
+        isin=guarantee.isin
+    )
     if guarantee.callback is not None:
-        guarantee.callback(
-            SignalNotIn(
-                arg_name=guarantee.parameter_name,
-                arg=arg,
-                isin=guarantee.isin
-            )
-        )
+        guarantee.callback(signal)
     else:
-        err_msg = f"The parameter {guarantee.parameter_name} " \
-                  f"must be in {guarantee.isin}. " \
-                  f"It is not. Value: {arg}"
-        if guarantee.warnings_only:
-            warnings.warn(err_msg)
-        else:
-            raise ValueError(err_msg)
+        err_msg = get_err_msg_isin(signal)
+        raise_value_warning_or_exception(err_msg, guarantee)

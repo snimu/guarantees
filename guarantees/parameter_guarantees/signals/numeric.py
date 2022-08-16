@@ -6,56 +6,57 @@ from guarantees.parameter_guarantees.signals.base import Signal
 
 @dataclass
 class SignalMinGEMax(Signal):
-    arg_type: str   # The type of the signal
+    guarantee_type_name: str   # The type of the signal
     minimum: Union[int, float, complex]
     maximum: Union[int, float, complex]
 
 
 @dataclass
 class SignalMinReGEMaxRe(SignalMinGEMax):
-    arg_type = "complex"
+    pass
 
 
 @dataclass
 class SignalMinImGEMaxIm(SignalMinGEMax):
-    arg_type = "complex"
+    pass
 
 
 @dataclass
 class SignalMinViolated(Signal):
-    arg_type: str
+    guarantee_type_name: str
     arg: Union[int, float, complex]
     minimum: Union[int, float, complex]
 
 
 @dataclass
 class SignalMinReViolated(SignalMinViolated):
-    arg_type = "complex"
+    pass
 
 
 @dataclass
 class SignalMinImViolated(SignalMinViolated):
-    arg_type = "complex"
+    pass
 
 
 @dataclass
 class SignalMaxViolated(Signal):
-    arg_type: str
+    guarantee_type_name: str
     arg: Union[int, float, complex]
     maximum: Union[int, float, complex]
 
 
 @dataclass
 class SignalMaxReViolated(SignalMaxViolated):
-    arg_type = "complex"
+    pass
 
 
 @dataclass
 class SignalMaxImViolated(SignalMaxViolated):
-    arg_type = "complex"
+    pass
 
 
 @dataclass
 class SignalNotIn(Signal):
+    guarantee_type_name: str
     arg: Union[int, float, complex]
     isin: List

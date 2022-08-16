@@ -8,6 +8,10 @@ from guarantees.parameter_guarantees.signals.base import SignalTypeError
 from guarantees.parameter_guarantees.signals.collections import \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
+from guarantees.parameter_guarantees.signals.numeric import SignalMinGEMax, \
+    SignalMinReGEMaxRe, SignalMinImGEMaxIm, SignalMinViolated, \
+    SignalMinReViolated, SignalMinImViolated, SignalMaxViolated, \
+    SignalMaxReViolated, SignalMaxImViolated, SignalNotIn
 
 
 guarantee_to_type_dict = {
@@ -119,8 +123,8 @@ def get_err_msg_type(signal: SignalTypeError) -> str:
 
 
 def get_err_msg_minimum_len_type(signal: SignalTypeError) -> str:
-    err_msg = f"parameter: {signal.parameter_name}.mimimum_len \n" \
-              f"\t violated : type -- {signal.guarantee_type_name}" \
+    err_msg = f"parameter: {signal.guarantee_type_name}.mimimum_len \n" \
+              f"\t violated : type -- guarantee parameter" \
               f".minimum_len \n" \
               f"\t should   : {signal.should_type_name} \n" \
               f"\t actual   :     {signal.is_type_name} \n"
@@ -129,8 +133,8 @@ def get_err_msg_minimum_len_type(signal: SignalTypeError) -> str:
 
 
 def get_err_msg_maximum_len_type(signal: SignalTypeError) -> str:
-    err_msg = f"parameter: {signal.parameter_name}.maximum_len\n" \
-              f"\t violated : type -- {signal.guarantee_type_name}" \
+    err_msg = f"parameter: {signal.guarantee_type_name}.maximum_len\n" \
+              f"\t violated : type -- guarantee parameter" \
               f".maximum_len \n" \
               f"\t should   : {signal.should_type_name} \n" \
               f"\t actual   :     {signal.is_type_name} \n"
@@ -138,7 +142,7 @@ def get_err_msg_maximum_len_type(signal: SignalTypeError) -> str:
     return err_msg
 
 
-def get_err_msg_minimum_ge_maximum(signal: SignalMinLenGEMaxLen) -> str:
+def get_err_msg_minimum_len_ge_maximum_len(signal: SignalMinLenGEMaxLen) -> str:
     err_msg = f"paramter: {signal.guarantee_type_name}.minimum_len " \
               f"and {signal.guarantee_type_name}.maximum_len \n" \
               f"\t violated    : minimum_len < maximum_len \n" \
@@ -193,6 +197,62 @@ def get_err_msg_has_values(signal: SignalHasValuesViolated) -> str:
     return err_msg
 
 
+def get_err_msg_minimum_ge_maximum(signal: SignalMinGEMax) -> str:
+    minstr, maxstr = "minimum", "maximum"
+    if isinstance(signal, SignalMinReGEMaxRe):
+        minstr, maxstr = "minimum_re", "maximum_re"
+    if isinstance(signal, SignalMinImGEMaxIm):
+        minstr, maxstr = "minimum_im", "maximum_im"
+
+    err_msg = f"parameter: {signal.guarantee_type_name}.{minstr} and " \
+              f"{signal.guarantee_type_name}.{maxstr} \n" \
+              f"\t violated : minimum < maximum \n" \
+              f"\t minimum  : {signal.minimum} \n" \
+              f"\t maximum  : {signal.maximum} \n"
+
+    return err_msg
+
+
+def get_err_msg_minimum(signal: SignalMinViolated) -> str:
+    minstr = "minimum"
+    if isinstance(signal, SignalMinReViolated):
+        minstr = "minimum_re"
+    if isinstance(signal, SignalMinImViolated):
+        minstr = "minimum_im"
+
+    err_msg = f"parameter: {signal.guarantee_type_name}.{minstr} \n" \
+              f"\t violated : type -- guarantee parameter \n" \
+              f"\t should   : >= {signal.minimum} \n" \
+              f"\t actual   :    {signal.arg} \n"
+
+    return err_msg
+
+
+def get_err_msg_maximum(signal: SignalMaxViolated) -> str:
+    maxstr = "maximum"
+    if isinstance(signal, SignalMinReViolated):
+        maxstr = "maximum_re"
+    if isinstance(signal, SignalMinImViolated):
+        maxstr = "maximum_im"
+
+    err_msg = f"parameter: {signal.guarantee_type_name}.{maxstr} \n" \
+              f"\t violated : type -- guarantee parameter \n" \
+              f"\t should   : <= {signal.maximum} \n" \
+              f"\t actual   :    {signal.arg} \n"
+
+    return err_msg
+
+
+def get_err_msg_isin(signal: SignalNotIn) -> str:
+    err_msg = f"parameter: {signal.parameter_name} \n" \
+              f"\t violated : {signal.guarantee_type_name}.isin \n" \
+              f"\t should   : {signal.isin} \n" \
+              f"\t actual   : {signal.arg} \n"
+
+    return err_msg
+
+
+# TODO (snimu): put err_msg-creation into raise... -> only needs signal
 def raise_type_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee

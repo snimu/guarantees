@@ -10,7 +10,7 @@ from guarantees.parameter_guarantees.enforcement._util import \
     get_guaranteed_type, get_guaranteed_type_name, get_err_msg_type, \
     raise_type_warning_or_exception, get_type_name, get_guarantee_name, \
     get_err_msg_maximum_len_type, get_err_msg_minimum_len_type, \
-    get_err_msg_minimum_ge_maximum, raise_value_warning_or_exception, \
+    get_err_msg_minimum_len_ge_maximum_len, raise_value_warning_or_exception, \
     get_err_msg_minimum_len, get_err_msg_maximum_len, get_err_msg_contains, \
     get_err_msg_has_keys, get_err_msg_has_values
 
@@ -145,16 +145,16 @@ def _check_min_ge_max(guarantee: CollectionType) -> None:
         return
 
     if guarantee.minimum_len >= guarantee.maximum_len:
-        signal_minlen_ge_maxlen = SignalMinLenGEMaxLen(
+        signal = SignalMinLenGEMaxLen(
             parameter_name=guarantee.parameter_name,
             guarantee_type_name=get_guarantee_name(guarantee),
             minimum_len=guarantee.minimum_len,
             maximum_len=guarantee.maximum_len
         )
         if guarantee.callback is not None:
-            guarantee.callback(signal_minlen_ge_maxlen)
+            guarantee.callback(signal)
         else:
-            err_msg = get_err_msg_minimum_ge_maximum(signal_minlen_ge_maxlen)
+            err_msg = get_err_msg_minimum_len_ge_maximum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
 
 

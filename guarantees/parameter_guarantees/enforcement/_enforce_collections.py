@@ -1,4 +1,3 @@
-import warnings
 from typing import Union
 
 from guarantees.parameter_guarantees.classes import IsList, IsTuple, IsDict, \
@@ -12,7 +11,8 @@ from guarantees.parameter_guarantees.enforcement._util import \
     raise_type_warning_or_exception, get_type_name, get_guarantee_name, \
     get_err_msg_maximum_len_type, get_err_msg_minimum_len_type, \
     get_err_msg_minimum_ge_maximum, raise_value_warning_or_exception, \
-    get_err_msg_minimum_len, get_err_msg_maximum_len
+    get_err_msg_minimum_len, get_err_msg_maximum_len, get_err_msg_contains, \
+    get_err_msg_has_keys, get_err_msg_has_values
 
 
 def enforce_islist(arg: list, guarantee: IsList) -> list:
@@ -71,16 +71,17 @@ def _check_type(
         err = True
 
     if err:
-        type_signal = SignalTypeError(
+        signal = SignalTypeError(
             parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
             should_type_name=should_type_name,
             is_type_name=get_type_name(arg),
             force_conversion=guarantee.force_conversion
         )
         if guarantee.callback is not None:
-            guarantee.callback(type_signal)
+            guarantee.callback(signal)
         else:
-            err_msg = get_err_msg_type(type_signal)
+            err_msg = get_err_msg_type(signal)
             raise_type_warning_or_exception(err_msg, guarantee)
 
     return arg
@@ -105,7 +106,13 @@ def _min_len_is_legitimate(guarantee: CollectionType) -> bool:
         return False
 
     if type(guarantee.minimum_len) is not int:
-        err_msg = get_err_msg_minimum_len_type(guarantee)
+        signal = SignalTypeError(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            is_type_name=get_type_name(guarantee.minimum_len),
+            should_type_name="int"
+        )
+        err_msg = get_err_msg_minimum_len_type(signal)
         raise_type_warning_or_exception(err_msg, guarantee)
         return False   # in case of warning instead of exception
 
@@ -117,7 +124,13 @@ def _max_len_is_legitimate(guarantee: CollectionType) -> bool:
         return False
 
     if type(guarantee.maximum_len) is not int:
-        err_msg = get_err_msg_maximum_len_type(guarantee)
+        signal = SignalTypeError(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            is_type_name=get_type_name(guarantee.minimum_len),
+            should_type_name="int"
+        )
+        err_msg = get_err_msg_maximum_len_type(signal)
         raise_type_warning_or_exception(err_msg, guarantee)
         return False   # in case of warning instead of exception
 
@@ -134,16 +147,15 @@ def _check_min_ge_max(guarantee: CollectionType) -> None:
     if guarantee.minimum_len >= guarantee.maximum_len:
         signal_minlen_ge_maxlen = SignalMinLenGEMaxLen(
             parameter_name=guarantee.parameter_name,
-            arg_type=get_guaranteed_type_name(guarantee),
+            guarantee_type_name=get_guarantee_name(guarantee),
             minimum_len=guarantee.minimum_len,
             maximum_len=guarantee.maximum_len
         )
         if guarantee.callback is not None:
             guarantee.callback(signal_minlen_ge_maxlen)
         else:
-            err_msg = get_err_msg_minimum_ge_maximum(
-                guarantee, guarantee.minimum_len, guarantee.maximum_len)
-            raise_value_warning_or_exception(err_msg)
+            err_msg = get_err_msg_minimum_ge_maximum(signal_minlen_ge_maxlen)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_min_len(
@@ -154,17 +166,16 @@ def _check_min_len(
         return
 
     if len(arg) < guarantee.minimum_len:
-        signal_min = SignalMinLenViolated(
+        signal = SignalMinLenViolated(
             parameter_name=guarantee.parameter_name,
-            arg_type=get_guaranteed_type_name(guarantee),
+            guarantee_type_name=get_guarantee_name(guarantee),
             arg=arg,
             minimum_len=guarantee.minimum_len
         )
         if guarantee.callback is not None:
-            guarantee.callback(signal_min)
+            guarantee.callback(signal)
         else:
-            err_msg = get_err_msg_minimum_len(guarantee, guarantee.minimum_len,
-                                              len(arg))
+            err_msg = get_err_msg_minimum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
 
 
@@ -176,17 +187,16 @@ def _check_max_len(
         return
 
     if len(arg) > guarantee.maximum_len:
-        signal_max = SignalMaxLenViolated(
+        signal = SignalMaxLenViolated(
             parameter_name=guarantee.parameter_name,
-            arg_type=get_guaranteed_type_name(guarantee),
+            guarantee_type_name=get_guarantee_name(guarantee),
             arg=arg,
             maximum_len=guarantee.maximum_len
         )
         if guarantee.callback is not None:
-            guarantee.callback(signal_max)
+            guarantee.callback(signal)
         else:
-            err_msg = get_err_msg_maximum_len(guarantee, guarantee.maximum_len,
-                                              len(arg))
+            err_msg = get_err_msg_maximum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
 
 
@@ -202,26 +212,17 @@ def _check_contains(
 
     for item in guarantee.contains:
         if item not in arg:
-            arg_type_str = get_guaranteed_type_name(guarantee)
+            signal = SignalContainsViolated(
+                parameter_name=guarantee.parameter_name,
+                guarantee_type_name=get_guarantee_name(guarantee),
+                arg=arg,
+                contains=guarantee.contains
+            )
             if guarantee.callback is not None:
-                guarantee.callback(
-                    SignalContainsViolated(
-                        parameter_name=guarantee.parameter_name,
-                        arg_type=arg_type_str,
-                        arg=arg,
-                        contains=guarantee.contains
-                    )
-                )
+                guarantee.callback(signal)
             else:
-                err_msg = f"You guaranteed that parameter {guarantee.parameter_name} " \
-                          f"contains one of the following items: " \
-                          f"{guarantee.contains}. However, " \
-                          f"at least item {item} is missing from parameter " \
-                          f"with value {arg}. "
-                if guarantee.warnings_only:
-                    warnings.warn(err_msg + "Ignoring")
-                else:
-                    raise ValueError(err_msg)
+                err_msg = get_err_msg_contains(signal)
+                raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_has_keys_values(
@@ -246,26 +247,18 @@ def _check_has_keys(arg: dict, guarantee: IsDict) -> None:
             kerr = key
             break
 
-    arg_type_str = get_guaranteed_type_name(guarantee)
     if kerr is not None:
+        signal = SignalHasKeysViolated(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            arg=arg,
+            has_keys=guarantee.has_values
+        )
         if guarantee.callback is not None:
-            guarantee.callback(
-                SignalHasKeysViolated(
-                    parameter_name=guarantee.parameter_name,
-                    arg_type=arg_type_str,
-                    arg=arg,
-                    has_keys=guarantee.has_values
-                )
-            )
+            guarantee.callback(signal)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} of value {arg} " \
-                      f"had a guarantee for " \
-                      f"has_keys: {guarantee.has_keys}, but key " \
-                      f"{kerr} is not contained in {guarantee.parameter_name}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_has_keys(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_has_values(arg: dict, guarantee: IsDict) -> None:
@@ -279,24 +272,15 @@ def _check_has_values(arg: dict, guarantee: IsDict) -> None:
             verr = val
             break
 
-    arg_type_str = get_guaranteed_type_name(guarantee)
-
     if verr is not None:
+        signal = SignalHasValuesViolated(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            arg=arg,
+            has_values=guarantee.has_values
+        )
         if guarantee.callback is not None:
-            guarantee.callback(
-                SignalHasValuesViolated(
-                    parameter_name=guarantee.parameter_name,
-                    arg_type=arg_type_str,
-                    arg=arg,
-                    has_values=guarantee.has_values
-                )
-            )
+            guarantee.callback(signal)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} of value {arg} " \
-                      f"had a guarantee for " \
-                      f"has_values: {guarantee.has_values}, but key " \
-                      f"{verr} is not contained in {guarantee.parameter_name}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_has_values(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)

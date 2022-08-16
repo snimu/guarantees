@@ -2,6 +2,8 @@ import warnings
 
 from guarantees.parameter_guarantees.classes import IsBool
 from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.enforcement._util import \
+    get_type_name, get_err_msg_type, raise_type_warning_or_exception
 
 
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:
@@ -21,25 +23,17 @@ def _check_type(arg: bool, guarantee: IsBool) -> bool:
         if type(arg) is not bool:
             err = True
 
-    if err:
-        if guarantee.callback is not None:
-            guarantee.callback(
-                SignalTypeError(
-                    arg_name=guarantee.parameter_name,
-                    type_should="bool",
-                    type_is=str(type(arg)),
-                    force_conversion=guarantee.force_conversion
-                )
-            )
-        else:
-            err_msg = f"Guaranteed type bool " \
-                      f"for parameter {guarantee.parameter_name}, " \
-                      f"but received type {type(arg)}. " \
-                      f"Called with " \
-                      f"force_conversion={guarantee.force_conversion}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise TypeError(err_msg)
+    if not err:
+        return arg
 
-    return arg
+    signal = SignalTypeError(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name="IsBool",
+        should_type_name="bool",
+        is_type_name=get_type_name(arg)
+    )
+    if guarantee.callback is not None:
+        guarantee.callback(signal)
+    else:
+        err_msg = get_err_msg_type(signal)
+        raise_type_warning_or_exception(err_msg, guarantee)

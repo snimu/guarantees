@@ -230,9 +230,9 @@ def get_err_msg_minimum(signal: SignalMinViolated) -> str:
 
 def get_err_msg_maximum(signal: SignalMaxViolated) -> str:
     maxstr = "maximum"
-    if isinstance(signal, SignalMinReViolated):
+    if isinstance(signal, SignalMaxReViolated):
         maxstr = "maximum_re"
-    if isinstance(signal, SignalMinImViolated):
+    if isinstance(signal, SignalMaxImViolated):
         maxstr = "maximum_im"
 
     err_msg = f"parameter: {signal.guarantee_type_name}.{maxstr} \n" \

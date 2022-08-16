@@ -236,7 +236,7 @@ def _check_max(
             guarantee.callback(signal)
         else:
             err_msg = get_err_msg_maximum(signal)
-            raise_value_warning_or_exception(err_msg)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):

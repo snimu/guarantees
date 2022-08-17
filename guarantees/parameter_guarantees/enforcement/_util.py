@@ -122,39 +122,39 @@ def get_guarantee_name(type_guarantee: TypeGuarantee) -> str:
 
 
 def get_err_msg_type(signal: SignalTypeError) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated         : type -- parameter \n" \
               f"\t should           : {signal.should_type_name} \n" \
-              f"\t actual           :     {signal.is_type_name} \n" \
+              f"\t actual           : {signal.is_type_name} \n" \
               f"\t force_conversion : {signal.force_conversion} \n"
 
     return err_msg
 
 
 def get_err_msg_minimum_len_type(signal: SignalTypeError) -> str:
-    err_msg = f"parameter: {signal.guarantee_type_name}.mimimum_len \n" \
-              f"\t violated : type -- guarantee parameter" \
+    err_msg = f"\n parameter: internal to {signal.guarantee_type_name} \n" \
+              f"\t violated : type of {signal.guarantee_type_name}" \
               f".minimum_len \n" \
               f"\t should   : {signal.should_type_name} \n" \
-              f"\t actual   :     {signal.is_type_name} \n"
+              f"\t actual   : {signal.is_type_name} \n"
 
     return err_msg
 
 
 def get_err_msg_maximum_len_type(signal: SignalTypeError) -> str:
-    err_msg = f"parameter: {signal.guarantee_type_name}.maximum_len\n" \
+    err_msg = f"\n parameter: {signal.guarantee_type_name}.maximum_len\n" \
               f"\t violated : type -- guarantee parameter" \
               f".maximum_len \n" \
               f"\t should   : {signal.should_type_name} \n" \
-              f"\t actual   :     {signal.is_type_name} \n"
+              f"\t actual   : {signal.is_type_name} \n"
 
     return err_msg
 
 
 def get_err_msg_minimum_len_ge_maximum_len(signal: SignalMinLenGEMaxLen) -> str:
-    err_msg = f"paramter: {signal.guarantee_type_name}.minimum_len " \
-              f"and {signal.guarantee_type_name}.maximum_len \n" \
-              f"\t violated    : minimum_len < maximum_len \n" \
+    err_msg = f"\n paramter: internal to {signal.guarantee_type_name} \n" \
+              f"\t violated    : {signal.guarantee_type_name}.minimum_le " \
+              f"< {signal.guarantee_type_name}.maximum_len \n" \
               f"\t minimum_len : {signal.minimum_len} \n" \
               f"\t maximum_len : {signal.maximum_len} \n"
 
@@ -162,7 +162,7 @@ def get_err_msg_minimum_len_ge_maximum_len(signal: SignalMinLenGEMaxLen) -> str:
 
 
 def get_err_msg_minimum_len(signal: SignalMinLenViolated) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated : {signal.guarantee_type_name}.minimum_len \n" \
               f"\t should   : >= {signal.minimum_len} \n" \
               f"\t actual   :    {len(signal.arg)} \n"
@@ -171,7 +171,7 @@ def get_err_msg_minimum_len(signal: SignalMinLenViolated) -> str:
 
 
 def get_err_msg_maximum_len(signal: SignalMaxLenViolated) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated : {signal.guarantee_type_name}.maximum_len \n" \
               f"\t should   : >= {signal.maximum_len} \n" \
               f"\t actual   :    {len(signal.arg)} \n"
@@ -180,7 +180,7 @@ def get_err_msg_maximum_len(signal: SignalMaxLenViolated) -> str:
 
 
 def get_err_msg_contains(signal: SignalContainsViolated) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated : {signal.guarantee_type_name}.contains \n" \
               f"\t should   : {signal.contains} \n" \
               f"\t actual   : {signal.arg} \n"
@@ -189,7 +189,7 @@ def get_err_msg_contains(signal: SignalContainsViolated) -> str:
 
 
 def get_err_msg_has_keys(signal: SignalHasKeysViolated) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated : {signal.guarantee_type_name}.has_keys \n" \
               f"\t should   : {signal.has_keys} \n" \
               f"\t actual   : {signal.arg} \n"
@@ -198,7 +198,7 @@ def get_err_msg_has_keys(signal: SignalHasKeysViolated) -> str:
 
 
 def get_err_msg_has_values(signal: SignalHasValuesViolated) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated : {signal.guarantee_type_name}.has_values \n" \
               f"\t should   : {signal.has_values} \n" \
               f"\t actual   : {signal.arg} \n"
@@ -213,9 +213,9 @@ def get_err_msg_minimum_ge_maximum(signal: SignalMinGEMax) -> str:
     if isinstance(signal, SignalMinImGEMaxIm):
         minstr, maxstr = "minimum_im", "maximum_im"
 
-    err_msg = f"parameter: {signal.guarantee_type_name}.{minstr} and " \
-              f"{signal.guarantee_type_name}.{maxstr} \n" \
-              f"\t violated : minimum < maximum \n" \
+    err_msg = f"\n parameter: internal to {signal.guarantee_type_name} \n" \
+              f"\t violated : {signal.guarantee_type_name}.{minstr} " \
+              f"< {signal.guarantee_type_name}.{maxstr} \n" \
               f"\t minimum  : {signal.minimum} \n" \
               f"\t maximum  : {signal.maximum} \n"
 
@@ -229,8 +229,8 @@ def get_err_msg_minimum(signal: SignalMinViolated) -> str:
     if isinstance(signal, SignalMinImViolated):
         minstr = "minimum_im"
 
-    err_msg = f"parameter: {signal.parameter_name} \n" \
-              f"\t violated : type -- guarantee parameter \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
+              f"\t violated : {signal.guarantee_type_name}.{minstr} \n" \
               f"\t should   : >= {signal.minimum} \n" \
               f"\t actual   :    {signal.arg} \n"
 
@@ -244,8 +244,8 @@ def get_err_msg_maximum(signal: SignalMaxViolated) -> str:
     if isinstance(signal, SignalMaxImViolated):
         maxstr = "maximum_im"
 
-    err_msg = f"parameter: {signal.guarantee_type_name}.{maxstr} \n" \
-              f"\t violated : type -- guarantee parameter \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
+              f"\t violated : {signal.guarantee_type_name}.{maxstr} \n" \
               f"\t should   : <= {signal.maximum} \n" \
               f"\t actual   :    {signal.arg} \n"
 
@@ -253,7 +253,7 @@ def get_err_msg_maximum(signal: SignalMaxViolated) -> str:
 
 
 def get_err_msg_isin(signal: SignalNotIn) -> str:
-    err_msg = f"parameter: {signal.parameter_name} \n" \
+    err_msg = f"\n parameter: {signal.parameter_name} \n" \
               f"\t violated : {signal.guarantee_type_name}.isin \n" \
               f"\t should   : {signal.isin} \n" \
               f"\t actual   : {signal.arg} \n"

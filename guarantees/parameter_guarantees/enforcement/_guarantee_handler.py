@@ -133,7 +133,7 @@ def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
     signal = SignalTypeError(
         parameter_name=param_guarantee.parameter_name,
         guarantee_type_name=get_guarantee_name(param_guarantee),
-        should_type_name=f"Union[{should_types}]",
+        should_type_name=f"Union{should_types}",
         is_type_name=get_type_name(arg)
     )
     err_msg = get_err_msg_type(signal)

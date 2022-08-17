@@ -12,11 +12,6 @@ from tests._test_types_collections import TestCollectionsGuarantee
 
 # TODO (snimu) implement enforcement & tests for binary types
 
-# TODO (snimu) implement IsUnion -> allows None (Union of IsNone, ...)
-
-# TODO (snimu) instead of finding out the type_str manually every time,
-#   make fcts 'type_from_guarantee' and 'type_name_from_guarantee'
-
 # TODO (snimu) "description" parameter?
 
 # TODO (snimu) Write docstrings

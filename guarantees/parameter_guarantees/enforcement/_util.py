@@ -229,7 +229,7 @@ def get_err_msg_minimum(signal: SignalMinViolated) -> str:
     if isinstance(signal, SignalMinImViolated):
         minstr = "minimum_im"
 
-    err_msg = f"parameter: {signal.guarantee_type_name}.{minstr} \n" \
+    err_msg = f"parameter: {signal.parameter_name} \n" \
               f"\t violated : type -- guarantee parameter \n" \
               f"\t should   : >= {signal.minimum} \n" \
               f"\t actual   :    {signal.arg} \n"

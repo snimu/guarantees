@@ -101,3 +101,25 @@ class TestIsUnion(unittest.TestCase):
             self.assertTrue(False)   # should have raised exception
         except TypeError:
             self.assertTrue(True)    # successfully raised exception
+
+    def test_value_error(self):
+        @guarantees.parameter_guarantees([
+            guarantees.IsUnion(
+                "a",
+                guarantees=[
+                    guarantees.IsInt("a", minimum=1),
+                    guarantees.IsNone("a")
+                ]
+            )
+        ])
+        def fct(a):
+            return a
+
+        self.assertIs(fct(None), None)
+        self.assertIsInstance(fct(1), int)
+
+        try:
+            fct(0)
+            self.assertTrue(False)   # should have raised ValueError
+        except ValueError:
+            self.assertTrue(True)    # successfully raised exception

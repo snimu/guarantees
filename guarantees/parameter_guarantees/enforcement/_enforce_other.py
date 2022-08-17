@@ -9,7 +9,7 @@ from guarantees.parameter_guarantees.enforcement._util import \
 
 # NoOp needs no enforcement; it is handled in the guarantee_handler
 def enforce_isclass(arg: object, guarantee: IsClass) -> object:
-    arg = _check_type(arg, guarantee)
+    arg = _check_isclass(arg, guarantee)
     if guarantee.check_fct is not None:
         return guarantee.check_fct(arg)
     return arg
@@ -32,7 +32,7 @@ def enforce_isnone(arg: None, guarantee: IsNone) -> None:
         raise_type_warning_or_exception(err_msg, guarantee)
 
 
-def _check_type(arg: object, guarantee: IsClass) -> object:
+def _check_isclass(arg: object, guarantee: IsClass) -> object:
     if isinstance(arg, guarantee.class_type):
         return arg
 

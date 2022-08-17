@@ -1,8 +1,12 @@
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Any, Union
 
 from guarantees.parameter_guarantees.classes import Guarantee, IsInt, IsFloat, \
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
-    IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone
+    IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
+from guarantees.parameter_guarantees.enforcement._util import \
+    get_guarantee_name, get_guaranteed_type_name, get_type_name, \
+    get_guaranteed_type, get_err_msg_type, raise_type_warning_or_exception
+from guarantees.parameter_guarantees.signals.common import SignalTypeError
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
      enforce_iscomplex
@@ -96,6 +100,49 @@ def enforce_guarantees(
     return tuple(return_args), return_kwargs
 
 
+def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
+    """`enforce_isunion` cannot make use of other `enforce_...`-fcts
+    without a circular import -> must be defined here."""
+    if arg is None:
+        return arg
+
+    for guarantee in param_guarantee.guarantees:
+        # 1. Try to change arg to wanted type if allowed
+        # 1.1  If ValueError: definitely wrong type -> continue
+        # 2. Check type (whether force_conversion or not)
+        # 2.1  If wrong type: loop continues or type is false
+        # 2.2  If right type: enforce it
+        if guarantee.force_conversion:
+            try:
+                target_type = get_guaranteed_type(guarantee)
+                if isinstance(guarantee, IsClass):
+                    target_type = guarantee.class_type
+                arg = target_type(arg)
+            except ValueError:
+                continue
+
+        target_type = get_guaranteed_type(guarantee)
+        if isinstance(guarantee, IsClass):
+            target_type = guarantee.class_type
+        if type(arg) is target_type:
+            return _enforce_arg(arg, guarantee)
+
+    # Didn't work
+    should_types = \
+        [get_guaranteed_type_name(g) for g in param_guarantee.guarantees]
+    signal = SignalTypeError(
+        parameter_name=param_guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(param_guarantee),
+        should_type_name=f"Union[{should_types}]",
+        is_type_name=get_type_name(arg)
+    )
+    err_msg = get_err_msg_type(signal)
+    raise_type_warning_or_exception(err_msg, param_guarantee)
+
+    # In case of warnings_only
+    return arg
+
+
 guarantee_enforcer_mapping = {
     IsInt: enforce_isint,
     IsFloat: enforce_isfloat,
@@ -109,7 +156,8 @@ guarantee_enforcer_mapping = {
     IsSet: enforce_isset,
     IsFrozenSet: enforce_isfrozenset,
     IsRange: enforce_isrange,
-    IsNone: enforce_isnone
+    IsNone: enforce_isnone,
+    IsUnion: _enforce_isunion
 }
 
 

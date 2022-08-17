@@ -1,9 +1,10 @@
 import warnings
-from typing import Any
+from typing import Any, Union
 
 from guarantees.parameter_guarantees.classes import TypeGuarantee, IsInt, \
     IsFloat, IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, \
-    IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, IsNone
+    IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, IsNone, \
+    IsUnion
 from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalNotIn
@@ -31,7 +32,8 @@ guarantee_to_type_dict = {
     IsBytes: bytes,
     IsByteArray: bytearray,
     IsMemoryView: memoryview,
-    IsNone: None
+    IsNone: None,
+    IsUnion: Any
 }
 
 
@@ -51,7 +53,8 @@ guarantee_to_type_name_dict = {
     IsBytes: "bytes",
     IsByteArray: "bytearray",
     IsMemoryView: "memoryview",
-    IsNone: "None"
+    IsNone: "None",
+    IsUnion: "Union"
 }
 
 
@@ -108,7 +111,8 @@ guarantee_name_dict = {
     IsBytes: "IsBytes",
     IsByteArray: "IsByteArray",
     IsMemoryView: "IsMemoryView",
-    IsNone: "IsNone"
+    IsNone: "IsNone",
+    IsUnion: "IsUnion"
 }
 
 

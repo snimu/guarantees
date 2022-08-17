@@ -60,10 +60,44 @@ class TestIsNone(unittest.TestCase):
         def fct(a):
             return a
 
-        fct(None)
+        out = fct(None)
+        self.assertIs(out, None)
 
         try:
             fct(1)
+            self.assertTrue(False)   # should have raised exception
+        except TypeError:
+            self.assertTrue(True)    # successfully raised exception
+
+
+class TestIsUnion(unittest.TestCase):
+    def setUp(self) -> None:
+        @guarantees.parameter_guarantees([
+            guarantees.IsUnion(
+                "a",
+                guarantees=[
+                    guarantees.IsInt("a"),
+                    guarantees.IsNone("a"),
+                    guarantees.IsStr("a")
+                ]
+            )
+        ])
+        def fct(a):
+            return a
+
+        self.fct = fct
+
+    def test_correct_inputs(self):
+        out = self.fct(None)
+        self.assertIs(out, None)
+        out = self.fct(1)
+        self.assertIsInstance(out, int)
+        out = self.fct("hi :)")
+        self.assertIsInstance(out, str)
+
+    def test_wrong_inputs(self):
+        try:
+            self.fct(complex(1., 1.))
             self.assertTrue(False)   # should have raised exception
         except TypeError:
             self.assertTrue(True)    # successfully raised exception

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, Type
+from typing import Callable, Type, List
 
 from ._base import Guarantee, TypeGuarantee
 
@@ -40,3 +40,8 @@ class IsClass(TypeGuarantee):
 @dataclass
 class IsNone(TypeGuarantee):
     pass
+
+
+@dataclass
+class IsUnion(TypeGuarantee):
+    guarantees: List[TypeGuarantee] = None

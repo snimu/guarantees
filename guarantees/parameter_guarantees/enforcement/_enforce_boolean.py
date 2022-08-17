@@ -1,7 +1,7 @@
 import warnings
 
 from guarantees.parameter_guarantees.classes import IsBool
-from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.common import SignalTypeError
 from guarantees.parameter_guarantees.enforcement._util import \
     get_type_name, get_err_msg_type, raise_type_warning_or_exception
 

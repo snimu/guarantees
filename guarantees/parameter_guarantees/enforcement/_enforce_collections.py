@@ -2,9 +2,10 @@ from typing import Union
 
 from guarantees.parameter_guarantees.classes import IsList, IsTuple, IsDict, \
     IsSet, IsFrozenSet, IsRange, TypeGuarantee, CollectionType
-from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+    SignalMinLenGEMaxLen, SignalMinLenViolated, \
+    SignalMaxLenViolated
 from guarantees.parameter_guarantees.signals.collections import \
-    SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
 from guarantees.parameter_guarantees.enforcement._util import \
     get_guaranteed_type, get_guaranteed_type_name, get_err_msg_type, \

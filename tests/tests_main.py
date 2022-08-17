@@ -12,6 +12,9 @@ from tests._test_types_collections import TestCollectionsGuarantee
 
 # TODO (snimu) implement enforcement & tests for binary types
 
+# TODO (snimu) implement IsUnion -> allows None (Union of IsNone, ...)
+#   -> implement IsNone
+
 # TODO (snimu) improve error messages
 
 # TODO (snimu) instead of finding out the type_str manually every time,

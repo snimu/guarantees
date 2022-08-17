@@ -4,14 +4,15 @@ from typing import Any
 from guarantees.parameter_guarantees.classes import TypeGuarantee, IsInt, \
     IsFloat, IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, \
     IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView
-from guarantees.parameter_guarantees.signals.base import SignalTypeError
-from guarantees.parameter_guarantees.signals.collections import \
+from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
+    SignalNotIn
+from guarantees.parameter_guarantees.signals.collections import \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
 from guarantees.parameter_guarantees.signals.numeric import SignalMinGEMax, \
     SignalMinReGEMaxRe, SignalMinImGEMaxIm, SignalMinViolated, \
     SignalMinReViolated, SignalMinImViolated, SignalMaxViolated, \
-    SignalMaxReViolated, SignalMaxImViolated, SignalNotIn
+    SignalMaxReViolated, SignalMaxImViolated
 
 
 guarantee_to_type_dict = {
@@ -271,4 +272,3 @@ def raise_value_warning_or_exception(
         warnings.warn(err_msg + "\t **Ignoring** \n")
     else:
         raise ValueError(err_msg)
-

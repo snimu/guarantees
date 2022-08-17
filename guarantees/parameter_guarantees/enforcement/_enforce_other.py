@@ -1,7 +1,10 @@
 import warnings
 
 from guarantees.parameter_guarantees.classes import IsClass
-from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.common import SignalTypeError
+from guarantees.parameter_guarantees.enforcement._util import \
+    get_guarantee_name, get_type_name, get_err_msg_type, \
+    raise_type_warning_or_exception
 
 
 # NoOp needs no enforcement; it is handled in the guarantee_handler
@@ -13,31 +16,17 @@ def enforce_isclass(arg: object, guarantee: IsClass) -> object:
 
 
 def _check_type(arg: object, guarantee: IsClass) -> object:
-    if guarantee.class_type is None:
-        err_msg = "You tried to enforce a class type but class_type is None. "
-        if guarantee.warnings_only:
-            warnings.warn(err_msg + "Ignoring.")
-        else:
-            raise TypeError(err_msg)
+    if isinstance(arg, guarantee.class_type):
+        return arg
 
-    if not isinstance(arg, guarantee.class_type):
-        if guarantee.callback is not None:
-            guarantee.callback(
-                SignalTypeError(
-                    arg_name=guarantee.parameter_name,
-                    type_should=str(type(guarantee.class_type)),
-                    type_is=str(type(arg)),
-                    force_conversion=False
-                )
-            )
-        else:
-            err_msg = f"Guaranteed type {guarantee.class_type} " \
-                      f"for parameter {guarantee.parameter_name}, " \
-                      f"but received type {type(arg)}. " \
-                      f"force_conversion parameter ignored. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg)
-            else:
-                raise TypeError(err_msg)
-
-    return arg
+    signal = SignalTypeError(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(guarantee),
+        should_type_name=get_type_name(guarantee.class_type),
+        is_type_name=get_type_name(arg)
+    )
+    if guarantee.callback is not None:
+        guarantee.callback(signal)
+    else:
+        err_msg = get_err_msg_type(signal)
+        raise_type_warning_or_exception(err_msg, guarantee)

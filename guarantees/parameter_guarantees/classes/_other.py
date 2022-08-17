@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable
+from typing import Callable, Type
 
 from ._base import Guarantee, TypeGuarantee
 
@@ -11,6 +11,6 @@ class NoOp(Guarantee):
 
 @dataclass
 class IsClass(TypeGuarantee):
-    class_type: object = None
+    class_type: Type = None
     callback: Callable = None    # Take signals, return None
     check_fct: Callable = None   # Take arg, return arg (optionally changed)

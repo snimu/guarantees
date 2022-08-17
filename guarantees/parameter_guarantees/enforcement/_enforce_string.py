@@ -1,10 +1,13 @@
-import warnings
-
 from guarantees.parameter_guarantees.classes import IsStr
-from guarantees.parameter_guarantees.signals.string \
-    import SignalMaximumLenViolated, SignalMinimumLenViolated,\
-    SignalMinimumLenGEMaximumLen, SignalNotIn
-from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+    SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
+    SignalNotIn
+from guarantees.parameter_guarantees.enforcement._util import \
+    raise_type_warning_or_exception, raise_value_warning_or_exception, \
+    get_guarantee_name, get_type_name, \
+    get_err_msg_type, get_err_msg_minimum_len_type, \
+    get_err_msg_maximum_len_type, get_err_msg_minimum_len_ge_maximum_len, \
+    get_err_msg_minimum_len, get_err_msg_maximum_len, get_err_msg_isin
 
 
 def enforce_isstr(arg: str, guarantee: IsStr) -> str:
@@ -26,133 +29,131 @@ def _check_type(arg: str, guarantee: IsStr) -> str:
         if not isinstance(arg, str):
             err = True
 
-    if err:
-        if guarantee.callback is not None:
-            guarantee.callback(
-                SignalTypeError(
-                    arg_name=guarantee.parameter_name,
-                    type_should="str",
-                    type_is=str(type(arg)),
-                    force_conversion=guarantee.force_conversion
-                )
-            )
-        else:
-            err_msg = f"Parameter {guarantee.parameter_name} is guaranteed to be " \
-                      f"of type str but is of type {str(type(arg))}. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring this parameter.")
-            else:
-                raise TypeError(err_msg)
+    if not err:
+        return arg
 
-    return arg
+    signal = SignalTypeError(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(guarantee),
+        should_type_name="str",
+        is_type_name=get_type_name(arg)
+    )
+    if guarantee.callback is not None:
+        guarantee.callback(signal)
+    else:
+        err_msg = get_err_msg_type(signal)
+        raise_type_warning_or_exception(err_msg, guarantee)
 
 
 def _check_len(arg, guarantee: IsStr) -> None:
     if type(arg) is not str:   # Can happen if guarantees.warnings_only is True
         return
 
-    _check_min_ge_max(guarantee)
-    _check_min(arg, guarantee)
-    _check_max(arg, guarantee)
+    _check_min_len_ge_max_len(guarantee)
+    _check_min_len(arg, guarantee)
+    _check_max_len(arg, guarantee)
 
 
-def _check_min_ge_max(guarantee: IsStr) -> None:
-    if guarantee.minimum_len is not None and guarantee.maximum_len is not None \
-            and type(guarantee.minimum_len) is int \
-            and type(guarantee.maximum_len) is int \
-            and guarantee.minimum_len >= guarantee.maximum_len:
+def _minimum_len_type_is_correct(guarantee: IsStr) -> bool:
+    if type(guarantee.minimum_len) is int:
+        return True
+
+    signal = SignalTypeError(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(guarantee),
+        should_type_name="int",
+        is_type_name=get_type_name(guarantee.minimum_len)
+    )
+    err_msg = get_err_msg_minimum_len_type(signal)
+    raise_type_warning_or_exception(err_msg, guarantee)
+
+    return False   # in case of warnings_only
+
+
+def _maximum_len_type_is_correct(guarantee: IsStr) -> bool:
+    if type(guarantee.maximum_len) is int:
+        return True
+
+    signal = SignalTypeError(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(guarantee),
+        should_type_name="int",
+        is_type_name=get_type_name(guarantee.maximum_len)
+    )
+    err_msg = get_err_msg_maximum_len_type(signal)
+    raise_type_warning_or_exception(err_msg, guarantee)
+
+    return False   # in case of warnings_only
+
+
+def _check_min_len_ge_max_len(guarantee: IsStr) -> None:
+    if guarantee.minimum_len is None or guarantee.maximum_len is None:
+        return
+
+    if not _minimum_len_type_is_correct(guarantee) \
+            or not _maximum_len_type_is_correct(guarantee):
+        return
+
+    if guarantee.minimum_len >= guarantee.maximum_len:
+        signal = SignalMinLenGEMaxLen(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            minimum_len=guarantee.minimum_len,
+            maximum_len=guarantee.maximum_len
+        )
         if guarantee.callback is not None:
-            guarantee.callback(
-                SignalMinimumLenGEMaximumLen(
-                    arg_name=guarantee.parameter_name,
-                    arg_type="str",
-                    minimum_len=guarantee.minimum_len,
-                    maximum_len=guarantee.maximum_len
-                )
-            )
+            guarantee.callback(signal)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} has " \
-                      f"minimum_len {guarantee.minimum_len} and maximum_len " \
-                      f"{guarantee.maximum_len} guaranteed; minimum_len " \
-                      f"must be less than maximum_len!"
-            if guarantee.warnings_only:
-                warnings.warn(err_msg)
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_minimum_len_ge_maximum_len(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
-def _check_min(arg, guarantee: IsStr) -> None:
+def _check_min_len(arg, guarantee: IsStr) -> None:
     if type(arg) is not str:
         return
 
     if guarantee.minimum_len is None:
         return
 
-    if type(guarantee.minimum_len) is not int:
-        err_msg = f"Type of minimum_len should be int but is " \
-                  f"{type(guarantee.minimum_len)}. "
-
-        if guarantee.warnings_only:
-            warnings.warn(err_msg + "Ignoring.")
-            return
-        else:
-            raise TypeError(err_msg)
+    if not _minimum_len_type_is_correct(guarantee):
+        return
 
     if len(arg) < guarantee.minimum_len:
+        signal = SignalMinLenViolated(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            minimum_len=guarantee.minimum_len,
+            arg=arg
+        )
         if guarantee.callback is not None:
-            guarantee.callback(
-                SignalMinimumLenViolated(
-                    arg_name=guarantee.parameter_name,
-                    arg=arg,
-                    minimum_len=guarantee.minimum_len
-                )
-            )
+            guarantee.callback(signal)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} violated guarantee " \
-                      f"'minimum_len': {len(arg)} < {guarantee.minimum_len}. "
-
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-                return
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_minimum_len(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
-def _check_max(arg, guarantee: IsStr) -> None:
+def _check_max_len(arg, guarantee: IsStr) -> None:
     if type(arg) is not str:
         return
 
     if guarantee.maximum_len is None:
         return
 
-    if type(guarantee.maximum_len) is not int:
-        err_msg = f"Type of maximum_len should be int but is " \
-                  f"{type(guarantee.maximum_len)}. "
-
-        if guarantee.warnings_only:
-            warnings.warn(err_msg + "Ignoring.")
-            return
-        else:
-            raise TypeError(err_msg)
+    if not _maximum_len_type_is_correct(guarantee):
+        return
 
     if len(arg) > guarantee.maximum_len:
+        signal = SignalMaxLenViolated(
+            parameter_name=guarantee.parameter_name,
+            guarantee_type_name=get_guarantee_name(guarantee),
+            maximum_len=guarantee.maximum_len,
+            arg=arg
+        )
         if guarantee.callback is not None:
-            guarantee.callback(
-                SignalMaximumLenViolated(
-                    arg_name=guarantee.parameter_name,
-                    arg=arg,
-                    maximum_len=guarantee.maximum_len
-                )
-            )
+            guarantee.callback(signal)
         else:
-            err_msg = f"Parameter {guarantee.parameter_name} violated guarantee " \
-                      f"'maximum_len': {len(arg)} > {guarantee.maximum_len}. "
-
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-                return
-            else:
-                raise ValueError(err_msg)
+            err_msg = get_err_msg_maximum_len(signal)
+            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_isin(arg: str, guarantee: IsStr) -> None:
@@ -163,27 +164,23 @@ def _check_isin(arg: str, guarantee: IsStr) -> None:
         return
 
     if type(guarantee.isin) is not list:
-        err_msg = "isin should be of type list but is of type " \
-                  f"{type(guarantee.isin)}. "
-        if guarantee.warnings_only:
-            warnings.warn(err_msg + "Ignoring.")
-            return
-        else:
-            raise TypeError(err_msg)
+        err_msg = f"parameter: {guarantee.parameter_name} \n" \
+                  f"\t violated: type -- guarantee \n" \
+                  f"\t should: list \n" \
+                  f"\t actual: {get_type_name(guarantee.isin)} \n"
+        raise_type_warning_or_exception(err_msg, guarantee)
 
-    if arg not in guarantee.isin:
-        if guarantee.callback is not None:
-            guarantee.callback(
-                SignalNotIn(
-                    arg_name=guarantee.parameter_name,
-                    arg=arg,
-                    isin=guarantee.isin
-                )
-            )
-        else:
-            err_msg = f"Parameter {guarantee.parameter_name} was guaranteed to be in " \
-                      f"{guarantee.isin} but is not. "
-            if guarantee.warnings_only:
-                warnings.warn(err_msg + "Ignoring.")
-            else:
-                raise ValueError(err_msg)
+    if arg in guarantee.isin:
+        return
+
+    signal = SignalNotIn(
+        parameter_name=guarantee.parameter_name,
+        guarantee_type_name=get_guarantee_name(guarantee),
+        isin=guarantee.isin,
+        arg=arg
+    )
+    if guarantee.callback is not None:
+        guarantee.callback(signal)
+    else:
+        err_msg = get_err_msg_isin(signal)
+        raise_value_warning_or_exception(err_msg, guarantee)

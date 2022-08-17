@@ -1,11 +1,22 @@
 from dataclasses import dataclass
-from typing import Union
-
-from guarantees.parameter_guarantees.signals.common import Signal
+from typing import Union, List
 
 
 @dataclass
-class SignalMinimumLenGEMaximumLen(Signal):
+class Signal:
+    parameter_name: str
+
+
+@dataclass
+class SignalTypeError(Signal):
+    guarantee_type_name: str
+    should_type_name: str
+    is_type_name: str
+    force_conversion: bool = False
+
+
+@dataclass
+class SignalMinLenGEMaxLen(Signal):
     guarantee_type_name: str
     minimum_len: int
     maximum_len: int
@@ -26,21 +37,7 @@ class SignalMaxLenViolated(Signal):
 
 
 @dataclass
-class SignalContainsViolated(Signal):
+class SignalNotIn(Signal):
     guarantee_type_name: str
-    arg: Union[list, tuple, set, frozenset]
-    contains: list
-
-
-@dataclass
-class SignalHasKeysViolated(Signal):
-    guarantee_type_name: str
-    arg: dict
-    has_keys: list
-
-
-@dataclass
-class SignalHasValuesViolated(Signal):
-    guarantee_type_name: str
-    arg: dict
-    has_values: list
+    arg: Union[int, float, complex, str]
+    isin: List

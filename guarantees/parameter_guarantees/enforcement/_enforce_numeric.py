@@ -1,14 +1,13 @@
-import warnings
 from typing import Union
 
 from guarantees.parameter_guarantees.classes import IsInt, IsFloat, IsComplex, \
     NumericGuarantee
-from guarantees.parameter_guarantees.signals.base import SignalTypeError
+from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+    SignalNotIn
 from guarantees.parameter_guarantees.signals.numeric import \
     SignalMinGEMax, SignalMinReGEMaxRe, SignalMinImGEMaxIm,\
     SignalMinViolated, SignalMinReViolated, SignalMinImViolated, \
-    SignalMaxViolated, SignalMaxReViolated, SignalMaxImViolated, \
-    SignalNotIn
+    SignalMaxViolated, SignalMaxReViolated, SignalMaxImViolated
 from guarantees.parameter_guarantees.enforcement._util import \
     raise_value_warning_or_exception, raise_type_warning_or_exception, \
     get_guaranteed_type, get_guaranteed_type_name, get_guarantee_name, \
@@ -124,10 +123,10 @@ def _check_type(
 
 
 def _check_minimum_type(
-        minimum: Union[int, float, complex],
+        minimum: Union[int, float],
         guarantee: NumericGuarantee
 ) -> None:
-    if type(minimum) is not get_guaranteed_type(guarantee):
+    if type(minimum) not in [int, float]:
         err_msg = f"parameter: {get_guarantee_name(guarantee)}.minimum \n" \
                   f"\t violated: type -- guarantee parameter \n" \
                   f"\t should: {get_guaranteed_type_name(guarantee)} \n" \
@@ -136,10 +135,10 @@ def _check_minimum_type(
 
 
 def _check_maximum_type(
-        maximum: Union[int, float, complex],
+        maximum: Union[int, float],
         guarantee: NumericGuarantee
 ) -> None:
-    if type(maximum) is not get_guaranteed_type(guarantee):
+    if type(maximum) not in [int, float]:
         err_msg = f"parameter: {get_guarantee_name(guarantee)}.maximum \n" \
                   f"\t violated: type -- guarantee parameter \n" \
                   f"\t should: {get_guaranteed_type_name(guarantee)} \n" \

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Union, List
 
-from guarantees.parameter_guarantees.signals.base import Signal
+from guarantees.parameter_guarantees.signals.common import Signal
 
 
 @dataclass
@@ -53,10 +53,3 @@ class SignalMaxReViolated(SignalMaxViolated):
 @dataclass
 class SignalMaxImViolated(SignalMaxViolated):
     pass
-
-
-@dataclass
-class SignalNotIn(Signal):
-    guarantee_type_name: str
-    arg: Union[int, float, complex]
-    isin: List

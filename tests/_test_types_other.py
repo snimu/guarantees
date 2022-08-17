@@ -2,7 +2,7 @@ import unittest
 import guarantees
 
 
-class TestOther(unittest.TestCase):
+class TestIsClass(unittest.TestCase):
     def setUp(self) -> None:
         class TestClass:
             def __init__(self, a=1):
@@ -49,4 +49,21 @@ class TestOther(unittest.TestCase):
             fct(self.test_class(2))
             self.assertTrue(False)   # should have raised exception
         except ValueError:
+            self.assertTrue(True)    # successfully raised exception
+
+
+class TestIsNone(unittest.TestCase):
+    def test_type(self):
+        @guarantees.parameter_guarantees([
+            guarantees.IsNone("a")
+        ])
+        def fct(a):
+            return a
+
+        fct(None)
+
+        try:
+            fct(1)
+            self.assertTrue(False)   # should have raised exception
+        except TypeError:
             self.assertTrue(True)    # successfully raised exception

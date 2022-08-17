@@ -3,7 +3,7 @@ from typing import Any
 
 from guarantees.parameter_guarantees.classes import TypeGuarantee, IsInt, \
     IsFloat, IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, \
-    IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView
+    IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, IsNone
 from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalNotIn
@@ -30,7 +30,8 @@ guarantee_to_type_dict = {
     IsClass: object,
     IsBytes: bytes,
     IsByteArray: bytearray,
-    IsMemoryView: memoryview
+    IsMemoryView: memoryview,
+    IsNone: None
 }
 
 
@@ -49,7 +50,8 @@ guarantee_to_type_name_dict = {
     IsClass: "object",
     IsBytes: "bytes",
     IsByteArray: "bytearray",
-    IsMemoryView: "memoryview"
+    IsMemoryView: "memoryview",
+    IsNone: "None"
 }
 
 
@@ -77,7 +79,8 @@ type_to_str_dict = {
     bytes: "bytes",
     bytearray: "bytearray",
     memoryview: "memoryview",
-    range: "range"
+    range: "range",
+    None: "None"
 }
 
 
@@ -104,7 +107,8 @@ guarantee_name_dict = {
     IsClass: "IsClass",
     IsBytes: "IsBytes",
     IsByteArray: "IsByteArray",
-    IsMemoryView: "IsMemoryView"
+    IsMemoryView: "IsMemoryView",
+    IsNone: "IsNone"
 }
 
 

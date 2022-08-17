@@ -5,4 +5,4 @@ from ._collections import IsSet, IsFrozenSet, IsDict, IsList, IsRange, \
 from ._string import IsStr
 from ._binary import IsMemoryView, IsBytes, IsByteArray
 from ._boolean import IsBool
-from ._other import NoOp, IsClass
+from ._other import NoOp, IsClass, IsNone

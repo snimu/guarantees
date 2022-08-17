@@ -2,7 +2,7 @@ from typing import List, Tuple, Dict
 
 from guarantees.parameter_guarantees.classes import Guarantee, IsInt, IsFloat, \
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
-    IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp
+    IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
      enforce_iscomplex
@@ -10,7 +10,7 @@ from ._enforce_string import enforce_isstr
 from ._enforce_boolean import enforce_isbool
 from ._enforce_collections import enforce_islist, enforce_istuple, \
     enforce_isdict, enforce_isset, enforce_isfrozenset, enforce_isrange
-from ._enforce_other import enforce_isclass
+from ._enforce_other import enforce_isclass, enforce_isnone
 
 
 class Handler:
@@ -108,7 +108,8 @@ guarantee_enforcer_mapping = {
     IsDict: enforce_isdict,
     IsSet: enforce_isset,
     IsFrozenSet: enforce_isfrozenset,
-    IsRange: enforce_isrange
+    IsRange: enforce_isrange,
+    IsNone: enforce_isnone
 }
 
 

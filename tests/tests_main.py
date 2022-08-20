@@ -8,6 +8,7 @@ from tests._test_types_boolean import TestBooleanGuarantee
 from tests._test_types_other import TestIsClass, TestIsNone, TestIsUnion
 from tests._test_types_collections import TestCollectionsGuarantee
 from tests._test_parameters_common import TestCallback
+from tests._test_parameters_binary import TestBinary
 
 # TODO (snimu) implement enforcement & tests for binary types
 

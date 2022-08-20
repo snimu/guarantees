@@ -1,5 +1,3 @@
-import warnings
-
 from guarantees.parameter_guarantees.classes import IsBool
 from guarantees.parameter_guarantees.signals.common import SignalTypeError
 from guarantees.parameter_guarantees.enforcement._util import \

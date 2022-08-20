@@ -15,6 +15,8 @@ from ._enforce_boolean import enforce_isbool
 from ._enforce_collections import enforce_islist, enforce_istuple, \
     enforce_isdict, enforce_isset, enforce_isfrozenset, enforce_isrange
 from ._enforce_other import enforce_isclass, enforce_isnone
+from ._enforce_binary import enforce_isbytes, enforce_isbytearray, \
+    enforce_ismemoryview
 
 
 class Handler:
@@ -157,7 +159,10 @@ guarantee_enforcer_mapping = {
     IsFrozenSet: enforce_isfrozenset,
     IsRange: enforce_isrange,
     IsNone: enforce_isnone,
-    IsUnion: _enforce_isunion
+    IsUnion: _enforce_isunion,
+    IsBytes: enforce_isbytes,
+    IsByteArray: enforce_isbytearray,
+    IsMemoryView: enforce_ismemoryview
 }
 
 

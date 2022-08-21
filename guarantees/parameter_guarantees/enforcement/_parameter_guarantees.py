@@ -2,15 +2,14 @@
 
 
 from ._guarantee_handler import enforce_guarantees, register_guarantees, Handler
+from ._on_off import OnOff
 
 
 def parameter_guarantees(param_guarantees, /):
-    """
-
-    :param param_guarantees:
-    :return:
-    """
     def _fct(fct):
+        if not OnOff.on:
+            return fct
+
         if not Handler.contains(fct):
             register_guarantees(fct, param_guarantees)
 

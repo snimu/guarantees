@@ -19,7 +19,7 @@ from ._enforce_binary import enforce_isbytes, enforce_isbytearray, \
     enforce_ismemoryview
 
 
-class Handler:
+class ParameterHandler:
     """
     Since it is possible to call functions and methods with a mixture of
     args and kwargs (and a different mixture at different calls!), and kwargs
@@ -43,9 +43,19 @@ class Handler:
         return False
 
 
-def register_guarantees(fct, param_guarantees: List[Guarantee]):
+class ReturnHandler:
+    handles = {}
+
+    @classmethod
+    def contains(cls, fct):
+        if fct in cls.handles.keys():
+            return True
+        return False
+
+
+def register_parameter_guarantees(fct, param_guarantees: List[Guarantee]):
     """Register the classes for the function."""
-    if fct in Handler.handles.keys():
+    if fct in ParameterHandler.handles.keys():
         # only need to register once
         #   -> when more than one call to @guarantees.parameter_guarantees
         #   is made on the same function / method, only the first will be used
@@ -63,16 +73,23 @@ def register_guarantees(fct, param_guarantees: List[Guarantee]):
     _check_duplicate_names(param_guarantees)
 
     # Prepare the handles
-    Handler.handles[fct] = {"args": [], "kwargs": {}}
+    ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
     for param_guarantee in param_guarantees:
-        Handler.handles[fct]["args"].append(param_guarantee)
-        Handler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
+        ParameterHandler.handles[fct]["args"].append(param_guarantee)
+        ParameterHandler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
 
 
-def _check_duplicate_names(param_guarantees):
+def register_return_guarantees(fct, return_guarantee: Guarantee):
+    if fct in ReturnHandler.handles.keys():
+        return
+
+    ReturnHandler.handles[fct] = return_guarantee
+
+
+def _check_duplicate_names(value_guarantees):
     names = []
-    for param_guarantee in param_guarantees:
+    for param_guarantee in value_guarantees:
         if param_guarantee.parameter_name in names:
             raise ValueError("@guarantees.parameter_guarantees: "
                              "Duplicate guarantees name: "
@@ -80,7 +97,7 @@ def _check_duplicate_names(param_guarantees):
         names.append(param_guarantee.parameter_name)
 
 
-def enforce_guarantees(
+def enforce_parameter_guarantees(
         fct,
         *args,
         **kwargs
@@ -92,15 +109,19 @@ def enforce_guarantees(
     return_kwargs = {}
 
     # zip ensures that this only checks the args, and in the correct order
-    for param_guarantee, arg in zip(Handler.handles[fct]["args"], args):
-        return_args.append(_enforce_arg(arg, param_guarantee))
+    for param_guarantee, arg in zip(ParameterHandler.handles[fct]["args"], args):
+        return_args.append(_enforce_val(arg, param_guarantee))
 
     # Python classes that the kwargs contain no duplicates of the args
     for key, val in kwargs.items():
         return_kwargs[key] = \
-            _enforce_arg(val, Handler.handles[fct]["kwargs"][key])
+            _enforce_val(val, ParameterHandler.handles[fct]["kwargs"][key])
 
     return tuple(return_args), return_kwargs
+
+
+def enforce_return_guarantees(fct, val) -> Any:
+    return _enforce_val(val, ReturnHandler.handles[fct])
 
 
 def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
@@ -128,7 +149,7 @@ def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
         if isinstance(guarantee, IsClass):
             target_type = guarantee.class_type
         if type(arg) is target_type:
-            return _enforce_arg(arg, guarantee)
+            return _enforce_val(arg, guarantee)
 
     # Didn't work
     should_types = \
@@ -167,16 +188,16 @@ guarantee_enforcer_mapping = {
 }
 
 
-def _enforce_arg(arg, param_guarantee: Guarantee):
-    """Enforce the classes on a single argument."""
+def _enforce_val(val, param_guarantee: Guarantee):
+    """Enforce the classes on a single value."""
     if not isinstance(param_guarantee, Guarantee):
         raise TypeError("Parameter guarantees is not a Guarantee. "
                         "@parameter_guarantees only takes Guarantees.")
-    
+
     if isinstance(param_guarantee, NoOp):
-        return arg
+        return val
 
     global guarantee_enforcer_mapping
     enforce_fct = guarantee_enforcer_mapping[type(param_guarantee)]
-    return enforce_fct(arg, param_guarantee)
+    return enforce_fct(val, param_guarantee)
 

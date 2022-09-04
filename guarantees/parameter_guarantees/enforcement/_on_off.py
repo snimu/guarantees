@@ -1,5 +1,5 @@
 from guarantees.parameter_guarantees.enforcement._guarantee_handler import \
-    Handler
+    ParameterHandler
 
 
 class OnOff:
@@ -12,4 +12,4 @@ def on():
 
 def off():
     OnOff.on = False
-    Handler.handles = {}
+    ParameterHandler.handles = {}

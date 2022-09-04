@@ -1,13 +1,13 @@
 import unittest
-import guarantees
+from guarantees import parameter_guarantees as pg
 
 
 class TestNumericGuarantee(unittest.TestCase):
     def test_basic(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a"),
-            guarantees.IsFloat("b"),
-            guarantees.IsComplex("c")
+        @pg.parameter_guarantees([
+            pg.IsInt("a"),
+            pg.IsFloat("b"),
+            pg.IsComplex("c")
         ])
         def fct(a, b, c):
             return a, b, c
@@ -36,10 +36,10 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", force_conversion=True),
-            guarantees.IsFloat("b", force_conversion=True),
-            guarantees.IsComplex("c", force_conversion=True)
+        @pg.parameter_guarantees([
+            pg.IsInt("a", force_conversion=True),
+            pg.IsFloat("b", force_conversion=True),
+            pg.IsComplex("c", force_conversion=True)
         ])
         def fct(a, b, c):
             return a, b, c
@@ -75,10 +75,10 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)     # successfully raised exception
 
     def test_minmax(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", minimum=0, maximum=5),
-            guarantees.IsFloat("b", minimum=0., maximum=5.),
-            guarantees.IsComplex("c", minimum=0., maximum=5., minimum_re=0.,
+        @pg.parameter_guarantees([
+            pg.IsInt("a", minimum=0, maximum=5),
+            pg.IsFloat("b", minimum=0., maximum=5.),
+            pg.IsComplex("c", minimum=0., maximum=5., minimum_re=0.,
                                  maximum_re=5., minimum_im=0., maximum_im=5.)
         ])
         def fct(a, b, c):
@@ -146,10 +146,10 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)     # successfully raised exception
 
     def test_isin(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", isin=[1, 2]),
-            guarantees.IsFloat("b", isin=[1., 2.]),
-            guarantees.IsComplex("c", isin=[complex(0., 0.), complex(1., 1.)])
+        @pg.parameter_guarantees([
+            pg.IsInt("a", isin=[1, 2]),
+            pg.IsFloat("b", isin=[1., 2.]),
+            pg.IsComplex("c", isin=[complex(0., 0.), complex(1., 1.)])
         ])
         def fct(a, b, c):
             return a, b, c
@@ -190,8 +190,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_min(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", minimum="nope")
+        @pg.parameter_guarantees([
+            pg.IsInt("a", minimum="nope")
         ])
         def fct(a):
             return a
@@ -203,8 +203,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_min(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsFloat("a", minimum="nope")
+        @pg.parameter_guarantees([
+            pg.IsFloat("a", minimum="nope")
         ])
         def fct(a):
             return a
@@ -216,8 +216,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", minimum="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", minimum="nope")
         ])
         def fct(a):
             return a
@@ -229,8 +229,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min_re(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", minimum_re="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", minimum_re="nope")
         ])
         def fct(a):
             return a
@@ -242,8 +242,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min_im(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", minimum_im="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", minimum_im="nope")
         ])
         def fct(a):
             return a
@@ -255,8 +255,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_max(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", maximum="nope")
+        @pg.parameter_guarantees([
+            pg.IsInt("a", maximum="nope")
         ])
         def fct(a):
             return a
@@ -268,8 +268,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_max(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsFloat("a", maximum="nope")
+        @pg.parameter_guarantees([
+            pg.IsFloat("a", maximum="nope")
         ])
         def fct(a):
             return a
@@ -281,8 +281,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", maximum="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", maximum="nope")
         ])
         def fct(a):
             return a
@@ -294,8 +294,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max_re(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", maximum_re="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", maximum_re="nope")
         ])
         def fct(a):
             return a
@@ -307,8 +307,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max_im(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", maximum_im="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", maximum_im="nope")
         ])
         def fct(a):
             return a
@@ -320,8 +320,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_isin(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", isin="nope")
+        @pg.parameter_guarantees([
+            pg.IsInt("a", isin="nope")
         ])
         def fct(a):
             return a
@@ -333,8 +333,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_isin(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsFloat("a", isin="nope")
+        @pg.parameter_guarantees([
+            pg.IsFloat("a", isin="nope")
         ])
         def fct(a):
             return a
@@ -346,8 +346,8 @@ class TestNumericGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_isin(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsComplex("a", isin="nope")
+        @pg.parameter_guarantees([
+            pg.IsComplex("a", isin="nope")
         ])
         def fct(a):
             return a

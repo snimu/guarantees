@@ -47,11 +47,12 @@ def register_guarantees(fct, param_guarantees: List[Guarantee]):
     """Register the classes for the function."""
     if fct in Handler.handles.keys():
         # only need to register once
-        #   -> when more than one call to @guarantees.parameter_guarantees is made
-        #   on the same function / method, only the first will be used
+        #   -> when more than one call to @guarantees.parameter_guarantees
+        #   is made on the same function / method, only the first will be used
         #   and the rest will be ignored.
         return
 
+    # TODO (snimu) improve error msg
     if type(param_guarantees) is not list \
             and not all(isinstance(g, Guarantee) for g in param_guarantees):
         raise ValueError("@guarantees.parameter_guarantees takes "

@@ -1,5 +1,5 @@
 import unittest
-import guarantees
+from guarantees import parameter_guarantees as pg
 
 
 class CbException(Exception):
@@ -14,8 +14,8 @@ class TestCallback(unittest.TestCase):
         self.cb = cb
 
     def test_isint_cb(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a", callback=self.cb)
+        @pg.parameter_guarantees([
+            pg.IsInt("a", callback=self.cb)
         ])
         def fct(a):
             return a
@@ -27,8 +27,8 @@ class TestCallback(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_isstr_cb(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsStr("a", callback=self.cb)
+        @pg.parameter_guarantees([
+            pg.IsStr("a", callback=self.cb)
         ])
         def fct(a):
             return a
@@ -40,8 +40,8 @@ class TestCallback(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_islist_cb(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsList("a", callback=self.cb)
+        @pg.parameter_guarantees([
+            pg.IsList("a", callback=self.cb)
         ])
         def fct(a):
             return a
@@ -55,8 +55,8 @@ class TestCallback(unittest.TestCase):
 
 class TestOnOff(unittest.TestCase):
     def test_onoff(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsInt("a")
+        @pg.parameter_guarantees([
+            pg.IsInt("a")
         ])
         def fct(a):
             return a
@@ -71,10 +71,10 @@ class TestOnOff(unittest.TestCase):
         except TypeError:
             self.assertTrue(True)
 
-        guarantees.off()
+        pg.off()
         fct("not an int!")
 
-        guarantees.on()
+        pg.on()
         try:
             fct("not an int!")
             self.assertTrue(False)

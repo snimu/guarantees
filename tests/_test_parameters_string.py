@@ -1,12 +1,12 @@
 import unittest
 
-import guarantees
+from guarantees import parameter_guarantees as pg
 
 
 class TestStringGuarantee(unittest.TestCase):
     def test_basic(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsStr("a")
+        @pg.parameter_guarantees([
+            pg.IsStr("a")
         ])
         def fct(a):
             return a
@@ -22,8 +22,8 @@ class TestStringGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsStr("a", force_conversion=True)
+        @pg.parameter_guarantees([
+            pg.IsStr("a", force_conversion=True)
         ])
         def fct(a):
             return a
@@ -37,8 +37,8 @@ class TestStringGuarantee(unittest.TestCase):
         self.assertIs(type(s), str)
 
     def test_minmax_len(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsStr("a", minimum_len=2, maximum_len=5)
+        @pg.parameter_guarantees([
+            pg.IsStr("a", minimum_len=2, maximum_len=5)
         ])
         def fct(a):
             return a
@@ -63,8 +63,8 @@ class TestStringGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_isin(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsStr("a", isin=["hi", "ciao"])
+        @pg.parameter_guarantees([
+            pg.IsStr("a", isin=["hi", "ciao"])
         ])
         def fct(a):
             return a
@@ -81,8 +81,8 @@ class TestStringGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_min(self):
-        @guarantees.parameter_guarantees([
-            guarantees.IsStr("a", minimum_len="nope")
+        @pg.parameter_guarantees([
+            pg.IsStr("a", minimum_len="nope")
         ])
         def fct(a):
             return a
@@ -94,8 +94,8 @@ class TestStringGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_max(self):
-        @guarantees.parameter_guarantees(([
-            guarantees.IsStr("a", maximum_len="nope")
+        @pg.parameter_guarantees(([
+            pg.IsStr("a", maximum_len="nope")
         ]))
         def fct(a):
             return a
@@ -107,8 +107,8 @@ class TestStringGuarantee(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_isin(self):
-        @guarantees.parameter_guarantees(([
-            guarantees.IsStr("a", isin="nope")
+        @pg.parameter_guarantees(([
+            pg.IsStr("a", isin="nope")
         ]))
         def fct(a):
             return a

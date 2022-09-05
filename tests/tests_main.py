@@ -13,9 +13,10 @@ from tests._test_return_guarantees import TestReturnGuarantees
 
 # TODO (snimu) "description" parameter?
 
-# TODO (snimu) Write docstrings
+# TODO (snimu) Create (and only raise) custom Exceptions
+#   should the error messages be constructed there?
 
-# TODO (snimu) classes for return values
+# TODO (snimu) Write docstrings
 
 # TODO (snimu) guarantee tests
 

@@ -13,6 +13,10 @@ from tests._test_return_guarantees import TestReturnGuarantees
 
 # TODO (snimu) "description" parameter?
 
+# TODO (snimu)
+#  - IsNumpyArray (valid_shapes)
+#  - IsTorchTensor (valid_shapes, valid_devices)
+
 # TODO (snimu) Create (and only raise) custom Exceptions
 #   should the error messages be constructed there?
 

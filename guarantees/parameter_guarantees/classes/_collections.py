@@ -12,31 +12,391 @@ class CollectionType(TypeGuarantee):
 
 @dataclass
 class IsList(CollectionType):
+    """
+    Guarantee type list.
+
+    Parameters
+    __________
+
+    parameter_name:     (str) (required) (position only)
+                        The name of the parameter.
+                        For this guarantee to work for parameters given by
+                        keyword, the name has to correspond exactly to the
+                        name of the parameter.
+
+    force_conversion:   (bool) (keyword only)
+                        If True, an attempt will be made to convert the
+                        parameter to list.
+
+    warnings_only:      (bool) (keyword only)
+                        If True, no Exceptions will be raised. Instead,
+                        a warning will be given over the command line via
+                        warnings.warn(...).
+
+    callback:           (function) (keyword only)
+                        If this parameter is not None and an error occurs,
+                        callback will be called with the signal corresponding to
+                        the error and no other parameters.
+                        No exceptions will be raised, no warnings given.
+                        The purpose of callback is to allow the user to handle
+                        errors themselves.
+
+    minimum_len:        (int) (keyword only)
+                        Guarantees that the length of the list is at least
+                        minimum_len.
+
+    maximum_len:        (int) (keyword only)
+                        Guarantees that the length of the list is at most
+                        maximum_len.
+                        Must be greater than minimum_len if both are
+                        not None.
+
+    contains:           (list) (keyword only)
+                        A list of items that must be contained within the
+                        list.
+
+    Example
+    _______
+
+        >>> from guarantees import parameter_guarantees as pg
+        >>>
+        >>>
+        >>> @pg.parameter_guarantees([
+        >>>     pg.IsList(
+        >>>         "param_name",           # Name of the parameter
+        >>>         force_conversion=True,  # Will attempt to convert to bytes
+        >>>         minimum_len=3,
+        >>>         maximum_len=200
+        >>>     )                           # No warnings, no custom callback
+        >>> ])
+        >>> def fct(param_name: list):
+        >>>     pass   # Some function
+    """
     contains: List[Any] = None
 
 
 @dataclass
 class IsTuple(CollectionType):
+    """
+    Guarantee type tuple.
+
+    Parameters
+    __________
+
+    parameter_name:     (str) (required) (position only)
+                        The name of the parameter.
+                        For this guarantee to work for parameters given by
+                        keyword, the name has to correspond exactly to the
+                        name of the parameter.
+
+    force_conversion:   (bool) (keyword only)
+                        If True, an attempt will be made to convert the
+                        parameter to tuple.
+
+    warnings_only:      (bool) (keyword only)
+                        If True, no Exceptions will be raised. Instead,
+                        a warning will be given over the command line via
+                        warnings.warn(...).
+
+    callback:           (function) (keyword only)
+                        If this parameter is not None and an error occurs,
+                        callback will be called with the signal corresponding to
+                        the error and no other parameters.
+                        No exceptions will be raised, no warnings given.
+                        The purpose of callback is to allow the user to handle
+                        errors themselves.
+
+    minimum_len:        (int) (keyword only)
+                        Guarantees that the length of the tuple is at least
+                        minimum_len.
+
+    maximum_len:        (int) (keyword only)
+                        Guarantees that the length of the tuple is at most
+                        maximum_len.
+                        Must be greater than minimum_len if both are
+                        not None.
+
+    contains:           (list) (keyword only)
+                        A list of items that must be contained within the
+                        tuple.
+
+    Example
+    _______
+
+        >>> from guarantees import parameter_guarantees as pg
+        >>>
+        >>>
+        >>> @pg.parameter_guarantees([
+        >>>     pg.IsTuple(
+        >>>         "param_name",           # Name of the parameter
+        >>>         force_conversion=True,  # Will attempt to convert to bytes
+        >>>         minimum_len=3,
+        >>>         maximum_len=200
+        >>>     )                           # No warnings, no custom callback
+        >>> ])
+        >>> def fct(param_name: tuple):
+        >>>     pass   # Some function
+    """
     contains: List[Any] = None
 
 
 @dataclass
 class IsDict(CollectionType):
+    """
+    Guarantee type list.
+
+    Parameters
+    __________
+
+    parameter_name:     (str) (required) (position only)
+                        The name of the parameter.
+                        For this guarantee to work for parameters given by
+                        keyword, the name has to correspond exactly to the
+                        name of the parameter.
+
+    force_conversion:   (bool) (keyword only)
+                        If True, an attempt will be made to convert the
+                        parameter to list.
+
+    warnings_only:      (bool) (keyword only)
+                        If True, no Exceptions will be raised. Instead,
+                        a warning will be given over the command line via
+                        warnings.warn(...).
+
+    callback:           (function) (keyword only)
+                        If this parameter is not None and an error occurs,
+                        callback will be called with the signal corresponding to
+                        the error and no other parameters.
+                        No exceptions will be raised, no warnings given.
+                        The purpose of callback is to allow the user to handle
+                        errors themselves.
+
+    minimum_len:        (int) (keyword only)
+                        Guarantees that the length of the list is at least
+                        minimum_len.
+
+    maximum_len:        (int) (keyword only)
+                        Guarantees that the length of the list is at most
+                        maximum_len.
+                        Must be greater than minimum_len if both are
+                        not None.
+
+    has_keys:           (list) (keyword only)
+                        A list of items that must be contained within the
+                        keys of the dict.
+
+    has_values:         (list) (keyword only)
+                        A list of items that must be contained within the
+                        values.
+
+
+    Example
+    _______
+
+        >>> from guarantees import parameter_guarantees as pg
+        >>>
+        >>>
+        >>> @pg.parameter_guarantees([
+        >>>     pg.IsDict(
+        >>>         "param_name",           # Name of the parameter
+        >>>         force_conversion=True,  # Will attempt to convert to bytes
+        >>>         minimum_len=3,
+        >>>         maximum_len=200
+        >>>     )                           # No warnings, no custom callback
+        >>> ])
+        >>> def fct(param_name: dict):
+        >>>     pass   # Some function
+    """
     has_keys: List[Any] = None
     has_values: List[Any] = None
 
 
 @dataclass
 class IsSet(CollectionType):
+    """
+    Guarantee type set.
+
+    Parameters
+    __________
+
+    parameter_name:     (str) (required) (position only)
+                        The name of the parameter.
+                        For this guarantee to work for parameters given by
+                        keyword, the name has to correspond exactly to the
+                        name of the parameter.
+
+    force_conversion:   (bool) (keyword only)
+                        If True, an attempt will be made to convert the
+                        parameter to set.
+
+    warnings_only:      (bool) (keyword only)
+                        If True, no Exceptions will be raised. Instead,
+                        a warning will be given over the command line via
+                        warnings.warn(...).
+
+    callback:           (function) (keyword only)
+                        If this parameter is not None and an error occurs,
+                        callback will be called with the signal corresponding to
+                        the error and no other parameters.
+                        No exceptions will be raised, no warnings given.
+                        The purpose of callback is to allow the user to handle
+                        errors themselves.
+
+    minimum_len:        (int) (keyword only)
+                        Guarantees that the length of the set is at least
+                        minimum_len.
+
+    maximum_len:        (int) (keyword only)
+                        Guarantees that the length of the set is at most
+                        maximum_len.
+                        Must be greater than minimum_len if both are
+                        not None.
+
+    contains:           (list) (keyword only)
+                        A list of items that must be contained within the
+                        set.
+
+    Example
+    _______
+
+        >>> from guarantees import parameter_guarantees as pg
+        >>>
+        >>>
+        >>> @pg.parameter_guarantees([
+        >>>     pg.IsSet(
+        >>>         "param_name",           # Name of the parameter
+        >>>         force_conversion=True,  # Will attempt to convert to bytes
+        >>>         minimum_len=3,
+        >>>         maximum_len=200
+        >>>     )                           # No warnings, no custom callback
+        >>> ])
+        >>> def fct(param_name: set):
+        >>>     pass   # Some function
+    """
     contains: Any = None
 
 
 @dataclass
 class IsFrozenSet(CollectionType):
+    """
+    Guarantee type frozenset.
+
+    Parameters
+    __________
+
+    parameter_name:     (str) (required) (position only)
+                        The name of the parameter.
+                        For this guarantee to work for parameters given by
+                        keyword, the name has to correspond exactly to the
+                        name of the parameter.
+
+    force_conversion:   (bool) (keyword only)
+                        If True, an attempt will be made to convert the
+                        parameter to frozenset.
+
+    warnings_only:      (bool) (keyword only)
+                        If True, no Exceptions will be raised. Instead,
+                        a warning will be given over the command line via
+                        warnings.warn(...).
+
+    callback:           (function) (keyword only)
+                        If this parameter is not None and an error occurs,
+                        callback will be called with the signal corresponding to
+                        the error and no other parameters.
+                        No exceptions will be raised, no warnings given.
+                        The purpose of callback is to allow the user to handle
+                        errors themselves.
+
+    minimum_len:        (int) (keyword only)
+                        Guarantees that the length of the frozenset is at least
+                        minimum_len.
+
+    maximum_len:        (int) (keyword only)
+                        Guarantees that the length of the frozenset is at most
+                        maximum_len.
+                        Must be greater than minimum_len if both are
+                        not None.
+
+    contains:           (list) (keyword only)
+                        A list of items that must be contained within the
+                        frozenset.
+
+    Example
+    _______
+
+        >>> from guarantees import parameter_guarantees as pg
+        >>>
+        >>>
+        >>> @pg.parameter_guarantees([
+        >>>     pg.IsFrozenSet(
+        >>>         "param_name",           # Name of the parameter
+        >>>         force_conversion=True,  # Will attempt to convert to bytes
+        >>>         minimum_len=3,
+        >>>         maximum_len=200
+        >>>     )                           # No warnings, no custom callback
+        >>> ])
+        >>> def fct(param_name: frozenset):
+        >>>     pass   # Some function
+    """
     contains: Any = None
 
 
-# TODO: check what exactly can be guaranteed for range
 @dataclass
 class IsRange(TypeGuarantee):
+    """
+    Guarantee type range.
+
+    Parameters
+    __________
+
+    parameter_name:     (str) (required) (position only)
+                        The name of the parameter.
+                        For this guarantee to work for parameters given by
+                        keyword, the name has to correspond exactly to the
+                        name of the parameter.
+
+    force_conversion:   (bool) (keyword only)
+                        If True, an attempt will be made to convert the
+                        parameter to range.
+
+    warnings_only:      (bool) (keyword only)
+                        If True, no Exceptions will be raised. Instead,
+                        a warning will be given over the command line via
+                        warnings.warn(...).
+
+    callback:           (function) (keyword only)
+                        If this parameter is not None and an error occurs,
+                        callback will be called with the signal corresponding to
+                        the error and no other parameters.
+                        No exceptions will be raised, no warnings given.
+                        The purpose of callback is to allow the user to handle
+                        errors themselves.
+
+    minimum_len:        (int) (keyword only)
+                        Guarantees that the length of the range is at least
+                        minimum_len.
+
+    maximum_len:        (int) (keyword only)
+                        Guarantees that the length of the range is at most
+                        maximum_len.
+                        Must be greater than minimum_len if both are
+                        not None.
+
+    Example
+    _______
+
+        >>> from guarantees import parameter_guarantees as pg
+        >>>
+        >>>
+        >>> @pg.parameter_guarantees([
+        >>>     pg.IsRange(
+        >>>         "param_name",           # Name of the parameter
+        >>>         force_conversion=True,  # Will attempt to convert to bytes
+        >>>         minimum_len=3,
+        >>>         maximum_len=200
+        >>>     )                           # No warnings, no custom callback
+        >>> ])
+        >>> def fct(param_name: range):
+        >>>     pass   # Some function
+    """
     pass

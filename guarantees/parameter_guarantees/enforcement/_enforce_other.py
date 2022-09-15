@@ -33,7 +33,7 @@ def enforce_isnone(arg: None, guarantee: IsNone) -> None:
 
 
 def _check_isclass(arg: object, guarantee: IsClass) -> object:
-    if isinstance(arg, guarantee.class_type):
+    if guarantee.class_type is None or isinstance(arg, guarantee.class_type):
         return arg
 
     signal = SignalTypeError(

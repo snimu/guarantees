@@ -35,13 +35,21 @@ class IsFloat(NumericGuarantee):
                         a warning will be given over the command line via
                         warnings.warn(...).
 
-    callback:           (function) (keyword only)
+    error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
                         callback will be called with the signal corresponding to
                         the error and no other parameters.
                         No exceptions will be raised, no warnings given.
                         The purpose of callback is to allow the user to handle
                         errors themselves.
+
+    check_function:     (function) (keyword only)
+                        If this parameter is not None, this function is called
+                        with the guaranteed parameter (or return value) and
+                        is expected to return the parameter again (though it can
+                        be changed arbitrarily -- even to None).
+                        This function is meant for the user to implement their
+                        own tests & checks on the parameter.
 
     isin:               (list) (keyword only)
                         If this parameter is not None, it must be a list of
@@ -102,13 +110,21 @@ class IsInt(NumericGuarantee):
                         a warning will be given over the command line via
                         warnings.warn(...).
 
-    callback:           (function) (keyword only)
+    error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
                         callback will be called with the signal corresponding to
                         the error and no other parameters.
                         No exceptions will be raised, no warnings given.
                         The purpose of callback is to allow the user to handle
                         errors themselves.
+
+    check_function:     (function) (keyword only)
+                        If this parameter is not None, this function is called
+                        with the guaranteed parameter (or return value) and
+                        is expected to return the parameter again (though it can
+                        be changed arbitrarily -- even to None).
+                        This function is meant for the user to implement their
+                        own tests & checks on the parameter.
 
     isin:               (list) (keyword only)
                         If this parameter is not None, it must be a list of
@@ -169,13 +185,21 @@ class IsComplex(NumericGuarantee):
                         a warning will be given over the command line via
                         warnings.warn(...).
 
-    callback:           (function) (keyword only)
+    error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
                         callback will be called with the signal corresponding to
                         the error and no other parameters.
                         No exceptions will be raised, no warnings given.
                         The purpose of callback is to allow the user to handle
                         errors themselves.
+
+    check_function:     (function) (keyword only)
+                        If this parameter is not None, this function is called
+                        with the guaranteed parameter (or return value) and
+                        is expected to return the parameter again (though it can
+                        be changed arbitrarily -- even to None).
+                        This function is meant for the user to implement their
+                        own tests & checks on the parameter.
 
     isin:               (list) (keyword only)
                         If this parameter is not None, it must be a list of

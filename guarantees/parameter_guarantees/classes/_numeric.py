@@ -30,10 +30,12 @@ class IsFloat(NumericGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to float.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -105,10 +107,12 @@ class IsInt(NumericGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to int.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -180,10 +184,12 @@ class IsComplex(NumericGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to complex.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,

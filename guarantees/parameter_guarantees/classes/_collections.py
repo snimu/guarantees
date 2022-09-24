@@ -28,10 +28,12 @@ class IsList(CollectionType):
                         If True, an attempt will be made to convert the
                         parameter to list.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -101,10 +103,12 @@ class IsTuple(CollectionType):
                         If True, an attempt will be made to convert the
                         parameter to tuple.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -174,10 +178,12 @@ class IsDict(CollectionType):
                         If True, an attempt will be made to convert the
                         parameter to list.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -253,10 +259,12 @@ class IsSet(CollectionType):
                         If True, an attempt will be made to convert the
                         parameter to set.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -326,10 +334,12 @@ class IsFrozenSet(CollectionType):
                         If True, an attempt will be made to convert the
                         parameter to frozenset.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -399,10 +409,12 @@ class IsRange(TypeGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to range.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,

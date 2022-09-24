@@ -21,10 +21,12 @@ class IsBytes(TypeGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to bytes.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -78,10 +80,12 @@ class IsByteArray(TypeGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to bytearray.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,
@@ -135,10 +139,12 @@ class IsMemoryView(TypeGuarantee):
                         If True, an attempt will be made to convert the
                         parameter to memoryview.
 
-    warnings_only:      (bool) (keyword only)
-                        If True, no Exceptions will be raised. Instead,
-                        a warning will be given over the command line via
-                        warnings.warn(...).
+    error_severity:     (int) (keyword only)
+                        If guarantees.severity.WARN (2) or below, no Exceptions
+                        will be raised. Instead, a warning will be given over
+                        the command line via warnings.warn(...).
+                        The severity will be mentioned in the Signal or
+                        Exception.
 
     error_callback:     (function) (keyword only)
                         If this parameter is not None and an error occurs,

@@ -15,6 +15,8 @@ from guarantees.parameter_guarantees.signals.numeric import SignalMinGEMax, \
     SignalMinReViolated, SignalMinImViolated, SignalMaxViolated, \
     SignalMaxReViolated, SignalMaxImViolated
 
+from guarantees import severity
+
 
 guarantee_to_type_dict = {
     IsInt: int,
@@ -266,7 +268,7 @@ def raise_type_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee
 ) -> None:
-    if type_guarantee.warnings_only:
+    if type_guarantee.error_severity <= severity.WARN:
         warnings.warn(err_msg + "\t **Ignoring** \n")
     else:
         raise TypeError(err_msg)
@@ -276,7 +278,7 @@ def raise_value_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee
 ) -> None:
-    if type_guarantee.warnings_only:
+    if type_guarantee.error_severity <= severity.WARN:
         warnings.warn(err_msg + "\t **Ignoring** \n")
     else:
         raise ValueError(err_msg)

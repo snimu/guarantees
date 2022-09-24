@@ -3,6 +3,7 @@
 
 from dataclasses import dataclass
 from typing import Callable
+from guarantees import severity
 
 
 @dataclass
@@ -12,7 +13,7 @@ class Guarantee:
 
 @dataclass
 class TypeGuarantee(Guarantee):
-    warnings_only: bool = False
+    error_severity: int = severity.ERROR
     force_conversion: bool = False
     error_callback: Callable = None
     check_function: Callable = None  # Take arg, return arg (optionally changed)

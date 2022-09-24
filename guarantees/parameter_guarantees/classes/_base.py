@@ -14,4 +14,4 @@ class Guarantee:
 class TypeGuarantee(Guarantee):
     warnings_only: bool = False
     force_conversion: bool = False
-    callback: Callable = None
+    error_callback: Callable = None

@@ -79,8 +79,8 @@ def _check_type(
             is_type_name=get_type_name(arg),
             force_conversion=guarantee.force_conversion
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_type(signal)
             raise_type_warning_or_exception(err_msg, guarantee)
@@ -152,8 +152,8 @@ def _check_min_ge_max(guarantee: CollectionType) -> None:
             minimum_len=guarantee.minimum_len,
             maximum_len=guarantee.maximum_len
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_minimum_len_ge_maximum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -173,8 +173,8 @@ def _check_min_len(
             arg=arg,
             minimum_len=guarantee.minimum_len
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_minimum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -194,8 +194,8 @@ def _check_max_len(
             arg=arg,
             maximum_len=guarantee.maximum_len
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_maximum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -219,8 +219,8 @@ def _check_contains(
                 arg=arg,
                 contains=guarantee.contains
             )
-            if guarantee.callback is not None:
-                guarantee.callback(signal)
+            if guarantee.error_callback is not None:
+                guarantee.error_callback(signal)
             else:
                 err_msg = get_err_msg_contains(signal)
                 raise_value_warning_or_exception(err_msg, guarantee)
@@ -255,8 +255,8 @@ def _check_has_keys(arg: dict, guarantee: IsDict) -> None:
             arg=arg,
             has_keys=guarantee.has_values
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_has_keys(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -280,8 +280,8 @@ def _check_has_values(arg: dict, guarantee: IsDict) -> None:
             arg=arg,
             has_values=guarantee.has_values
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_has_values(signal)
             raise_value_warning_or_exception(err_msg, guarantee)

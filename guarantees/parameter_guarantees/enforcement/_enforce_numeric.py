@@ -115,8 +115,8 @@ def _check_type(
         is_type_name=type_is_str,
         force_conversion=guarantee.force_conversion
     )
-    if guarantee.callback is not None:
-        guarantee.callback(signal)
+    if guarantee.error_callback is not None:
+        guarantee.error_callback(signal)
     else:
         err_msg = get_err_msg_type(signal)
         raise_type_warning_or_exception(err_msg, guarantee)
@@ -168,8 +168,8 @@ def _check_min_ge_max(
             maximum=maximum
         )
 
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_minimum_ge_maximum(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -200,8 +200,8 @@ def _check_min(
             minimum=minimum
         )
 
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_minimum(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -231,8 +231,8 @@ def _check_max(
             arg=arg,
             maximum=maximum
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_maximum(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -258,8 +258,8 @@ def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):
         arg=arg,
         isin=guarantee.isin
     )
-    if guarantee.callback is not None:
-        guarantee.callback(signal)
+    if guarantee.error_callback is not None:
+        guarantee.error_callback(signal)
     else:
         err_msg = get_err_msg_isin(signal)
         raise_value_warning_or_exception(err_msg, guarantee)

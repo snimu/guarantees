@@ -38,8 +38,8 @@ def _check_type(arg: str, guarantee: IsStr) -> str:
         should_type_name="str",
         is_type_name=get_type_name(arg)
     )
-    if guarantee.callback is not None:
-        guarantee.callback(signal)
+    if guarantee.error_callback is not None:
+        guarantee.error_callback(signal)
     else:
         err_msg = get_err_msg_type(signal)
         raise_type_warning_or_exception(err_msg, guarantee)
@@ -101,8 +101,8 @@ def _check_min_len_ge_max_len(guarantee: IsStr) -> None:
             minimum_len=guarantee.minimum_len,
             maximum_len=guarantee.maximum_len
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_minimum_len_ge_maximum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -125,8 +125,8 @@ def _check_min_len(arg, guarantee: IsStr) -> None:
             minimum_len=guarantee.minimum_len,
             arg=arg
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_minimum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -149,8 +149,8 @@ def _check_max_len(arg, guarantee: IsStr) -> None:
             maximum_len=guarantee.maximum_len,
             arg=arg
         )
-        if guarantee.callback is not None:
-            guarantee.callback(signal)
+        if guarantee.error_callback is not None:
+            guarantee.error_callback(signal)
         else:
             err_msg = get_err_msg_maximum_len(signal)
             raise_value_warning_or_exception(err_msg, guarantee)
@@ -179,8 +179,8 @@ def _check_isin(arg: str, guarantee: IsStr) -> None:
         isin=guarantee.isin,
         arg=arg
     )
-    if guarantee.callback is not None:
-        guarantee.callback(signal)
+    if guarantee.error_callback is not None:
+        guarantee.error_callback(signal)
     else:
         err_msg = get_err_msg_isin(signal)
         raise_value_warning_or_exception(err_msg, guarantee)

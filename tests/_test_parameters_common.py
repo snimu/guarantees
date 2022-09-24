@@ -15,7 +15,7 @@ class TestCallback(unittest.TestCase):
 
     def test_isint_cb(self):
         @pg.parameter_guarantees([
-            pg.IsInt("a", callback=self.cb)
+            pg.IsInt("a", error_callback=self.cb)
         ])
         def fct(a):
             return a
@@ -28,7 +28,7 @@ class TestCallback(unittest.TestCase):
 
     def test_isstr_cb(self):
         @pg.parameter_guarantees([
-            pg.IsStr("a", callback=self.cb)
+            pg.IsStr("a", error_callback=self.cb)
         ])
         def fct(a):
             return a
@@ -41,7 +41,7 @@ class TestCallback(unittest.TestCase):
 
     def test_islist_cb(self):
         @pg.parameter_guarantees([
-            pg.IsList("a", callback=self.cb)
+            pg.IsList("a", error_callback=self.cb)
         ])
         def fct(a):
             return a

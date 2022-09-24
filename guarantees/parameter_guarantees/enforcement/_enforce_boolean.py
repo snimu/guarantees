@@ -30,8 +30,8 @@ def _check_type(arg: bool, guarantee: IsBool) -> bool:
         should_type_name="bool",
         is_type_name=get_type_name(arg)
     )
-    if guarantee.callback is not None:
-        guarantee.callback(signal)
+    if guarantee.error_callback is not None:
+        guarantee.error_callback(signal)
     else:
         err_msg = get_err_msg_type(signal)
         raise_type_warning_or_exception(err_msg, guarantee)

@@ -106,7 +106,6 @@ class IsClass(TypeGuarantee):
         >>>     pass   # Some function
     """
     class_type: Type = None
-    check_fct: Callable = None   # Take arg, return arg (optionally changed)
 
 
 @dataclass

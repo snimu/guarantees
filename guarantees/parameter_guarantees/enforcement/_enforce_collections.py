@@ -20,6 +20,9 @@ def enforce_islist(arg: list, guarantee: IsList) -> list:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
@@ -27,6 +30,9 @@ def enforce_istuple(arg: tuple, guarantee: IsTuple) -> tuple:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
@@ -34,6 +40,9 @@ def enforce_isdict(arg: dict, guarantee: IsDict) -> dict:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
     _check_has_keys_values(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
@@ -41,6 +50,9 @@ def enforce_isset(arg: set, guarantee: IsSet) -> set:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
@@ -48,11 +60,18 @@ def enforce_isfrozenset(arg: frozenset, guarantee: IsFrozenSet) -> frozenset:
     arg = _check_type(arg, guarantee)
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
 def enforce_isrange(arg: range, guarantee: IsRange) -> range:
-    return _check_type(arg, guarantee)
+    arg = _check_type(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
+    return arg
 
 
 def _check_type(

@@ -10,8 +10,9 @@ from guarantees.parameter_guarantees.enforcement._util import \
 # NoOp needs no enforcement; it is handled in the guarantee_handler
 def enforce_isclass(arg: object, guarantee: IsClass) -> object:
     arg = _check_isclass(arg, guarantee)
-    if guarantee.check_fct is not None:
-        return guarantee.check_fct(arg)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 

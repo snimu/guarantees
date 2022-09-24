@@ -6,6 +6,9 @@ from guarantees.parameter_guarantees.enforcement._util import \
 
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:
     arg = _check_type(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 

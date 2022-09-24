@@ -15,3 +15,4 @@ class TypeGuarantee(Guarantee):
     warnings_only: bool = False
     force_conversion: bool = False
     error_callback: Callable = None
+    check_function: Callable = None  # Take arg, return arg (optionally changed)

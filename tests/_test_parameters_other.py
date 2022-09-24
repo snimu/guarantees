@@ -7,6 +7,7 @@ class TestIsClass(unittest.TestCase):
         class TestClass:
             def __init__(self, a=1):
                 self.a = a
+
         self.test_class = TestClass
         self.test_class_instance = TestClass()
 
@@ -25,18 +26,18 @@ class TestIsClass(unittest.TestCase):
         # Check errors
         try:
             fct(1, 1)
-            self.assertTrue(False)    # should have raised exception
+            self.assertTrue(False)  # should have raised exception
         except TypeError:
-            self.assertTrue(True)     # successfully raised exception
+            self.assertTrue(True)  # successfully raised exception
 
     def test_check_fct(self):
-        def check_fct(arg):
+        def check_function(arg):
             if arg.a != 1:
-                raise ValueError("check_fct raised ValueError")
+                raise ValueError("check_function raised ValueError")
 
         @pg.parameter_guarantees([
             pg.IsClass("a", class_type=self.test_class,
-                               check_fct=check_fct)
+                       check_function=check_function)
         ])
         def fct(a):
             return a
@@ -44,12 +45,12 @@ class TestIsClass(unittest.TestCase):
         # Check correct input
         fct(self.test_class_instance)
 
-        # Check check_fct
+        # Check check_function
         try:
             fct(self.test_class(2))
-            self.assertTrue(False)   # should have raised exception
+            self.assertTrue(False)  # should have raised exception
         except ValueError:
-            self.assertTrue(True)    # successfully raised exception
+            self.assertTrue(True)  # successfully raised exception
 
 
 class TestIsNone(unittest.TestCase):
@@ -65,9 +66,9 @@ class TestIsNone(unittest.TestCase):
 
         try:
             fct(1)
-            self.assertTrue(False)   # should have raised exception
+            self.assertTrue(False)  # should have raised exception
         except TypeError:
-            self.assertTrue(True)    # successfully raised exception
+            self.assertTrue(True)  # successfully raised exception
 
 
 class TestIsUnion(unittest.TestCase):
@@ -98,9 +99,9 @@ class TestIsUnion(unittest.TestCase):
     def test_wrong_inputs(self):
         try:
             self.fct(complex(1., 1.))
-            self.assertTrue(False)   # should have raised exception
+            self.assertTrue(False)  # should have raised exception
         except TypeError:
-            self.assertTrue(True)    # successfully raised exception
+            self.assertTrue(True)  # successfully raised exception
 
     def test_value_error(self):
         @pg.parameter_guarantees([
@@ -120,6 +121,6 @@ class TestIsUnion(unittest.TestCase):
 
         try:
             fct(0)
-            self.assertTrue(False)   # should have raised ValueError
+            self.assertTrue(False)  # should have raised ValueError
         except ValueError:
-            self.assertTrue(True)    # successfully raised exception
+            self.assertTrue(True)  # successfully raised exception

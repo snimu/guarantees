@@ -10,11 +10,17 @@ from guarantees.parameter_guarantees.signals.common import SignalTypeError
 
 def enforce_isbytes(arg: bytes, guarantee: IsBytes) -> bytes:
     arg = _check_type(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
 def enforce_isbytearray(arg: bytearray, guarantee: IsByteArray) -> bytearray:
     arg = _check_type(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 
@@ -23,6 +29,9 @@ def enforce_ismemoryview(
         guarantee: IsMemoryView
 ) -> memoryview:
     arg = _check_type(arg, guarantee)
+
+    if guarantee.check_function is not None:
+        arg = guarantee.check_function(arg)
     return arg
 
 

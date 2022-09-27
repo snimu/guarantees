@@ -279,7 +279,7 @@ def raise_warning_or_exception(
         type_guarantee: TypeGuarantee
 ):
     if type_guarantee.error_severity <= severity.WARN:
-        warnings.warn(exception.err_str + "\t **Ignoring** \n")
+        warnings.warn(exception.err_str + "\t**Ignoring** \n")
     else:
         raise exception
 

@@ -14,6 +14,10 @@ from guarantees.functional_guarantees.signals.numeric import SignalMinGEMax, \
     SignalMinReGEMaxRe, SignalMinImGEMaxIm, SignalMinViolated, \
     SignalMinReViolated, SignalMinImViolated, SignalMaxViolated, \
     SignalMaxReViolated, SignalMaxImViolated
+from guarantees.functional_guarantees.exceptions import \
+    ParameterGuaranteesTypeError, ParameterGuaranteesValueError, \
+    ReturnGuaranteesValueError, ReturnGuaranteesTypeError, \
+    FunctionalGuaranteesUserTypeError, FunctionalGuaranteesUserValueError
 
 from guarantees import severity
 
@@ -263,7 +267,23 @@ def get_err_msg_isin(signal: SignalNotIn) -> str:
     return err_msg
 
 
-# TODO (snimu): put err_msg-creation into raise... -> only needs signal
+def raise_warning_or_exception(
+        exception: Union[
+            ParameterGuaranteesTypeError,
+            ParameterGuaranteesValueError,
+            ReturnGuaranteesValueError,
+            ReturnGuaranteesTypeError,
+            FunctionalGuaranteesUserTypeError,
+            FunctionalGuaranteesUserValueError
+        ],
+        type_guarantee: TypeGuarantee
+):
+    if type_guarantee.error_severity <= severity.WARN:
+        warnings.warn(exception.err_str + "\t **Ignoring** \n")
+    else:
+        raise exception
+
+
 def raise_type_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee

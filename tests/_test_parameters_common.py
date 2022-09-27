@@ -14,9 +14,13 @@ class TestCallback(unittest.TestCase):
         self.cb = cb
 
     def test_isint_cb(self):
-        @fg.parameter_guarantees([
-            fg.IsInt("a", error_callback=self.cb)
-        ])
+        @fg.add_guarantees(
+            function_name="TestCallback.test_isint_cb.fct",
+            function_namespace="_test_parameters_common",
+            param_guarantees=[
+                fg.IsInt("a", error_callback=self.cb)
+            ]
+        )
         def fct(a):
             return a
 
@@ -27,9 +31,13 @@ class TestCallback(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_isstr_cb(self):
-        @fg.parameter_guarantees([
-            fg.IsStr("a", error_callback=self.cb)
-        ])
+        @fg.add_guarantees(
+            function_name="TestCallback.test_isstr_cb.fct",
+            function_namespace="_test_parameters_common",
+            param_guarantees=[
+                fg.IsStr("a", error_callback=self.cb)
+            ]
+        )
         def fct(a):
             return a
 
@@ -40,9 +48,13 @@ class TestCallback(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_islist_cb(self):
-        @fg.parameter_guarantees([
-            fg.IsList("a", error_callback=self.cb)
-        ])
+        @fg.add_guarantees(
+            function_name="TestCallback.test_islist_cb.fct",
+            function_namespace="_test_parameters_common",
+            param_guarantees=[
+                fg.IsList("a", error_callback=self.cb)
+            ]
+        )
         def fct(a):
             return a
 
@@ -55,9 +67,13 @@ class TestCallback(unittest.TestCase):
 
 class TestOnOff(unittest.TestCase):
     def test_onoff(self):
-        @fg.parameter_guarantees([
-            fg.IsInt("a")
-        ])
+        @fg.add_guarantees(
+            function_name="TestOnOff.test_onoff.fct",
+            function_namespace="_test_parameters_common",
+            param_guarantees=[
+                fg.IsInt("a")
+            ]
+        )
         def fct(a):
             return a
 

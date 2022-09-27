@@ -4,7 +4,10 @@ from guarantees import functional_guarantees as fg
 
 class TestReturnGuarantees(unittest.TestCase):
     def test_correct(self) -> None:
-        @fg.return_guarantees(fg.IsInt("a"))
+        @fg.add_guarantees(
+            function_name="TestReturnGuarantees.test_correct.fct",
+            function_namespace="_test_return_guarantees",
+            return_guarantee=fg.IsInt("a"))
         def fct(a):
             return a
 
@@ -12,7 +15,10 @@ class TestReturnGuarantees(unittest.TestCase):
         self.assertIsInstance(ret_val, int)
 
     def test_false(self):
-        @fg.return_guarantees(fg.IsInt("a"))
+        @fg.add_guarantees(
+            function_name="TestReturnGuarantees.test_false.fct",
+            function_namespace="_test_return_guarantees",
+            return_guarantee=fg.IsInt("a"))
         def fct(a):
             return float(a)
 
@@ -23,7 +29,10 @@ class TestReturnGuarantees(unittest.TestCase):
             self.assertTrue(True)    # successfully raised an exception
 
     def test_false_with_conversion(self):
-        @fg.return_guarantees(fg.IsInt("a", force_conversion=True))
+        @fg.add_guarantees(
+            function_name="TestReturnGuarantees.test_false_with_conversion.fct",
+            function_namespace="_test_return_guarantees",
+            return_guarantee=fg.IsInt("a", force_conversion=True))
         def fct(a):
             return float(a)
 

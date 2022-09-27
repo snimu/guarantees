@@ -71,7 +71,7 @@ class IsList(CollectionType):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsList(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -146,7 +146,7 @@ class IsTuple(CollectionType):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsTuple(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -226,7 +226,7 @@ class IsDict(CollectionType):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsDict(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -302,7 +302,7 @@ class IsSet(CollectionType):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsSet(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -377,7 +377,7 @@ class IsFrozenSet(CollectionType):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsFrozenSet(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -448,7 +448,7 @@ class IsRange(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsRange(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes

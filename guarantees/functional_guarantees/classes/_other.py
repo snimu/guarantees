@@ -25,7 +25,7 @@ class NoOp(Guarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsInt("a"),
         >>>     fg.NoOp("b"),
         >>>     fg.IsInt("c")
@@ -106,7 +106,7 @@ class IsClass(TypeGuarantee):
         >>> from typing import Any
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsClass(
         >>>         "param_name",           # Name of the parameter
         >>>         class_type=sp.Popen
@@ -164,7 +164,7 @@ class IsNone(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsNone(
         >>>         "param_name"           # Name of the parameter
         >>>     )                           # No warnings, no custom callback
@@ -227,7 +227,7 @@ class IsUnion(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsUnion(
         >>>         "param_name",           # Name of the parameter
         >>>         guarantees=[

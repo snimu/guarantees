@@ -50,7 +50,7 @@ class IsBytes(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsBytes(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
@@ -109,7 +109,7 @@ class IsByteArray(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsByteArray(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
@@ -168,7 +168,7 @@ class IsMemoryView(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsMemoryView(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes

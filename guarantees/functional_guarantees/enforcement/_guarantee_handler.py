@@ -53,7 +53,11 @@ class ReturnHandler:
         return False
 
 
-def register_parameter_guarantees(fct, param_guarantees: List[Guarantee]):
+def register_parameter_guarantees(
+        fct,
+        function_name: str,
+        function_namespace: str,
+        param_guarantees: List[Guarantee]):
     """Register the classes for the function."""
     if fct in ParameterHandler.handles.keys():
         # only need to register once
@@ -76,14 +80,23 @@ def register_parameter_guarantees(fct, param_guarantees: List[Guarantee]):
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
     for param_guarantee in param_guarantees:
+        param_guarantee.function_name = function_name
+        param_guarantee.function_namespace = function_namespace
+
         ParameterHandler.handles[fct]["args"].append(param_guarantee)
         ParameterHandler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
 
 
-def register_return_guarantees(fct, return_guarantee: Guarantee):
+def register_return_guarantees(
+        fct,
+        function_name,
+        function_namespace,
+        return_guarantee: Guarantee):
     if fct in ReturnHandler.handles.keys():
         return
 
+    return_guarantee.function_name = function_name
+    return_guarantee.function_namespace = function_namespace
     ReturnHandler.handles[fct] = return_guarantee
 
 

@@ -51,7 +51,7 @@ class IsStr(TypeGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsStr(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes

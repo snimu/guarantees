@@ -16,7 +16,7 @@ def construct_err_str(
         parameter_name: str = None,
         what_dict: dict = None
 ) -> str:
-    err_str = f"\nWhere: {namespace}/{function} \n"
+    err_str = f"\nWhere: {namespace}.{function} \n"
 
     if parameter_name is not None:
         err_str += f"\tparameter: {parameter_name} \n"

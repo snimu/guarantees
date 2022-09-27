@@ -75,7 +75,7 @@ class IsFloat(NumericGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsFloat(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to float
@@ -152,7 +152,7 @@ class IsInt(NumericGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsInt(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to int
@@ -249,7 +249,7 @@ class IsComplex(NumericGuarantee):
         >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @fg.parameter_guarantees([
+        >>> @fg.add_guarantees([
         >>>     fg.IsComplex(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes

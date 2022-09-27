@@ -12,10 +12,14 @@ class TestIsClass(unittest.TestCase):
         self.test_class_instance = TestClass()
 
     def test_base(self):
-        @fg.parameter_guarantees([
-            fg.NoOp("a"),
-            fg.IsClass("b", class_type=self.test_class)
-        ])
+        @fg.add_guarantees(
+            function_name="TestIsClass.test_base.fct",
+            function_namespace="_test_parameters_other",
+            param_guarantees=[
+                fg.NoOp("a"),
+                fg.IsClass("b", class_type=self.test_class)
+            ]
+        )
         def fct(a, b):
             return a, b
 
@@ -35,10 +39,14 @@ class TestIsClass(unittest.TestCase):
             if arg.a != 1:
                 raise ValueError("check_function raised ValueError")
 
-        @fg.parameter_guarantees([
-            fg.IsClass("a", class_type=self.test_class,
-                       check_function=check_function)
-        ])
+        @fg.add_guarantees(
+            function_name="TestIsClass.test_check_fct.fct",
+            function_namespace="_test_parameters_other",
+            param_guarantees=[
+                fg.IsClass("a", class_type=self.test_class,
+                           check_function=check_function)
+            ]
+        )
         def fct(a):
             return a
 
@@ -55,9 +63,13 @@ class TestIsClass(unittest.TestCase):
 
 class TestIsNone(unittest.TestCase):
     def test_type(self):
-        @fg.parameter_guarantees([
-            fg.IsNone("a")
-        ])
+        @fg.add_guarantees(
+            function_name="TestIsNone.test_type.fct",
+            function_namespace="_test_parameters_other",
+            param_guarantees=[
+                fg.IsNone("a")
+            ]
+        )
         def fct(a):
             return a
 
@@ -73,16 +85,20 @@ class TestIsNone(unittest.TestCase):
 
 class TestIsUnion(unittest.TestCase):
     def setUp(self) -> None:
-        @fg.parameter_guarantees([
-            fg.IsUnion(
-                "a",
-                guarantees=[
-                    fg.IsInt("a"),
-                    fg.IsNone("a"),
-                    fg.IsStr("a")
-                ]
-            )
-        ])
+        @fg.add_guarantees(
+            function_name="TestIsUnion.setUp.fct",
+            function_namespace="_test_parameters_other",
+            param_guarantees=[
+                fg.IsUnion(
+                    "a",
+                    guarantees=[
+                        fg.IsInt("a"),
+                        fg.IsNone("a"),
+                        fg.IsStr("a")
+                    ]
+                )
+            ]
+        )
         def fct(a):
             return a
 
@@ -104,15 +120,19 @@ class TestIsUnion(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_value_error(self):
-        @fg.parameter_guarantees([
-            fg.IsUnion(
-                "a",
-                guarantees=[
-                    fg.IsInt("a", minimum=1),
-                    fg.IsNone("a")
-                ]
-            )
-        ])
+        @fg.add_guarantees(
+            function_name="TestIsClass.test_value_error.fct",
+            function_namespace="_test_parameters_other",
+            param_guarantees=[
+                fg.IsUnion(
+                    "a",
+                    guarantees=[
+                        fg.IsInt("a", minimum=1),
+                        fg.IsNone("a")
+                    ]
+                )
+            ]
+        )
         def fct(a):
             return a
 

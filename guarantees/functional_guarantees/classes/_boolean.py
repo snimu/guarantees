@@ -1,13 +1,12 @@
 from dataclasses import dataclass
-from typing import Callable, List
 
 from ._base import TypeGuarantee
 
 
 @dataclass
-class IsStr(TypeGuarantee):
+class IsBool(TypeGuarantee):
     """
-    Guarantee type str.
+    Guarantee type bool.
 
     Parameters
     __________
@@ -20,7 +19,7 @@ class IsStr(TypeGuarantee):
 
     force_conversion:   (bool) (keyword only)
                         If True, an attempt will be made to convert the
-                        parameter to str.
+                        parameter to bool.
 
     error_severity:     (int) (keyword only)
                         If guarantees.severity.WARN (2) or below, no Exceptions
@@ -48,18 +47,16 @@ class IsStr(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
-        >>>     pg.IsStr(
+        >>> @pg.functional_guarantees([
+        >>>     pg.IsBool(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
         >>>     )                           # No warnings, no custom callback
         >>> ])
-        >>> def fct(param_name: str):
+        >>> def fct(param_name: bool):
         >>>     pass   # Some function
     """
-    minimum_len: int = None
-    maximum_len: int = None
-    isin: List = None
+    pass

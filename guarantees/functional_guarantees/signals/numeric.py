@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Union, List
 
-from guarantees.parameter_guarantees.signals.common import Signal
+from guarantees.functional_guarantees.signals.common import Signal
 
 
 @dataclass

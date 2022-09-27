@@ -68,10 +68,10 @@ class IsList(CollectionType):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
+        >>> @pg.functional_guarantees([
         >>>     pg.IsList(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -143,10 +143,10 @@ class IsTuple(CollectionType):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
+        >>> @pg.functional_guarantees([
         >>>     pg.IsTuple(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -223,10 +223,10 @@ class IsDict(CollectionType):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
+        >>> @pg.functional_guarantees([
         >>>     pg.IsDict(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -299,10 +299,10 @@ class IsSet(CollectionType):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
+        >>> @pg.functional_guarantees([
         >>>     pg.IsSet(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -374,10 +374,10 @@ class IsFrozenSet(CollectionType):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
+        >>> @pg.functional_guarantees([
         >>>     pg.IsFrozenSet(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
@@ -445,10 +445,10 @@ class IsRange(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import parameter_guarantees as pg
+        >>> from guarantees import functional_guarantees as pg
         >>>
         >>>
-        >>> @pg.parameter_guarantees([
+        >>> @pg.functional_guarantees([
         >>>     pg.IsRange(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes

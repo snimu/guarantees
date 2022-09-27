@@ -1,8 +1,8 @@
 from typing import Any
 
-from guarantees.parameter_guarantees.classes import IsClass, IsNone
-from guarantees.parameter_guarantees.signals.common import SignalTypeError
-from guarantees.parameter_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.classes import IsClass, IsNone
+from guarantees.functional_guarantees.signals.common import SignalTypeError
+from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_type_name, get_err_msg_type, \
     raise_type_warning_or_exception
 

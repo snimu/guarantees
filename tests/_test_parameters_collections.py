@@ -1,5 +1,5 @@
 import unittest
-from guarantees import parameter_guarantees as pg
+from guarantees import functional_guarantees as fg
 
 
 class TestCollectionsGuarantee(unittest.TestCase):
@@ -11,44 +11,44 @@ class TestCollectionsGuarantee(unittest.TestCase):
         self.fst = frozenset(self.lst)
         self.rng = range(1, 3, 1)
 
-        @pg.parameter_guarantees([
-            pg.IsList("lst"),
-            pg.IsTuple("tup"),
-            pg.IsDict("dic"),
-            pg.IsSet("st"),
-            pg.IsFrozenSet("fst"),
-            pg.IsRange("rng")
+        @fg.parameter_guarantees([
+            fg.IsList("lst"),
+            fg.IsTuple("tup"),
+            fg.IsDict("dic"),
+            fg.IsSet("st"),
+            fg.IsFrozenSet("fst"),
+            fg.IsRange("rng")
         ])
         def base_fct(lst, tup, dic, st, fst, rng):
             return lst, tup, dic, st, fst, rng
 
         self.base_fct = base_fct
 
-        @pg.parameter_guarantees([
-            pg.IsList("lst", minimum_len=1, maximum_len=3),
-            pg.IsTuple("tup", minimum_len=1, maximum_len=3),
-            pg.IsDict("dic", minimum_len=1, maximum_len=3),
-            pg.IsSet("st", minimum_len=1, maximum_len=3),
-            pg.IsFrozenSet("fst", minimum_len=1, maximum_len=3)
+        @fg.parameter_guarantees([
+            fg.IsList("lst", minimum_len=1, maximum_len=3),
+            fg.IsTuple("tup", minimum_len=1, maximum_len=3),
+            fg.IsDict("dic", minimum_len=1, maximum_len=3),
+            fg.IsSet("st", minimum_len=1, maximum_len=3),
+            fg.IsFrozenSet("fst", minimum_len=1, maximum_len=3)
         ])
         def minmax_fct(lst, tup, dic, st, fst):
             return lst, tup, dic, st, fst
 
         self.minmax_fct = minmax_fct
 
-        @pg.parameter_guarantees([
-            pg.IsList("lst", contains=[1, 2, 3]),
-            pg.IsTuple("tup", contains=[1, 2, 3]),
-            pg.IsSet("st", contains=[1, 2, 3]),
-            pg.IsFrozenSet("fst", contains=[1, 2, 3])
+        @fg.parameter_guarantees([
+            fg.IsList("lst", contains=[1, 2, 3]),
+            fg.IsTuple("tup", contains=[1, 2, 3]),
+            fg.IsSet("st", contains=[1, 2, 3]),
+            fg.IsFrozenSet("fst", contains=[1, 2, 3])
         ])
         def contains_fct(lst, tup, st, fst):
             return lst, tup, st, fst
 
         self.contains_fct = contains_fct
 
-        @pg.parameter_guarantees([
-            pg.IsDict("dic", has_keys=[1, 2, 3], has_values=[1, 2, 3])
+        @fg.parameter_guarantees([
+            fg.IsDict("dic", has_keys=[1, 2, 3], has_values=[1, 2, 3])
         ])
         def keysvals_fct(dic):
             return dic

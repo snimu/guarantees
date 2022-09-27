@@ -1,5 +1,5 @@
 import unittest
-from guarantees import parameter_guarantees as pg
+from guarantees import functional_guarantees as fg
 
 
 class TestIsClass(unittest.TestCase):
@@ -12,9 +12,9 @@ class TestIsClass(unittest.TestCase):
         self.test_class_instance = TestClass()
 
     def test_base(self):
-        @pg.parameter_guarantees([
-            pg.NoOp("a"),
-            pg.IsClass("b", class_type=self.test_class)
+        @fg.parameter_guarantees([
+            fg.NoOp("a"),
+            fg.IsClass("b", class_type=self.test_class)
         ])
         def fct(a, b):
             return a, b
@@ -35,8 +35,8 @@ class TestIsClass(unittest.TestCase):
             if arg.a != 1:
                 raise ValueError("check_function raised ValueError")
 
-        @pg.parameter_guarantees([
-            pg.IsClass("a", class_type=self.test_class,
+        @fg.parameter_guarantees([
+            fg.IsClass("a", class_type=self.test_class,
                        check_function=check_function)
         ])
         def fct(a):
@@ -55,8 +55,8 @@ class TestIsClass(unittest.TestCase):
 
 class TestIsNone(unittest.TestCase):
     def test_type(self):
-        @pg.parameter_guarantees([
-            pg.IsNone("a")
+        @fg.parameter_guarantees([
+            fg.IsNone("a")
         ])
         def fct(a):
             return a
@@ -73,13 +73,13 @@ class TestIsNone(unittest.TestCase):
 
 class TestIsUnion(unittest.TestCase):
     def setUp(self) -> None:
-        @pg.parameter_guarantees([
-            pg.IsUnion(
+        @fg.parameter_guarantees([
+            fg.IsUnion(
                 "a",
                 guarantees=[
-                    pg.IsInt("a"),
-                    pg.IsNone("a"),
-                    pg.IsStr("a")
+                    fg.IsInt("a"),
+                    fg.IsNone("a"),
+                    fg.IsStr("a")
                 ]
             )
         ])
@@ -104,12 +104,12 @@ class TestIsUnion(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_value_error(self):
-        @pg.parameter_guarantees([
-            pg.IsUnion(
+        @fg.parameter_guarantees([
+            fg.IsUnion(
                 "a",
                 guarantees=[
-                    pg.IsInt("a", minimum=1),
-                    pg.IsNone("a")
+                    fg.IsInt("a", minimum=1),
+                    fg.IsNone("a")
                 ]
             )
         ])

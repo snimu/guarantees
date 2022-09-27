@@ -1,10 +1,10 @@
 import unittest
-from guarantees import parameter_guarantees as pg
+from guarantees import functional_guarantees as fg
 
 
 class TestReturnGuarantees(unittest.TestCase):
     def test_correct(self) -> None:
-        @pg.return_guarantees(pg.IsInt("a"))
+        @fg.return_guarantees(fg.IsInt("a"))
         def fct(a):
             return a
 
@@ -12,7 +12,7 @@ class TestReturnGuarantees(unittest.TestCase):
         self.assertIsInstance(ret_val, int)
 
     def test_false(self):
-        @pg.return_guarantees(pg.IsInt("a"))
+        @fg.return_guarantees(fg.IsInt("a"))
         def fct(a):
             return float(a)
 
@@ -23,7 +23,7 @@ class TestReturnGuarantees(unittest.TestCase):
             self.assertTrue(True)    # successfully raised an exception
 
     def test_false_with_conversion(self):
-        @pg.return_guarantees(pg.IsInt("a", force_conversion=True))
+        @fg.return_guarantees(fg.IsInt("a", force_conversion=True))
         def fct(a):
             return float(a)
 

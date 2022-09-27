@@ -1,4 +1,4 @@
-"""Defines the @guarantees.parameter_guarantees decorator."""
+"""Defines the @guarantees.functional_guarantees decorator."""
 
 
 from ._guarantee_handler import enforce_parameter_guarantees, \

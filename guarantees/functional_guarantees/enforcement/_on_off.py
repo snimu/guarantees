@@ -1,4 +1,4 @@
-from guarantees.parameter_guarantees.enforcement._guarantee_handler import \
+from guarantees.functional_guarantees.enforcement._guarantee_handler import \
     ParameterHandler
 
 

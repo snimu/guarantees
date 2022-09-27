@@ -1,12 +1,12 @@
 from typing import List, Tuple, Dict, Any, Union
 
-from guarantees.parameter_guarantees.classes import Guarantee, IsInt, IsFloat, \
+from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, \
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
     IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
-from guarantees.parameter_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_guaranteed_type_name, get_type_name, \
     get_guaranteed_type, get_err_msg_type, raise_type_warning_or_exception
-from guarantees.parameter_guarantees.signals.common import SignalTypeError
+from guarantees.functional_guarantees.signals.common import SignalTypeError
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
      enforce_iscomplex
@@ -29,7 +29,7 @@ class ParameterHandler:
     Instead, a dict has to be created with an entry for every function and
     method. For each fct, all classes will be entered into an args-list
     responsible for handling args (the order is determined by the order in
-    which the classes appear in the list given to @guarantees.parameter_guarantees()),
+    which the classes appear in the list given to @guarantees.functional_guarantees()),
     and a kwargs-dict responsible for handling kwargs (where the key is the
     name given to the guarantees  ->  the parameter-names and guarantees-names
     must match for this library to handle keyword arguments!
@@ -57,7 +57,7 @@ def register_parameter_guarantees(fct, param_guarantees: List[Guarantee]):
     """Register the classes for the function."""
     if fct in ParameterHandler.handles.keys():
         # only need to register once
-        #   -> when more than one call to @guarantees.parameter_guarantees
+        #   -> when more than one call to @guarantees.functional_guarantees
         #   is made on the same function / method, only the first will be used
         #   and the rest will be ignored.
         return
@@ -65,7 +65,7 @@ def register_parameter_guarantees(fct, param_guarantees: List[Guarantee]):
     # TODO (snimu) improve error msg
     if type(param_guarantees) is not list \
             and not all(isinstance(g, Guarantee) for g in param_guarantees):
-        raise ValueError("@guarantees.parameter_guarantees takes "
+        raise ValueError("@guarantees.functional_guarantees takes "
                          "a list of classes! "
                          f"You have given it: {type(param_guarantees)}")
 
@@ -91,7 +91,7 @@ def _check_duplicate_names(value_guarantees):
     names = []
     for param_guarantee in value_guarantees:
         if param_guarantee.parameter_name in names:
-            raise ValueError("@guarantees.parameter_guarantees: "
+            raise ValueError("@guarantees.functional_guarantees: "
                              "Duplicate guarantees name: "
                              f"'{param_guarantee.parameter_name}'")
         names.append(param_guarantee.parameter_name)
@@ -192,7 +192,7 @@ def _enforce_val(val, param_guarantee: Guarantee):
     """Enforce the classes on a single value."""
     if not isinstance(param_guarantee, Guarantee):
         raise TypeError("Parameter guarantees is not a Guarantee. "
-                        "@parameter_guarantees only takes Guarantees.")
+                        "@functional_guarantees only takes Guarantees.")
 
     if isinstance(param_guarantee, NoOp):
         return val

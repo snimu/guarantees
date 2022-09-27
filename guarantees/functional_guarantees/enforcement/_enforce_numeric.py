@@ -1,14 +1,14 @@
 from typing import Union
 
-from guarantees.parameter_guarantees.classes import IsInt, IsFloat, IsComplex, \
+from guarantees.functional_guarantees.classes import IsInt, IsFloat, IsComplex, \
     NumericGuarantee
-from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+from guarantees.functional_guarantees.signals.common import SignalTypeError, \
     SignalNotIn
-from guarantees.parameter_guarantees.signals.numeric import \
+from guarantees.functional_guarantees.signals.numeric import \
     SignalMinGEMax, SignalMinReGEMaxRe, SignalMinImGEMaxIm,\
     SignalMinViolated, SignalMinReViolated, SignalMinImViolated, \
     SignalMaxViolated, SignalMaxReViolated, SignalMaxImViolated
-from guarantees.parameter_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.enforcement._util import \
     raise_value_warning_or_exception, raise_type_warning_or_exception, \
     get_guaranteed_type, get_guaranteed_type_name, get_guarantee_name, \
     get_type_name, get_err_msg_type, get_err_msg_minimum_ge_maximum, \

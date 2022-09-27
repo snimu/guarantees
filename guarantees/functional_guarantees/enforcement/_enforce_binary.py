@@ -1,11 +1,11 @@
 from typing import Union
 
-from guarantees.parameter_guarantees.classes import IsBytes, \
+from guarantees.functional_guarantees.classes import IsBytes, \
     IsByteArray, IsMemoryView
-from guarantees.parameter_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_guaranteed_type, get_type_name, \
     get_guaranteed_type_name, get_err_msg_type, raise_type_warning_or_exception
-from guarantees.parameter_guarantees.signals.common import SignalTypeError
+from guarantees.functional_guarantees.signals.common import SignalTypeError
 
 
 def enforce_isbytes(arg: bytes, guarantee: IsBytes) -> bytes:

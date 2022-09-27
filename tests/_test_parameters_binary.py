@@ -1,21 +1,21 @@
 import unittest
-from guarantees import parameter_guarantees as pg
+from guarantees import functional_guarantees as fg
 
 
 class TestBinary(unittest.TestCase):
     def setUp(self) -> None:
-        @pg.parameter_guarantees([
-            pg.IsBytes("a"),
-            pg.IsByteArray("b"),
-            pg.IsMemoryView("c")
+        @fg.parameter_guarantees([
+            fg.IsBytes("a"),
+            fg.IsByteArray("b"),
+            fg.IsMemoryView("c")
         ])
         def fct(a, b, c):
             return a, b, c
 
-        @pg.parameter_guarantees([
-            pg.IsBytes("a", force_conversion=True),
-            pg.IsByteArray("b", force_conversion=True),
-            pg.IsMemoryView("c", force_conversion=True)
+        @fg.parameter_guarantees([
+            fg.IsBytes("a", force_conversion=True),
+            fg.IsByteArray("b", force_conversion=True),
+            fg.IsMemoryView("c", force_conversion=True)
         ])
         def fct_conversion(a, b, c):
             return a, b, c

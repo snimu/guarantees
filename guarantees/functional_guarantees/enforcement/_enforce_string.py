@@ -1,8 +1,8 @@
-from guarantees.parameter_guarantees.classes import IsStr
-from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+from guarantees.functional_guarantees.classes import IsStr
+from guarantees.functional_guarantees.signals.common import SignalTypeError, \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalNotIn
-from guarantees.parameter_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.enforcement._util import \
     raise_type_warning_or_exception, raise_value_warning_or_exception, \
     get_guarantee_name, get_type_name, \
     get_err_msg_type, get_err_msg_minimum_len_type, \

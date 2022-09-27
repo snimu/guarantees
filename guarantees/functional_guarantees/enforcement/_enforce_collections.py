@@ -1,13 +1,13 @@
 from typing import Union
 
-from guarantees.parameter_guarantees.classes import IsList, IsTuple, IsDict, \
+from guarantees.functional_guarantees.classes import IsList, IsTuple, IsDict, \
     IsSet, IsFrozenSet, IsRange, TypeGuarantee, CollectionType
-from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+from guarantees.functional_guarantees.signals.common import SignalTypeError, \
     SignalMinLenGEMaxLen, SignalMinLenViolated, \
     SignalMaxLenViolated
-from guarantees.parameter_guarantees.signals.collections import \
+from guarantees.functional_guarantees.signals.collections import \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
-from guarantees.parameter_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.enforcement._util import \
     get_guaranteed_type, get_guaranteed_type_name, get_err_msg_type, \
     raise_type_warning_or_exception, get_type_name, get_guarantee_name, \
     get_err_msg_maximum_len_type, get_err_msg_minimum_len_type, \

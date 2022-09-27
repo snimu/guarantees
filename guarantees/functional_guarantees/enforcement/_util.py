@@ -1,16 +1,16 @@
 import warnings
 from typing import Any, Union
 
-from guarantees.parameter_guarantees.classes import TypeGuarantee, IsInt, \
+from guarantees.functional_guarantees.classes import TypeGuarantee, IsInt, \
     IsFloat, IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, \
     IsRange, IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, IsNone, \
     IsUnion
-from guarantees.parameter_guarantees.signals.common import SignalTypeError, \
+from guarantees.functional_guarantees.signals.common import SignalTypeError, \
     SignalMinLenGEMaxLen, SignalMinLenViolated, SignalMaxLenViolated, \
     SignalNotIn
-from guarantees.parameter_guarantees.signals.collections import \
+from guarantees.functional_guarantees.signals.collections import \
     SignalContainsViolated, SignalHasKeysViolated, SignalHasValuesViolated
-from guarantees.parameter_guarantees.signals.numeric import SignalMinGEMax, \
+from guarantees.functional_guarantees.signals.numeric import SignalMinGEMax, \
     SignalMinReGEMaxRe, SignalMinImGEMaxIm, SignalMinViolated, \
     SignalMinReViolated, SignalMinImViolated, SignalMaxViolated, \
     SignalMaxReViolated, SignalMaxImViolated

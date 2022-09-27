@@ -1,12 +1,12 @@
 import unittest
 
-from guarantees import parameter_guarantees as pg
+from guarantees import functional_guarantees as fg
 
 
 class TestBooleanGuarantee(unittest.TestCase):
     def test_base(self):
-        @pg.parameter_guarantees([
-            pg.IsBool("a")
+        @fg.parameter_guarantees([
+            fg.IsBool("a")
         ])
         def fct(a):
             return a
@@ -23,8 +23,8 @@ class TestBooleanGuarantee(unittest.TestCase):
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):
-        @pg.parameter_guarantees([
-            pg.IsBool("a", force_conversion=True)
+        @fg.parameter_guarantees([
+            fg.IsBool("a", force_conversion=True)
         ])
         def fct(a):
             return a

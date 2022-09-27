@@ -47,11 +47,11 @@ class IsBool(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsBool(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsBool(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
         >>>     )                           # No warnings, no custom callback

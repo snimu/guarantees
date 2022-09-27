@@ -22,13 +22,13 @@ class NoOp(Guarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsInt("a"),
-        >>>     pg.NoOp("b"),
-        >>>     pg.IsInt("c")
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsInt("a"),
+        >>>     fg.NoOp("b"),
+        >>>     fg.IsInt("c")
         >>> ])
         >>> def fct(a, b, c):
         >>>     pass
@@ -101,13 +101,13 @@ class IsClass(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>> import subprocess as sp
         >>> from typing import Any
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsClass(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsClass(
         >>>         "param_name",           # Name of the parameter
         >>>         class_type=sp.Popen
         >>>     )                           # No warnings, no custom callback
@@ -161,11 +161,11 @@ class IsNone(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsNone(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsNone(
         >>>         "param_name"           # Name of the parameter
         >>>     )                           # No warnings, no custom callback
         >>> ])
@@ -224,15 +224,15 @@ class IsUnion(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsUnion(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsUnion(
         >>>         "param_name",           # Name of the parameter
         >>>         guarantees=[
-        >>>             pg.IsInt("param_name", minimum=3),
-        >>>             pg.IsFloat("param_name", minimum=3.)
+        >>>             fg.IsInt("param_name", minimum=3),
+        >>>             fg.IsFloat("param_name", minimum=3.)
         >>>         ]
         >>>     )                           # No warnings, no custom callback
         >>> ])

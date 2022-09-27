@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Callable, List
+from typing import List
 
 from ._base import TypeGuarantee
 
@@ -48,11 +48,11 @@ class IsStr(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsStr(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsStr(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
         >>>     )                           # No warnings, no custom callback

@@ -72,11 +72,11 @@ class IsFloat(NumericGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsFloat(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsFloat(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to float
         >>>         minimum=-2.2,
@@ -149,11 +149,11 @@ class IsInt(NumericGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsInt(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsInt(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to int
         >>>         minimum=-2,
@@ -246,11 +246,11 @@ class IsComplex(NumericGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsComplex(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsComplex(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True,  # Will attempt to convert to bytes
         >>>         minimum=-2.2,

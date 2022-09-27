@@ -47,11 +47,11 @@ class IsBytes(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsBytes(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsBytes(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
         >>>     )                           # No warnings, no custom callback
@@ -106,11 +106,11 @@ class IsByteArray(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsByteArray(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsByteArray(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
         >>>     )                           # No warnings, no custom callback
@@ -165,11 +165,11 @@ class IsMemoryView(TypeGuarantee):
     Example
     _______
 
-        >>> from guarantees import functional_guarantees as pg
+        >>> from guarantees import functional_guarantees as fg
         >>>
         >>>
-        >>> @pg.functional_guarantees([
-        >>>     pg.IsMemoryView(
+        >>> @fg.parameter_guarantees([
+        >>>     fg.IsMemoryView(
         >>>         "param_name",           # Name of the parameter
         >>>         force_conversion=True   # Will attempt to convert to bytes
         >>>     )                           # No warnings, no custom callback

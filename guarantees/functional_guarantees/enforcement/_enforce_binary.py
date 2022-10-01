@@ -3,10 +3,8 @@ from typing import Union
 from guarantees.functional_guarantees.classes import IsBytes, \
     IsByteArray, IsMemoryView
 from guarantees.functional_guarantees.enforcement._util import \
-    get_guarantee_name, get_guaranteed_type, get_type_name, \
-    get_guaranteed_type_name, get_err_msg_type, \
-    raise_warning_or_exception, choose_exception, raise_type_warning_or_exception
-from guarantees.functional_guarantees.signals.common import SignalTypeError
+    get_guaranteed_type, get_type_name, \
+    get_guaranteed_type_name, raise_warning_or_exception, choose_exception
 
 
 def enforce_isbytes(arg: bytes, guarantee: IsBytes) -> bytes:

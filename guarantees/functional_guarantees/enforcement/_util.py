@@ -21,7 +21,6 @@ from guarantees.functional_guarantees.exceptions import \
 
 from guarantees import severity
 
-
 guarantee_to_type_dict = {
     IsInt: int,
     IsFloat: float,
@@ -41,7 +40,6 @@ guarantee_to_type_dict = {
     IsNone: None,
     IsUnion: Any
 }
-
 
 guarantee_to_type_name_dict = {
     IsInt: "int",
@@ -265,6 +263,35 @@ def get_err_msg_isin(signal: SignalNotIn) -> str:
               f"\t actual   : {signal.arg} \n"
 
     return err_msg
+
+
+def choose_exception(
+        where: str,
+        what: str
+) -> Union[
+    ParameterGuaranteesTypeError,
+    ParameterGuaranteesValueError,
+    ReturnGuaranteesValueError,
+    ReturnGuaranteesTypeError,
+    FunctionalGuaranteesUserTypeError,
+    FunctionalGuaranteesUserValueError
+]:
+    exception_dict = {
+        "parameter": {
+            "type": ParameterGuaranteesTypeError,
+            "value": ParameterGuaranteesValueError
+        },
+        "return": {
+            "type": ReturnGuaranteesTypeError,
+            "value": ReturnGuaranteesValueError
+        },
+        "internal": {
+            "type": FunctionalGuaranteesUserTypeError,
+            "value": FunctionalGuaranteesUserValueError
+        }
+    }
+
+    return exception_dict[where][what]
 
 
 def raise_warning_or_exception(

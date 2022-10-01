@@ -4,7 +4,8 @@ from guarantees.functional_guarantees.classes import IsBytes, \
     IsByteArray, IsMemoryView
 from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_guaranteed_type, get_type_name, \
-    get_guaranteed_type_name, get_err_msg_type, raise_type_warning_or_exception
+    get_guaranteed_type_name, get_err_msg_type, \
+    raise_warning_or_exception, choose_exception, raise_type_warning_or_exception
 from guarantees.functional_guarantees.signals.common import SignalTypeError
 
 
@@ -51,17 +52,20 @@ def _check_type(
             pass
 
     # Type error occurred
-    signal = SignalTypeError(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(guarantee),
-        should_type_name=get_guaranteed_type_name(guarantee),
-        is_type_name=get_type_name(arg)
+    exception = choose_exception(where=guarantee.where, what="type")
+    exception = exception(
+        function_name=guarantee.function_name,
+        function_namespace=guarantee.function_namespace,
+        guarantee_type_name=get_guaranteed_type_name(guarantee),
+        what_dict={
+            "should_type_name": get_guaranteed_type_name(guarantee),
+            "actual_type_name": get_type_name(arg)
+        }
     )
 
     if guarantee.error_callback is not None:
-        guarantee.error_callback(signal)
+        guarantee.error_callback(exception)
     else:
-        err_msg = get_err_msg_type(signal)
-        raise_type_warning_or_exception(err_msg, guarantee)
+        raise_warning_or_exception(exception, guarantee)
 
     return arg   # in case of warnings_only

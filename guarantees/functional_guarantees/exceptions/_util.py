@@ -14,15 +14,9 @@ def construct_err_str(
         function_name: str,
         function_namespace: str,
         guarantee_name: str,
-        parameter_name: str = None,
         what_dict: dict = None
 ) -> str:
     err_str = f"\nWhere: {function_namespace}.{function_name} \n"
     err_str += f"\tGuarantee: {guarantee_name} \n"
-
-    if parameter_name is not None:
-        err_str += f"\tParameter: {parameter_name} \n"
-
     err_str += _parse_what_dict(what_dict)
-
     return err_str

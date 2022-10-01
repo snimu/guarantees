@@ -15,6 +15,7 @@ class Guarantee:
 
 @dataclass
 class TypeGuarantee(Guarantee):
+    where: str = "parameter"
     error_severity: int = severity.ERROR
     force_conversion: bool = False
     error_callback: Callable = None

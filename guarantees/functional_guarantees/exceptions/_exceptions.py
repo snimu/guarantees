@@ -7,11 +7,13 @@ class ParameterGuaranteesValueError(ValueError):
             function_name="",
             function_namespace="",
             parameter_name="",
+            guarantee_type_name="",
             what_dict=None
     ) -> None:
         self.function_name = function_name
         self.function_namespace = function_namespace
         self.parameter_name = parameter_name
+        self.guarantee_type_name = guarantee_type_name
         self.what_dict = what_dict
         self.err_str = construct_err_str(
             function_name=function_name,
@@ -28,11 +30,13 @@ class ParameterGuaranteesTypeError(TypeError):
             function_name="",
             function_namespace="",
             parameter_name="",
+            guarantee_type_name="",
             what_dict=None
     ) -> None:
         self.function_name = function_name
         self.function_namespace = function_namespace
         self.parameter_name = parameter_name
+        self.guarantee_type_name = guarantee_type_name
         self.what_dict = what_dict
         self.err_str = construct_err_str(
             function_name=function_name,
@@ -48,10 +52,12 @@ class ReturnGuaranteesValueError(ValueError):
             self,
             function_name="",
             function_namespace="",
+            guarantee_type_name="",
             what_dict=None
     ) -> None:
         self.function_name = function_name
         self.function_namespace = function_namespace
+        self.guarantee_type_name = guarantee_type_name
         self.what_dict = what_dict
         self.err_str = construct_err_str(
             function_name=function_name,
@@ -67,10 +73,12 @@ class ReturnGuaranteesTypeError(TypeError):
             self,
             function_name="",
             function_namespace="",
+            guarantee_type_name="",
             what_dict=None
     ) -> None:
         self.function_name = function_name
         self.function_namespace = function_namespace
+        self.guarantee_type_name = guarantee_type_name
         self.what_dict = what_dict
         self.err_str = construct_err_str(
             function_name=function_name,
@@ -87,12 +95,14 @@ class FunctionalGuaranteesUserValueError(ValueError):
             function_name="",
             function_namespace="",
             internal_parameter_name="",
+            guarantee_type_name="",
             what_dict=None
     ) -> None:
         self.function_name = function_name
         self.function_namespace = function_namespace
-        self.what_dict = what_dict
         self.internal_parameter_name = internal_parameter_name
+        self.guarantee_type_name = guarantee_type_name
+        self.what_dict = what_dict
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
@@ -108,12 +118,14 @@ class FunctionalGuaranteesUserTypeError(TypeError):
             function_name="",
             function_namespace="",
             internal_parameter_name="",
+            guarantee_type_name="",
             what_dict=None
     ) -> None:
         self.function_name = function_name
         self.function_namespace = function_namespace
-        self.what_dict = what_dict
+        self.guarantee_type_name = guarantee_type_name
         self.internal_parameter_name = internal_parameter_name
+        self.what_dict = what_dict
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,

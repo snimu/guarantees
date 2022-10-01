@@ -11,12 +11,12 @@ def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
 
 
 def construct_err_str(
-        function: str,
-        namespace: str,
+        function_name: str,
+        function_namespace: str,
         parameter_name: str = None,
         what_dict: dict = None
 ) -> str:
-    err_str = f"\nWhere: {namespace}.{function} \n"
+    err_str = f"\nWhere: {function_namespace}.{function_name} \n"
 
     if parameter_name is not None:
         err_str += f"\tparameter: {parameter_name} \n"

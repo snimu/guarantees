@@ -1,7 +1,7 @@
 from guarantees.functional_guarantees.classes import IsBool
-from guarantees.functional_guarantees.signals.common import SignalTypeError
 from guarantees.functional_guarantees.enforcement._util import \
-    get_type_name, get_err_msg_type, raise_type_warning_or_exception
+    get_type_name, get_guaranteed_type_name, raise_warning_or_exception, \
+    choose_exception
 
 
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:
@@ -27,14 +27,18 @@ def _check_type(arg: bool, guarantee: IsBool) -> bool:
     if not err:
         return arg
 
-    signal = SignalTypeError(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name="IsBool",
-        should_type_name="bool",
-        is_type_name=get_type_name(arg)
+    exception = choose_exception(where=guarantee.where, what="type")
+    exception = exception(
+        function_name=guarantee.function_name,
+        function_namespace=guarantee.function_namespace,
+        guarantee_type_name=get_guaranteed_type_name(guarantee),
+        what_dict={
+            "should_type_name": get_guaranteed_type_name(guarantee),
+            "actual_type_name": get_type_name(arg)
+        }
     )
+
     if guarantee.error_callback is not None:
-        guarantee.error_callback(signal)
+        guarantee.error_callback(exception)
     else:
-        err_msg = get_err_msg_type(signal)
-        raise_type_warning_or_exception(err_msg, guarantee)
+        raise_warning_or_exception(exception, guarantee)

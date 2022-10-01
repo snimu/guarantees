@@ -16,6 +16,7 @@ class ParameterGuaranteesValueError(ValueError):
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
+            guarantee_type_name=guarantee_type_name,
             what_dict=what_dict
         )
         super().__init__(self.err_str)
@@ -36,6 +37,7 @@ class ParameterGuaranteesTypeError(TypeError):
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
+            guarantee_type_name=guarantee_type_name,
             what_dict=what_dict
         )
         super().__init__(self.err_str)
@@ -56,6 +58,7 @@ class ReturnGuaranteesValueError(ValueError):
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
+            guarantee_type_name=guarantee_type_name,
             what_dict=what_dict
         )
         super().__init__(self.err_str)
@@ -76,6 +79,7 @@ class ReturnGuaranteesTypeError(TypeError):
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
+            guarantee_type_name=guarantee_type_name,
             what_dict=what_dict
         )
         super().__init__(self.err_str)
@@ -96,6 +100,7 @@ class FunctionalGuaranteesUserValueError(ValueError):
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
+            guarantee_type_name=guarantee_type_name,
             what_dict=what_dict
         )
         super().__init__(self.err_str)
@@ -116,6 +121,7 @@ class FunctionalGuaranteesUserTypeError(TypeError):
         self.err_str = construct_err_str(
             function_name=function_name,
             function_namespace=function_namespace,
+            guarantee_type_name=guarantee_type_name,
             what_dict=what_dict
         )
         super().__init__(self.err_str)

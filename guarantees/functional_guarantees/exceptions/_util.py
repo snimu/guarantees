@@ -13,10 +13,10 @@ def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
 def construct_err_str(
         function_name: str,
         function_namespace: str,
-        guarantee_name: str,
+        guarantee_type_name: str,
         what_dict: dict = None
 ) -> str:
     err_str = f"\nWhere: {function_namespace}.{function_name} \n"
-    err_str += f"\tGuarantee: {guarantee_name} \n"
+    err_str += f"\tGuarantee: {guarantee_type_name} \n"
     err_str += _parse_what_dict(what_dict)
     return err_str

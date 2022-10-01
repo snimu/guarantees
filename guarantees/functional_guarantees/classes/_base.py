@@ -11,11 +11,11 @@ class Guarantee:
     parameter_name: str
     function_name: str = ""
     function_namespace: str = ""
+    where: str = "parameter"
 
 
 @dataclass
 class TypeGuarantee(Guarantee):
-    where: str = "parameter"
     error_severity: int = severity.ERROR
     force_conversion: bool = False
     error_callback: Callable = None

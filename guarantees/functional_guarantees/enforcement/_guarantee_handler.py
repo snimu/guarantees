@@ -82,6 +82,7 @@ def register_parameter_guarantees(
     for param_guarantee in param_guarantees:
         param_guarantee.function_name = function_name
         param_guarantee.function_namespace = function_namespace
+        param_guarantee.where = "parameter"
 
         ParameterHandler.handles[fct]["args"].append(param_guarantee)
         ParameterHandler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
@@ -97,6 +98,7 @@ def register_return_guarantees(
 
     return_guarantee.function_name = function_name
     return_guarantee.function_namespace = function_namespace
+    return_guarantee.where = "return"
     ReturnHandler.handles[fct] = return_guarantee
 
 

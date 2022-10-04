@@ -2,17 +2,9 @@ from typing import Union
 
 from guarantees.functional_guarantees.classes import IsInt, IsFloat, IsComplex, \
     NumericGuarantee
-from guarantees.functional_guarantees.signals.common import SignalTypeError, \
-    SignalNotIn
-from guarantees.functional_guarantees.signals.numeric import \
-    SignalMinGEMax, SignalMinReGEMaxRe, SignalMinImGEMaxIm,\
-    SignalMinViolated, SignalMinReViolated, SignalMinImViolated, \
-    SignalMaxViolated, SignalMaxReViolated, SignalMaxImViolated
 from guarantees.functional_guarantees.enforcement._util import \
-    raise_value_warning_or_exception, raise_type_warning_or_exception, \
     get_guaranteed_type, get_guaranteed_type_name, get_guarantee_name, \
-    get_type_name, get_err_msg_type, get_err_msg_minimum_ge_maximum, \
-    get_err_msg_minimum, get_err_msg_maximum, get_err_msg_isin
+    get_type_name, handle_error
 
 
 def enforce_isint(arg: int, guarantee: IsInt) -> int:
@@ -111,24 +103,19 @@ def _check_type(
         if type(arg) is not type_should:
             err = True
 
-    # Handle errors
-    if not err:
-        return arg
+    if err:
+        handle_error(
+            where=guarantee.where,
+            type_or_value="type",
+            guarantee=guarantee,
+            parameter_name=guarantee.parameter_name,
+            what_dict={
+                "should_type": type_should_str,
+                "actual_type": type_is_str
+            }
+        )
 
-    # Error occurred
-
-    signal = SignalTypeError(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guaranteed_type_name(guarantee),
-        should_type_name=type_should_str,
-        is_type_name=type_is_str,
-        force_conversion=guarantee.force_conversion
-    )
-    if guarantee.error_callback is not None:
-        guarantee.error_callback(signal)
-    else:
-        err_msg = get_err_msg_type(signal)
-        raise_type_warning_or_exception(err_msg, guarantee)
+    return arg  # if warnings_only
 
 
 def _check_minimum_type(
@@ -136,11 +123,17 @@ def _check_minimum_type(
         guarantee: NumericGuarantee
 ) -> None:
     if type(minimum) not in [int, float]:
-        err_msg = f"parameter: {get_guarantee_name(guarantee)}.minimum \n" \
-                  f"\t violated: type -- guarantee parameter \n" \
-                  f"\t should: {get_guaranteed_type_name(guarantee)} \n" \
-                  f"\t actual: {get_type_name(minimum)} \n"
-        raise_type_warning_or_exception(err_msg, guarantee)
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=guarantee,
+            parameter_name=f"{get_guarantee_name(guarantee)}.minimum",
+            what_dict={
+                "should_type": \
+                    "int" if isinstance(guarantee, IsInt) else "float",
+                "actual_type": get_type_name(minimum)
+            }
+        )
 
 
 def _check_maximum_type(
@@ -148,11 +141,17 @@ def _check_maximum_type(
         guarantee: NumericGuarantee
 ) -> None:
     if type(maximum) not in [int, float]:
-        err_msg = f"parameter: {get_guarantee_name(guarantee)}.maximum \n" \
-                  f"\t violated: type -- guarantee parameter \n" \
-                  f"\t should: {get_guaranteed_type_name(guarantee)} \n" \
-                  f"\t actual: {get_type_name(maximum)} \n"
-        raise_type_warning_or_exception(err_msg, guarantee)
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=guarantee,
+            parameter_name=f"{get_guarantee_name(guarantee)}.maximum",
+            what_dict={
+                "should_type": \
+                    "int" if isinstance(guarantee, IsInt) else "float",
+                "actual_type": get_type_name(maximum)
+            }
+        )
 
 
 def _check_min_ge_max(
@@ -165,23 +164,21 @@ def _check_min_ge_max(
         _check_minimum_type(minimum, guarantee)
         _check_maximum_type(maximum, guarantee)
 
-        signal = SignalMinGEMax
-        if minmax_type == "re":
-            signal = SignalMinReGEMaxRe
-        elif minmax_type == "im":
-            signal = SignalMinImGEMaxIm
-        signal = signal(
-            parameter_name=guarantee.parameter_name,
-            guarantee_type_name=get_guaranteed_type_name(guarantee),
-            minimum=minimum,
-            maximum=maximum
-        )
+        minimum_name = "minimum" if minmax_type == "abs" else "minimum_" + minmax_type
+        maximum_name = "maximum" if minmax_type == "abs" else "minimum_" + minmax_type
 
-        if guarantee.error_callback is not None:
-            guarantee.error_callback(signal)
-        else:
-            err_msg = get_err_msg_minimum_ge_maximum(signal)
-            raise_value_warning_or_exception(err_msg, guarantee)
+        handle_error(
+            where="internal",
+            type_or_value="value",
+            guarantee=guarantee,
+            parameter_name=f"{get_guarantee_name(guarantee)}.{minimum_name} "
+                           f"and {get_type_name(guarantee)}.{maximum_name}",
+            what_dict={
+                "error": f"{minimum_name} >= {maximum_name} ",
+                "minimum": str(minimum),
+                "maximum": str(maximum)
+            }
+        )
 
 
 def _check_min(
@@ -196,24 +193,19 @@ def _check_min(
     _check_minimum_type(minimum, guarantee)
 
     if arg < minimum:
-        signal = SignalMinViolated
-        if min_type == "re":
-            signal = SignalMinReViolated
-        if min_type == "im":
-            signal = SignalMinImViolated
-
-        signal = signal(
+        minimum_name = "minimum" if min_type == "abs" else "minimum_" + min_type
+        handle_error(
+            where=guarantee.where,
+            type_or_value="value",
+            guarantee=guarantee,
             parameter_name=guarantee.parameter_name,
-            guarantee_type_name=get_guarantee_name(guarantee),
-            arg=arg,
-            minimum=minimum
+            what_dict={
+                "error": f"violated "
+                         f"{get_guarantee_name(guarantee)}.{minimum_name}",
+                "minimum": minimum,
+                "actual": arg
+            }
         )
-
-        if guarantee.error_callback is not None:
-            guarantee.error_callback(signal)
-        else:
-            err_msg = get_err_msg_minimum(signal)
-            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_max(
@@ -228,23 +220,19 @@ def _check_max(
     _check_maximum_type(maximum, guarantee)
 
     if arg > maximum:
-        signal = SignalMaxViolated
-        if max_type == "re":
-            signal = SignalMaxReViolated
-        if max_type == "im":
-            signal = SignalMaxImViolated
-
-        signal = signal(
+        maximum_name = "maximum" if max_type == "abs" else "maximum_" + max_type
+        handle_error(
+            where=guarantee.where,
+            type_or_value="value",
+            guarantee=guarantee,
             parameter_name=guarantee.parameter_name,
-            guarantee_type_name=get_guarantee_name(guarantee),
-            arg=arg,
-            maximum=maximum
+            what_dict={
+                "error": f"violated "
+                         f"{get_guarantee_name(guarantee)}.{maximum_name}",
+                "minimum": maximum,
+                "actual": arg
+            }
         )
-        if guarantee.error_callback is not None:
-            guarantee.error_callback(signal)
-        else:
-            err_msg = get_err_msg_maximum(signal)
-            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):
@@ -252,23 +240,26 @@ def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):
         return
 
     if type(guarantee.isin) is not list:
-        err_msg = f"parameter: {get_guarantee_name(guarantee)}.isin \n" \
-                  f"\t violated: type -- guarantee parameter \n" \
-                  f"\t should: list \n" \
-                  f"\t actual: {get_type_name(guarantee.isin)} \n"
-        raise_type_warning_or_exception(err_msg, guarantee)
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=guarantee,
+            parameter_name=f"{get_guarantee_name(guarantee)}.isin",
+            what_dict={
+                "should_type": "list",
+                "actual_type": f"{get_type_name(guarantee.isin)}"
+            }
+        )
 
-    if arg in guarantee.isin:
-        return
-
-    signal = SignalNotIn(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(guarantee),
-        arg=arg,
-        isin=guarantee.isin
-    )
-    if guarantee.error_callback is not None:
-        guarantee.error_callback(signal)
-    else:
-        err_msg = get_err_msg_isin(signal)
-        raise_value_warning_or_exception(err_msg, guarantee)
+    if arg not in guarantee.isin:
+        handle_error(
+            where=guarantee.where,
+            type_or_value="value",
+            guarantee=guarantee,
+            parameter_name=guarantee.parameter_name,
+            what_dict={
+                "error": f"violated {get_guarantee_name(guarantee)}.isin",
+                "isin": guarantee.isin,
+                "actual": arg
+            }
+        )

@@ -1,3 +1,6 @@
+from guarantees import severity
+
+
 def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
     err_str = ""
     for key, val in what_dict.items():
@@ -5,7 +8,7 @@ def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
             err_str += f"{tabs}key: \n"
             err_str += _parse_what_dict(val, tabs + "\t")
         else:
-            err_str += f"{tabs}{key}: {val} \n"
+            err_str += f"{tabs}{str(key)}: {str(val)} \n"
 
     return err_str
 
@@ -13,10 +16,21 @@ def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
 def construct_err_str(
         function_name: str,
         function_namespace: str,
-        guarantee_type_name: str,
+        guarantee_name: str,
+        parameter_name: str,
+        error_severity: int,
         what_dict: dict = None
 ) -> str:
+    severity_str_dict = {
+        severity.DEBUG: "DEBUG",
+        severity.INFO: "INFO",
+        severity.WARN: "WARN",
+        severity.ERROR: "ERROR",
+        severity.FATAL: "FATAL"
+    }
     err_str = f"\nWhere: {function_namespace}.{function_name} \n"
-    err_str += f"\tGuarantee: {guarantee_type_name} \n"
+    err_str += f"\tSeverity: {severity_str_dict[error_severity]} \n"
+    err_str += f"\tGuarantee: {guarantee_name} \n"
+    err_str += f"\tParameter: {parameter_name} \n"
     err_str += _parse_what_dict(what_dict)
     return err_str

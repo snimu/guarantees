@@ -1,7 +1,6 @@
 from guarantees.functional_guarantees.classes import IsBool
 from guarantees.functional_guarantees.enforcement._util import \
-    get_type_name, get_guaranteed_type_name, raise_warning_or_exception, \
-    choose_exception
+    get_type_name, get_guaranteed_type_name, handle_error
 
 
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:
@@ -27,18 +26,13 @@ def _check_type(arg: bool, guarantee: IsBool) -> bool:
     if not err:
         return arg
 
-    exception = choose_exception(where=guarantee.where, what="type")
-    exception = exception(
-        function_name=guarantee.function_name,
-        function_namespace=guarantee.function_namespace,
-        guarantee_type_name=get_guaranteed_type_name(guarantee),
+    handle_error(
+        where=guarantee.where,
+        type_or_value="type",
+        guarantee=guarantee,
+        parameter_name=guarantee.parameter_name,
         what_dict={
-            "should_type_name": get_guaranteed_type_name(guarantee),
-            "actual_type_name": get_type_name(arg)
+            "should_type": get_guaranteed_type_name(guarantee),
+            "actual_type": get_type_name(arg)
         }
     )
-
-    if guarantee.error_callback is not None:
-        guarantee.error_callback(exception)
-    else:
-        raise_warning_or_exception(exception, guarantee)

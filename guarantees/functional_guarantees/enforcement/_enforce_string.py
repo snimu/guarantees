@@ -7,7 +7,7 @@ from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_type_name, \
     get_err_msg_type, get_err_msg_minimum_len_type, \
     get_err_msg_maximum_len_type, get_err_msg_minimum_len_ge_maximum_len, \
-    get_err_msg_minimum_len, get_err_msg_maximum_len, get_err_msg_isin
+    get_err_msg_minimum_len, get_err_msg_maximum_len, get_err_msg_isin, handle_error
 
 
 def enforce_isstr(arg: str, guarantee: IsStr) -> str:
@@ -32,20 +32,19 @@ def _check_type(arg: str, guarantee: IsStr) -> str:
         if not isinstance(arg, str):
             err = True
 
-    if not err:
-        return arg
+    if err:
+        handle_error(
+            where=guarantee.where,
+            type_or_value="type",
+            guarantee=guarantee,
+            parameter_name=guarantee.parameter_name,
+            what_dict={
+                "should_type": "str",
+                "actual_type": get_type_name(arg)
+            }
+        )
 
-    signal = SignalTypeError(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(guarantee),
-        should_type_name="str",
-        is_type_name=get_type_name(arg)
-    )
-    if guarantee.error_callback is not None:
-        guarantee.error_callback(signal)
-    else:
-        err_msg = get_err_msg_type(signal)
-        raise_type_warning_or_exception(err_msg, guarantee)
+    return arg
 
 
 def _check_len(arg, guarantee: IsStr) -> None:
@@ -61,14 +60,16 @@ def _minimum_len_type_is_correct(guarantee: IsStr) -> bool:
     if type(guarantee.minimum_len) is int:
         return True
 
-    signal = SignalTypeError(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(guarantee),
-        should_type_name="int",
-        is_type_name=get_type_name(guarantee.minimum_len)
+    handle_error(
+        where="internal",
+        type_or_value="type",
+        guarantee=guarantee,
+        parameter_name=f"{get_guarantee_name(guarantee)}.minimum_len",
+        what_dict={
+            "should_type": "int",
+            "actual_type": get_type_name(guarantee.minimum_len)
+        }
     )
-    err_msg = get_err_msg_minimum_len_type(signal)
-    raise_type_warning_or_exception(err_msg, guarantee)
 
     return False   # in case of warnings_only
 
@@ -77,14 +78,16 @@ def _maximum_len_type_is_correct(guarantee: IsStr) -> bool:
     if type(guarantee.maximum_len) is int:
         return True
 
-    signal = SignalTypeError(
-        parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(guarantee),
-        should_type_name="int",
-        is_type_name=get_type_name(guarantee.maximum_len)
+    handle_error(
+        where="internal",
+        type_or_value="type",
+        guarantee=guarantee,
+        parameter_name=f"{get_guarantee_name(guarantee)}.maximum_len",
+        what_dict={
+            "should_type": "int",
+            "actual_type": get_type_name(guarantee.maximum_len)
+        }
     )
-    err_msg = get_err_msg_maximum_len_type(signal)
-    raise_type_warning_or_exception(err_msg, guarantee)
 
     return False   # in case of warnings_only
 
@@ -98,17 +101,18 @@ def _check_min_len_ge_max_len(guarantee: IsStr) -> None:
         return
 
     if guarantee.minimum_len >= guarantee.maximum_len:
-        signal = SignalMinLenGEMaxLen(
-            parameter_name=guarantee.parameter_name,
-            guarantee_type_name=get_guarantee_name(guarantee),
-            minimum_len=guarantee.minimum_len,
-            maximum_len=guarantee.maximum_len
+        handle_error(
+            where="internal",
+            type_or_value="value",
+            guarantee=guarantee,
+            parameter_name=f"{get_guarantee_name(guarantee)}.minimum_len "
+                           f"and {get_guarantee_name(guarantee)}.maximum_len",
+            what_dict={
+                "error": "minimum_len >= maximum_len",
+                "minimum_len": str(guarantee.minimum_len),
+                "maximum_len": str(guarantee.maximum_len)
+            }
         )
-        if guarantee.error_callback is not None:
-            guarantee.error_callback(signal)
-        else:
-            err_msg = get_err_msg_minimum_len_ge_maximum_len(signal)
-            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_min_len(arg, guarantee: IsStr) -> None:
@@ -122,17 +126,18 @@ def _check_min_len(arg, guarantee: IsStr) -> None:
         return
 
     if len(arg) < guarantee.minimum_len:
-        signal = SignalMinLenViolated(
+        handle_error(
+            where=guarantee.where,
+            type_or_value="value",
+            guarantee=guarantee,
             parameter_name=guarantee.parameter_name,
-            guarantee_type_name=get_guarantee_name(guarantee),
-            minimum_len=guarantee.minimum_len,
-            arg=arg
+            what_dict={
+                "error": f"violated "
+                         f"{get_guarantee_name(guarantee)}.minimum_len",
+                "minimum_len": str(guarantee.minimum_len),
+                "actual len": str(len(arg))
+            }
         )
-        if guarantee.error_callback is not None:
-            guarantee.error_callback(signal)
-        else:
-            err_msg = get_err_msg_minimum_len(signal)
-            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_max_len(arg, guarantee: IsStr) -> None:
@@ -146,17 +151,18 @@ def _check_max_len(arg, guarantee: IsStr) -> None:
         return
 
     if len(arg) > guarantee.maximum_len:
-        signal = SignalMaxLenViolated(
+        handle_error(
+            where=guarantee.where,
+            type_or_value="value",
+            guarantee=guarantee,
             parameter_name=guarantee.parameter_name,
-            guarantee_type_name=get_guarantee_name(guarantee),
-            maximum_len=guarantee.maximum_len,
-            arg=arg
+            what_dict={
+                "error": f"violated "
+                         f"{get_guarantee_name(guarantee)}.maximum_len",
+                "maximum_len": str(guarantee.maximum_len),
+                "actual len": str(len(arg))
+            }
         )
-        if guarantee.error_callback is not None:
-            guarantee.error_callback(signal)
-        else:
-            err_msg = get_err_msg_maximum_len(signal)
-            raise_value_warning_or_exception(err_msg, guarantee)
 
 
 def _check_isin(arg: str, guarantee: IsStr) -> None:
@@ -167,23 +173,28 @@ def _check_isin(arg: str, guarantee: IsStr) -> None:
         return
 
     if type(guarantee.isin) is not list:
-        err_msg = f"parameter: {guarantee.parameter_name} \n" \
-                  f"\t violated: type -- guarantee \n" \
-                  f"\t should: list \n" \
-                  f"\t actual: {get_type_name(guarantee.isin)} \n"
-        raise_type_warning_or_exception(err_msg, guarantee)
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=guarantee,
+            parameter_name=f"{get_guarantee_name(guarantee)}.isin",
+            what_dict={
+                "should_type": "list",
+                "actual_type": get_type_name(guarantee.isin)
+            }
+        )
 
     if arg in guarantee.isin:
         return
 
-    signal = SignalNotIn(
+    handle_error(
+        where=guarantee.where,
+        type_or_value="value",
+        guarantee=guarantee,
         parameter_name=guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(guarantee),
-        isin=guarantee.isin,
-        arg=arg
+        what_dict={
+            "error": f"violated {get_guarantee_name(guarantee)}.isin",
+            "isin": f"{guarantee.isin}",
+            "actual": arg  # is str
+        }
     )
-    if guarantee.error_callback is not None:
-        guarantee.error_callback(signal)
-    else:
-        err_msg = get_err_msg_isin(signal)
-        raise_value_warning_or_exception(err_msg, guarantee)

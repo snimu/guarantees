@@ -18,7 +18,7 @@ from tests._test_return_guarantees import TestReturnGuarantees
 #  - IsTorchTensor (valid_shapes, valid_devices)
 
 # TODO (snimu) Create (and only raise) custom Exceptions
-#   - Replace all signals etc. with those exceptions
+#   - Test for specific exceptions
 #   - Change existing documentation accordingly
 #   - Write documentation for the decorators (specifically `add_guarantees`)
 

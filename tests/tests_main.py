@@ -13,12 +13,13 @@ from tests._test_return_guarantees import TestReturnGuarantees
 
 # TODO (snimu) "description" parameter?
 
+# TODO: test_mixed_arg_kwarg in _test_parameters_guarantee_common
+
 # TODO (snimu)
 #  - IsNumpyArray (valid_shapes)
 #  - IsTorchTensor (valid_shapes, valid_devices)
 
 # TODO (snimu) Create (and only raise) custom Exceptions
-#   - Test for specific exceptions
 #   - Change existing documentation accordingly
 #   - Write documentation for the decorators (specifically `add_guarantees`)
 

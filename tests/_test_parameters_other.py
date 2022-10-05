@@ -31,7 +31,7 @@ class TestIsClass(unittest.TestCase):
         try:
             fct(1, 1)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_check_fct(self):
@@ -79,7 +79,7 @@ class TestIsNone(unittest.TestCase):
         try:
             fct(1)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)  # successfully raised exception
 
 
@@ -116,7 +116,7 @@ class TestIsUnion(unittest.TestCase):
         try:
             self.fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_value_error(self):
@@ -142,5 +142,5 @@ class TestIsUnion(unittest.TestCase):
         try:
             fct(0)
             self.assertTrue(False)  # should have raised ValueError
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)  # successfully raised exception

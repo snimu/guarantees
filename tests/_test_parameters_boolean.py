@@ -1,5 +1,6 @@
 import unittest
 
+import guarantees.functional_guarantees.exceptions
 from guarantees import functional_guarantees as fg
 
 
@@ -23,7 +24,7 @@ class TestBooleanGuarantee(unittest.TestCase):
         try:
             fct("nope")
             self.assertTrue(False)   # should have raised an exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):

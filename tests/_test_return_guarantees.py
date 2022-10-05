@@ -25,7 +25,7 @@ class TestReturnGuarantees(unittest.TestCase):
         try:
             fct(1)
             self.assertTrue(False)   # should have raised an exception
-        except TypeError:
+        except fg.exceptions.ReturnGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised an exception
 
     def test_false_with_conversion(self):

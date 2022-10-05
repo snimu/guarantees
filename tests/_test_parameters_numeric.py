@@ -24,19 +24,19 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1., 1., complex(1., 1.))
             self.assertTrue(False)   # should have raised an error
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
         try:
             fct(1, 1, complex(1., 1.))
             self.assertTrue(False)   # param b should have raised error
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
         try:
             fct(1, 1., 1.)
             self.assertTrue(False)   # param c should have raised error
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):
@@ -67,19 +67,19 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct("nope", 1., complex(1., 1.))
             self.assertTrue(False)    # param a should have raise error
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(1, "nope", complex(1., 1.))
             self.assertTrue(False)  # param b should have raise error
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)  # successfully raised exception
 
         try:
             fct(1, 1., "nope")
             self.assertTrue(False)    # param c should have raise error
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)     # successfully raised exception
 
     def test_minmax(self):
@@ -106,55 +106,55 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(-1, 0., complex(0., 0.))    # param a too small
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(6, 0., complex(0., 0.))     # param a too large
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, -1., complex(0., 0.))     # param b too small
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, 6., complex(0., 0.))     # param b too large
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, 0., complex(5., 5.))    # abs value of param c too great
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, 0., complex(-1., 0.))    # param c.real too small
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, 0., complex(6., 0.))     # param c.real too large
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, 0., complex(0., -1.))    # param c.imag too small
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
         try:
             fct(0, 0., complex(0., 6.))     # param c.imag too large
             self.assertTrue(False)    # should raise an exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)     # successfully raised exception
 
     def test_isin(self):
@@ -184,25 +184,25 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(4, 0., complex(0., 0.))
             self.assertTrue(False)   # param a should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
         try:
             fct(0, 4., complex(0., 0.))
             self.assertTrue(False)   # param a should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
         try:
             fct(0, 0., complex(4., 0.))
             self.assertTrue(False)   # param a should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
         try:
             fct(0, 0., complex(0., 4.))
             self.assertTrue(False)   # param a should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_min(self):
@@ -220,7 +220,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1)
             self.assertTrue(False)   # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_min(self):
@@ -238,7 +238,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1.)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min(self):
@@ -256,7 +256,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min_re(self):
@@ -274,7 +274,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_min_im(self):
@@ -292,7 +292,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_max(self):
@@ -310,7 +310,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_max(self):
@@ -328,7 +328,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1.)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max(self):
@@ -346,7 +346,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max_re(self):
@@ -364,7 +364,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_max_im(self):
@@ -382,7 +382,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_int_isin(self):
@@ -400,7 +400,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_float_isin(self):
@@ -418,7 +418,7 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(1.)
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_complex_isin(self):
@@ -436,8 +436,5 @@ class TestNumericGuarantee(unittest.TestCase):
         try:
             fct(complex(1., 1.))
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
-
-
-# TODO: test_mixed_arg_kwarg in _test_parameters_guarantee_base

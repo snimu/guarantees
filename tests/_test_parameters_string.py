@@ -22,7 +22,7 @@ class TestStringGuarantee(unittest.TestCase):
         try:
             fct(1)
             self.assertTrue(False)   # should have raised exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_force_conversion(self):
@@ -65,13 +65,13 @@ class TestStringGuarantee(unittest.TestCase):
         try:
             fct("1")
             self.assertTrue(False)   # should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
         try:
             fct("123456")
             self.assertTrue(False)   # should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_isin(self):
@@ -93,7 +93,7 @@ class TestStringGuarantee(unittest.TestCase):
         try:
             fct("nope")
             self.assertTrue(False)   # should have raised exception
-        except ValueError:
+        except fg.exceptions.ParameterGuaranteesValueError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_min(self):
@@ -110,7 +110,7 @@ class TestStringGuarantee(unittest.TestCase):
         try:
             fct("hi")
             self.assertTrue(False)   # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_incorrect_guarantee_parameters_max(self):
@@ -127,7 +127,7 @@ class TestStringGuarantee(unittest.TestCase):
         try:
             fct("hi")
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception
 
     def test_incorrect_guarantee_parameters_isin(self):
@@ -144,5 +144,5 @@ class TestStringGuarantee(unittest.TestCase):
         try:
             fct("hi")
             self.assertTrue(False)  # should have raised exception
-        except TypeError:
+        except fg.exceptions.FunctionalGuaranteesUserTypeError:
             self.assertTrue(True)  # successfully raised exception

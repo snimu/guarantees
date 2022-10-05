@@ -5,7 +5,7 @@ from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, 
     IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
 from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_guaranteed_type_name, get_type_name, \
-    get_guaranteed_type, get_err_msg_type, raise_type_warning_or_exception
+    get_guaranteed_type, get_err_msg_type, raise_type_warning_or_exception, handle_error
 from guarantees.functional_guarantees.signals.common import SignalTypeError
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
@@ -146,6 +146,9 @@ def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
         return arg
 
     for guarantee in param_guarantee.guarantees:
+        guarantee.function_name = f"{param_guarantee.function_name}: IsUnion"
+        guarantee.function_namespace = param_guarantee.function_namespace
+
         # 1. Try to change arg to wanted type if allowed
         # 1.1  If ValueError: definitely wrong type -> continue
         # 2. Check type (whether force_conversion or not)
@@ -169,14 +172,16 @@ def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
     # Didn't work
     should_types = \
         [get_guaranteed_type_name(g) for g in param_guarantee.guarantees]
-    signal = SignalTypeError(
+    handle_error(
+        where=param_guarantee.where,
+        type_or_value="type",
+        guarantee=param_guarantee,
         parameter_name=param_guarantee.parameter_name,
-        guarantee_type_name=get_guarantee_name(param_guarantee),
-        should_type_name=f"Union{should_types}",
-        is_type_name=get_type_name(arg)
+        what_dict={
+            "should_type": f"Union{should_types}",
+            "actual_type": get_type_name(arg)
+        }
     )
-    err_msg = get_err_msg_type(signal)
-    raise_type_warning_or_exception(err_msg, param_guarantee)
 
     # In case of warnings_only
     return arg

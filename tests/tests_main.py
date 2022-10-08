@@ -15,6 +15,10 @@ from tests._test_return_guarantees import TestReturnGuarantees
 
 # TODO: test_mixed_arg_kwarg in _test_parameters_guarantee_common
 
+# TODO (snimu) "types" parameter in collections -> if not None, check (with any)
+#   that all members of the collectible are of the type
+#   ("key_types", "val_types" for dict; "types" checks both here)
+
 # TODO (snimu)
 #  - IsNumpyArray (valid_shapes)
 #  - IsTorchTensor (valid_shapes, valid_devices)
@@ -25,7 +29,7 @@ from tests._test_return_guarantees import TestReturnGuarantees
 
 # TODO (snimu) guarantee tests
 
-# TODO (snimu) classes for other languages: Rust, C++, Java, etc.
+# TODO (snimu) dynamic guarantees for other languages: Rust, C++, Java, etc.
 #   -> one branch per language.
 #   Subbranches in naming style: <language>-<branch>
 

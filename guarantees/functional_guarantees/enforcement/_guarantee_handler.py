@@ -5,8 +5,7 @@ from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, 
     IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
 from guarantees.functional_guarantees.enforcement._util import \
     get_guarantee_name, get_guaranteed_type_name, get_type_name, \
-    get_guaranteed_type, get_err_msg_type, raise_type_warning_or_exception, handle_error
-from guarantees.functional_guarantees.signals.common import SignalTypeError
+    get_guaranteed_type, handle_error
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
      enforce_iscomplex

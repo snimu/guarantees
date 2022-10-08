@@ -1,7 +1,6 @@
 from typing import Any
 
 from guarantees.functional_guarantees.classes import IsClass, IsNone
-from guarantees.functional_guarantees.signals.common import SignalTypeError
 from guarantees.functional_guarantees.enforcement._util import \
     get_type_name, handle_error
 

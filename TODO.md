@@ -58,7 +58,7 @@
 
 3. Create file in `functional_guarantees`: `settings.py`
     - Has two global variables:
-      - `cache: bool` If `False`, the `Handler.handles`dict
+      - `CACHE: bool` If `False`, the `Handler.handles`dict
         will be reset after every function call:
          ```python
              # in add_guarantees.
@@ -66,13 +66,13 @@
              ret_val = enforce_return_guarantees(arg)
              
              # Add these lines:
-             if not settings.cache:
+             if not settings.CACHE:
                 ReturnGuaranteeHandler.handles = {}
                 ParameterGuaranteeHandler.handles = {}
         
              return ret_val   
          ```
-      - `on: bool` Replaces `OnOff.on`
+      - `ON: bool` Replaces `OnOff.on`
     - Has one function:
       - `settings(on: bool, cache: bool)`
 

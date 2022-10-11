@@ -1,9 +1,12 @@
 ## Immediate steps
 
+0. Move all TODOs here
+
 1. Create `util`&ndash;directory.
     - `util.typenames` or something like it
     - `util.error_handeling`
     - `util.other`
+   
 2. Change `check_fct`&ndash;member for `TypeGuarantee`s.
    - `guarantee.check_functions`
      - Example:
@@ -52,6 +55,7 @@
             what_dict=what_dict
         )
      ````
+
 3. Create file in `functional_guarantees`: `settings.py`
     - Has two global variables:
       - `cache: bool` If `False`, the `Handler.handles`dict

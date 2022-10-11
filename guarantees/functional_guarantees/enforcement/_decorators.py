@@ -42,6 +42,11 @@ def add_guarantees(
             ret_val = fct(*args, **kwargs)
             if return_guarantee is not None:
                 ret_val = enforce_return_guarantees(fct, ret_val)
+
+            if not settings.CACHE:
+                ParameterHandler.handles = {}
+                ReturnHandler.handles = {}
+
             return ret_val
 
         return _enforce

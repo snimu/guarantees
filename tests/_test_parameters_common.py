@@ -87,10 +87,10 @@ class TestOnOff(unittest.TestCase):
         except TypeError:
             self.assertTrue(True)
 
-        fg.off()
+        fg.settings.change_settings(on=False)
         fct("not an int!")
 
-        fg.on()
+        fg.settings.change_settings(on=True)
         try:
             fct("not an int!")
             self.assertTrue(False)

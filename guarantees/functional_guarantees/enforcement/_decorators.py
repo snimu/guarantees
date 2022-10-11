@@ -5,7 +5,7 @@ from ._guarantee_handler import enforce_parameter_guarantees, \
     register_parameter_guarantees, ParameterHandler, \
     register_return_guarantees, ReturnHandler, \
     enforce_return_guarantees
-from ._on_off import OnOff
+from guarantees.functional_guarantees import settings
 
 
 def add_guarantees(
@@ -15,7 +15,7 @@ def add_guarantees(
         return_guarantee=None
 ):
     def _fct(fct):
-        if not OnOff.on:
+        if not settings.ON:
             return fct
 
         if not ParameterHandler.contains(fct) and param_guarantees is not None:

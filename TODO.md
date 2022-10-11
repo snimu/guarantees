@@ -44,13 +44,33 @@
         
         for i, err_ind in enumerate(errors):
             what_dict[f"error {i}" = \
-                f"....check_function[{err_ind}]"
+                f"....check_function[{err_ind}]: "
+                f"{get_error_msg(guarantee.check_functions[err_ind])}"
         
         handle_errors(
             ...,
             what_dict=what_dict
         )
      ````
+3. Create file in `functional_guarantees`: `settings.py`
+    - Has two global variables:
+      - `cache: bool` If `False`, the `Handler.handles`dict
+        will be reset after every function call:
+         ```python
+             # in add_guarantees.
+             arg = enforce_parameter_guarantees(arg)
+             ret_val = enforce_return_guarantees(arg)
+             
+             # Add these lines:
+             if not settings.cache:
+                ReturnGuaranteeHandler.handles = {}
+                ParameterGuaranteeHandler.handles = {}
+        
+             return ret_val   
+         ```
+      - `on: bool` Replaces `OnOff.on`
+    - Has one function:
+      - `settings(on: bool, cache: bool)`
 
 
 ## Other

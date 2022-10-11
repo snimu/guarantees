@@ -56,25 +56,4 @@
         )
      ````
 
-3. Create file in `functional_guarantees`: `settings.py`
-    - Has two global variables:
-      - `CACHE: bool` If `False`, the `Handler.handles`dict
-        will be reset after every function call:
-         ```python
-             # in add_guarantees.
-             arg = enforce_parameter_guarantees(arg)
-             ret_val = enforce_return_guarantees(arg)
-             
-             # Add these lines:
-             if not settings.CACHE:
-                ReturnGuaranteeHandler.handles = {}
-                ParameterGuaranteeHandler.handles = {}
-        
-             return ret_val   
-         ```
-      - `ON: bool` Replaces `OnOff.on`
-    - Has one function:
-      - `settings(on: bool, cache: bool)`
-
-
 ## Other

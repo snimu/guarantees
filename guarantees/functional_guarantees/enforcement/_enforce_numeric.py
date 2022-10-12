@@ -2,9 +2,11 @@ from typing import Union
 
 from guarantees.functional_guarantees.classes import IsInt, IsFloat, IsComplex, \
     NumericGuarantee
-from guarantees.functional_guarantees.enforcement._util import \
+from guarantees.functional_guarantees.enforcement.util.typenames import \
     get_guaranteed_type, get_guaranteed_type_name, get_guarantee_name, \
-    get_type_name, handle_error
+    get_type_name
+from guarantees.functional_guarantees.enforcement.util.error_handeling import \
+    handle_error
 
 
 def enforce_isint(arg: int, guarantee: IsInt) -> int:

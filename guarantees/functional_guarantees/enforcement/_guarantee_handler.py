@@ -3,9 +3,10 @@ from typing import List, Tuple, Dict, Any, Union
 from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, \
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
     IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
-from guarantees.functional_guarantees.enforcement._util import \
-    get_guarantee_name, get_guaranteed_type_name, get_type_name, \
-    get_guaranteed_type, handle_error
+from guarantees.functional_guarantees.enforcement.util.typenames import \
+    get_guaranteed_type_name, get_type_name, get_guaranteed_type
+from guarantees.functional_guarantees.enforcement.util.error_handeling import \
+    handle_error
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
      enforce_iscomplex

@@ -1,8 +1,10 @@
 from typing import Any
 
 from guarantees.functional_guarantees.classes import IsClass, IsNone
-from guarantees.functional_guarantees.enforcement._util import \
-    get_type_name, handle_error
+from guarantees.functional_guarantees.enforcement.util.typenames import \
+    get_type_name
+from guarantees.functional_guarantees.enforcement.util.error_handeling import \
+    handle_error
 
 
 # NoOp needs no enforcement; it is handled in the guarantee_handler

@@ -1,6 +1,8 @@
 from guarantees.functional_guarantees.classes import IsStr
-from guarantees.functional_guarantees.enforcement._util import \
-    get_guarantee_name, get_type_name, handle_error
+from guarantees.functional_guarantees.enforcement.util.typenames import \
+    get_guarantee_name, get_type_name
+from guarantees.functional_guarantees.enforcement.util.error_handeling import \
+    handle_error
 
 
 def enforce_isstr(arg: str, guarantee: IsStr) -> str:

@@ -1,6 +1,8 @@
 from guarantees.functional_guarantees.classes import IsBool
-from guarantees.functional_guarantees.enforcement._util import \
-    get_type_name, get_guaranteed_type_name, handle_error
+from guarantees.functional_guarantees.enforcement.util.typenames import \
+    get_type_name, get_guaranteed_type_name
+from guarantees.functional_guarantees.enforcement.util.error_handeling import \
+    handle_error
 
 
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:

@@ -8,8 +8,8 @@ from guarantees.functional_guarantees.enforcement.util.error_handeling import \
 def enforce_isbool(arg: bool, guarantee: IsBool) -> bool:
     arg = _check_type(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
     return arg
 
 

@@ -44,7 +44,7 @@ class TestIsClass(unittest.TestCase):
             function_namespace="_test_parameters_other",
             param_guarantees=[
                 fg.IsClass("a", class_type=self.test_class,
-                           check_function=check_function)
+                           check_functions=check_function)
             ]
         )
         def fct(a):

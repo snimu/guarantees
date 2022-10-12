@@ -11,16 +11,16 @@ from guarantees.functional_guarantees.enforcement.util.error_handeling import \
 def enforce_isbytes(arg: bytes, guarantee: IsBytes) -> bytes:
     arg = _check_type(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
     return arg
 
 
 def enforce_isbytearray(arg: bytearray, guarantee: IsByteArray) -> bytearray:
     arg = _check_type(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
     return arg
 
 
@@ -30,8 +30,8 @@ def enforce_ismemoryview(
 ) -> memoryview:
     arg = _check_type(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
     return arg
 
 

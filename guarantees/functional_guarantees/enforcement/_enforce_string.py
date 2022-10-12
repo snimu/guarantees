@@ -10,8 +10,8 @@ def enforce_isstr(arg: str, guarantee: IsStr) -> str:
     _check_len(arg, guarantee)
     _check_isin(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
     return arg
 
 

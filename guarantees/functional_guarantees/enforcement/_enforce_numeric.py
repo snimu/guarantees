@@ -23,8 +23,8 @@ def enforce_isint(arg: int, guarantee: IsInt) -> int:
 
     _check_isin(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
 
     return arg
 
@@ -43,8 +43,8 @@ def enforce_isfloat(arg: float, guarantee: IsFloat) -> float:
 
     _check_isin(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
 
     return arg
 
@@ -79,8 +79,8 @@ def enforce_iscomplex(arg: complex, guarantee: IsComplex) -> complex:
 
     _check_isin(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
 
     return arg
 

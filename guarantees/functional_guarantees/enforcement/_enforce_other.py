@@ -11,8 +11,8 @@ from guarantees.functional_guarantees.enforcement.util.error_handeling import \
 def enforce_isclass(arg: object, guarantee: IsClass) -> object:
     arg = _check_isclass(arg, guarantee)
 
-    if guarantee.check_function is not None:
-        arg = guarantee.check_function(arg)
+    if guarantee.check_functions is not None:
+        arg = guarantee.check_functions(arg)
     return arg
 
 

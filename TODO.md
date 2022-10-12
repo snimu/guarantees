@@ -1,11 +1,6 @@
 ## Immediate steps
 
-0. Move all TODOs here
-
-1. Create `util`&ndash;directory.
-    - `util.typenames` or something like it
-    - `util.error_handeling`
-    - `util.other`
+1. Move all TODOs here
    
 2. Change `check_fct`&ndash;member for `TypeGuarantee`s.
    - `guarantee.check_functions`

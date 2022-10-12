@@ -15,7 +15,7 @@ def add_guarantees(
         return_guarantee=None
 ):
     def _fct(fct):
-        if not settings.ON:
+        if not settings.ACTIVE:
             return fct
 
         if not ParameterHandler.contains(fct) and param_guarantees is not None:

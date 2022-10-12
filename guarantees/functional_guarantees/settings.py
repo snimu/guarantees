@@ -1,9 +1,9 @@
-ON = True
+ACTIVE = True
 CACHE = True
 
 
-def change_settings(on: bool = True, cache: bool = True):
-    global ON, CACHE
-    ON = on
+def change_settings(active: bool = True, cache: bool = True):
+    global ACTIVE, CACHE
+    ACTIVE = active
     CACHE = cache
 

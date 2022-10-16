@@ -66,12 +66,19 @@ def register_parameter_guarantees(
         #   and the rest will be ignored.
         return
 
-    # TODO (snimu) improve error msg
     if type(param_guarantees) is not list \
             and not all(isinstance(g, Guarantee) for g in param_guarantees):
-        raise ValueError("@guarantees.functional_guarantees takes "
-                         "a list of classes! "
-                         f"You have given it: {type(param_guarantees)}")
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=None,
+            parameter_name="@guarantees.functional_guarantees.add_guarantees: "
+                           "param_guarantees",
+            what_dict={
+                "should_type": "List[Guarantee]",
+                "actual_type": f"{get_type_name(param_guarantees)}"
+            }
+        )
 
     # Raise exception if duplicate names exist
     _check_duplicate_names(param_guarantees)

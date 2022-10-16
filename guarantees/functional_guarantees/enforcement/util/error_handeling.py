@@ -99,6 +99,9 @@ def output_exception(
     def esc(code):
         return f'\033[{code}m'
 
+    if guarantee is None:
+        raise exception
+
     if guarantee.error_severity == severity.DEBUG:
         print(esc(32) + exception.err_str + esc(0))     # green
     elif guarantee.error_severity == severity.INFO:
@@ -152,7 +155,7 @@ def handle_error(
         what_dict=what_dict
     )
 
-    if guarantee.error_callback is not None:
+    if guarantee is not None and guarantee.error_callback is not None:
         guarantee.error_callback(exception)
     else:
         output_exception(exception, guarantee)

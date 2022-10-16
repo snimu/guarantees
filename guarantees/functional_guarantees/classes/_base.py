@@ -2,7 +2,7 @@
 
 
 from dataclasses import dataclass
-from typing import Callable, Union, Dict
+from typing import Callable, Union, Dict, List
 from guarantees import severity
 
 
@@ -20,4 +20,8 @@ class TypeGuarantee(Guarantee):
     force_conversion: bool = False
     error_callback: Callable = None
     check_functions: \
-        Union[Callable, Dict[Callable, str], Dict[str, Callable]] = None
+        Union[
+            List[Callable],
+            Dict[Callable, str],
+            Dict[str, Callable]
+        ] = None

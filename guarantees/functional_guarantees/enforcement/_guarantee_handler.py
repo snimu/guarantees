@@ -4,7 +4,8 @@ from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, 
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
     IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
 from guarantees.functional_guarantees.enforcement.util.typenames import \
-    get_guaranteed_type_name, get_type_name, get_guaranteed_type
+    get_guaranteed_type_name, get_type_name, get_guaranteed_type, \
+    get_guarantee_name
 from guarantees.functional_guarantees.enforcement.util.error_handeling import \
     handle_error
 
@@ -113,9 +114,17 @@ def _check_duplicate_names(value_guarantees):
     names = []
     for param_guarantee in value_guarantees:
         if param_guarantee.parameter_name in names:
-            raise ValueError("@guarantees.functional_guarantees: "
-                             "Duplicate guarantees name: "
-                             f"'{param_guarantee.parameter_name}'")
+            handle_error(
+                where="internal",
+                type_or_value="value",
+                guarantee=param_guarantee,
+                parameter_name=f"{get_guarantee_name(param_guarantee)}.name",
+                what_dict={
+                    "error": f"duplicate parameter name "
+                             f"'{param_guarantee.parameter_name}'"
+                }
+            )
+
         names.append(param_guarantee.parameter_name)
 
 

@@ -34,32 +34,6 @@ class TestIsClass(unittest.TestCase):
         except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)  # successfully raised exception
 
-    def test_check_fct(self):
-        def check_function(arg):
-            if arg.a != 1:
-                raise ValueError("check_function raised ValueError")
-
-        @fg.add_guarantees(
-            function_name="TestIsClass.test_check_fct.fct",
-            function_namespace="_test_parameters_other",
-            param_guarantees=[
-                fg.IsClass("a", class_type=self.test_class,
-                           check_functions=check_function)
-            ]
-        )
-        def fct(a):
-            return a
-
-        # Check correct input
-        fct(self.test_class_instance)
-
-        # Check check_function
-        try:
-            fct(self.test_class(2))
-            self.assertTrue(False)  # should have raised exception
-        except ValueError:
-            self.assertTrue(True)  # successfully raised exception
-
 
 class TestIsNone(unittest.TestCase):
     def test_type(self):

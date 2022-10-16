@@ -8,6 +8,8 @@ from guarantees.functional_guarantees.enforcement.util.typenames import \
     get_guarantee_name
 from guarantees.functional_guarantees.enforcement.util.error_handeling import \
     handle_error
+from guarantees.functional_guarantees.enforcement.util.common_checks import \
+    enforce_check_functions
 
 from ._enforce_numeric import enforce_isint, enforce_isfloat, \
      enforce_iscomplex
@@ -160,6 +162,8 @@ def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
     without a circular import -> must be defined here."""
     if arg is None:
         return arg
+
+    enforce_check_functions(arg, param_guarantee)
 
     for guarantee in param_guarantee.guarantees:
         guarantee.function_name = f"{param_guarantee.function_name}: IsUnion"

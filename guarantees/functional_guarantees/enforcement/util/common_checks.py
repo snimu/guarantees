@@ -4,28 +4,22 @@ from .typenames import get_type_name, get_guarantee_name
 from typing import Callable, List
 
 
-def all_keys_are(ktype: type, dictionary: dict):
-    all(type(key) is ktype for key in dictionary.keys())
-
-
-def all_vals_are(vtype, dictionary: dict):
-    all(type(val) is vtype for val in dictionary.values())
-
-
 def enforce_check_functions(arg, guarantee: TypeGuarantee) -> None:
-    cf = TypeGuarantee.check_functions
+    cf = guarantee.check_functions
     if cf is None:
         return
 
     descriptions = None
     error_indices = []
 
-    if type(cf) is list and all(type(f) is Callable for f in cf):
+    if type(cf) is list and all(callable(f) for f in cf):
         error_indices = _find_errors(arg, cf)
-    elif all_keys_are(str, cf) and all_vals_are(Callable, cf):
+    elif all(isinstance(k, str) for k in cf.keys()) \
+            and all(callable(f) for f in cf.values()):
         descriptions = list(cf.keys())
         error_indices = _find_errors(arg, list(cf.values()))
-    elif all_keys_are(Callable, cf) and all_vals_are(str, cf):
+    elif all(callable(f) for f in cf.keys()) \
+            and all(isinstance(v, str) for v in cf.values()):
         descriptions = list(cf.values())
         error_indices = _find_errors(arg, list(cf.keys()))
     else:

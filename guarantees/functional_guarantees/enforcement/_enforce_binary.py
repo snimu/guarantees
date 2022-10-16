@@ -6,21 +6,19 @@ from guarantees.functional_guarantees.enforcement.util.typenames import \
     get_guaranteed_type, get_type_name, get_guaranteed_type_name
 from guarantees.functional_guarantees.enforcement.util.error_handeling import \
     handle_error
+from guarantees.functional_guarantees.enforcement.util.common_checks import \
+    enforce_check_functions
 
 
 def enforce_isbytes(arg: bytes, guarantee: IsBytes) -> bytes:
     arg = _check_type(arg, guarantee)
-
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
 def enforce_isbytearray(arg: bytearray, guarantee: IsByteArray) -> bytearray:
     arg = _check_type(arg, guarantee)
-
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
@@ -29,9 +27,7 @@ def enforce_ismemoryview(
         guarantee: IsMemoryView
 ) -> memoryview:
     arg = _check_type(arg, guarantee)
-
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 

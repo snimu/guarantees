@@ -7,6 +7,8 @@ from guarantees.functional_guarantees.enforcement.util.typenames import \
     get_guarantee_name
 from guarantees.functional_guarantees.enforcement.util.error_handeling import \
     handle_error
+from guarantees.functional_guarantees.enforcement.util.common_checks import \
+    enforce_check_functions
 
 
 def enforce_islist(arg: list, guarantee: IsList) -> list:
@@ -14,8 +16,7 @@ def enforce_islist(arg: list, guarantee: IsList) -> list:
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
 
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
@@ -24,8 +25,7 @@ def enforce_istuple(arg: tuple, guarantee: IsTuple) -> tuple:
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
 
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
@@ -34,8 +34,7 @@ def enforce_isdict(arg: dict, guarantee: IsDict) -> dict:
     _check_minmax_len(arg, guarantee)
     _check_has_keys_values(arg, guarantee)
 
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
@@ -44,8 +43,7 @@ def enforce_isset(arg: set, guarantee: IsSet) -> set:
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
 
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
@@ -54,16 +52,14 @@ def enforce_isfrozenset(arg: frozenset, guarantee: IsFrozenSet) -> frozenset:
     _check_minmax_len(arg, guarantee)
     _check_contains(arg, guarantee)
 
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 
 def enforce_isrange(arg: range, guarantee: IsRange) -> range:
     arg = _check_type(arg, guarantee)
 
-    if guarantee.check_functions is not None:
-        arg = guarantee.check_functions(arg)
+    enforce_check_functions(arg, guarantee)
     return arg
 
 

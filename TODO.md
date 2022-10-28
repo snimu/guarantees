@@ -1,6 +1,7 @@
 ## Immediate steps
 
-1. Move all TODOs here
+1. Make sure that `functional_guarantees` work with methods; especially `self`
+   might be an issue, as well as `cls` for a `classmethod`.
 
 2. Save arg in Exceptions
     - add `arg` to Exception arguments
@@ -9,38 +10,28 @@
 ## Other
 
 - `description`-parameter?
+
 - test_mixed_arg_kwarg in _test_parameters_guarantee_common
+
 - In `CollectionType`: `types`-member
   - Is list of more Guarantees
   - For dict: has `key_types` and `val_types`, where `types` checks both
+  
 - Guarantees for types from package `collections` 
   - Just add those to `_collections.py`
+
 - Support for third-party libraries
   - Examples:
     - `IsNumpyArray`
     - `IsTorchTensor`
   - Some way to easily extend this library with ever-more types
-  - To create `Guarantee` / enforcement-fct:
-  ```python
-  try:
-      import torch
-      # implement here
-  except ImportError:
-      pass 
-  ```
-  
-  - To add to `guarantee_enforcer_mapping`-dict: 
-  ```python 
-  try:
-    from guarantees.functional_guarantees import IsTorchTensor
-    from ._enforce_torch import enforce_torchtensor
-    guarantee_enforcer_mapping[IsTorchTensor] = enforce_torchtensor
-  except ImportError:
-    pass
-  ``` 
-  
-  - Stuff like this should probably be put into its own function
-    (`enable_third_party_library_guarantees` or something like it)
+    - IMPORTANT: Rewrite below
+
+- Rewrite: Add method `Guarantee.enforce(value)`
+  - Can put `_enforce_isunion` out of the `_guarantee_handler.py`
+  - Is more readable
+  - Can more easily extend the library
+
 - Dynamic guarantees for other languages
   - One branch per language
   - `main`-branch just has some description & examples

@@ -1,9 +1,13 @@
 ## Immediate steps
 
-1. Make sure that `functional_guarantees` work with methods; especially `self`
-   might be an issue, as well as `cls` for a `classmethod`.
+1. Make `functional_guarantees` work properly with `staticmethod`s.
+    - Might have to add a `staticmethod`-member to `Guarantee`
 
-2. Save arg in Exceptions
+2. Read function-name and -namespace from `inspect.getmembers`
+   - remove `function_name` and `function_namespace` from Guarantee
+   - How to communicate those with error?
+
+3. Save arg in Exceptions
     - add `arg` to Exception arguments
     - add `self.arg` in all Exceptions
 

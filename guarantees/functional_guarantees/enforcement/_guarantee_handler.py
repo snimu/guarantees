@@ -90,8 +90,8 @@ def register_parameter_guarantees(
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
     for param_guarantee in param_guarantees:
-        param_guarantee.function_name = function_name
-        param_guarantee.function_namespace = function_namespace
+        param_guarantee.qualname = function_name
+        param_guarantee.module = function_namespace
         param_guarantee.where = "parameter"
 
         ParameterHandler.handles[fct]["args"].append(param_guarantee)
@@ -106,8 +106,8 @@ def register_return_guarantees(
     if fct in ReturnHandler.handles.keys():
         return
 
-    return_guarantee.function_name = function_name
-    return_guarantee.function_namespace = function_namespace
+    return_guarantee.qualname = function_name
+    return_guarantee.module = function_namespace
     return_guarantee.where = "return"
     ReturnHandler.handles[fct] = return_guarantee
 
@@ -166,8 +166,8 @@ def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
     enforce_check_functions(arg, param_guarantee)
 
     for guarantee in param_guarantee.guarantees:
-        guarantee.function_name = f"{param_guarantee.function_name}: IsUnion"
-        guarantee.function_namespace = param_guarantee.function_namespace
+        guarantee.qualname = f"{param_guarantee.qualname}: IsUnion"
+        guarantee.module = param_guarantee.module
 
         # 1. Try to change arg to wanted type if allowed
         # 1.1  If ValueError: definitely wrong type -> continue

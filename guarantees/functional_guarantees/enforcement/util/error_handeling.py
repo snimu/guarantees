@@ -43,8 +43,8 @@ def choose_exception(
 def make_exception(
         where: str,
         type_or_value: str,
-        function_name: str,
-        function_namespace: str,
+        qualname: str,
+        module: str,
         guarantee_name: str,
         parameter_name: str,
         error_severity: int,
@@ -59,8 +59,8 @@ def make_exception(
 ]:
     exception = choose_exception(where, type_or_value)
     return exception(
-        function_name=function_name,
-        function_namespace=function_namespace,
+        qualname=qualname,
+        module=module,
         guarantee_name=guarantee_name,
         parameter_name=parameter_name,
         error_severity=error_severity,
@@ -147,8 +147,8 @@ def handle_error(
     exception = make_exception(
         where=where,
         type_or_value=type_or_value,
-        function_name=guarantee.function_name,
-        function_namespace=guarantee.function_namespace,
+        qualname=guarantee.qualname,
+        module=guarantee.module,
         guarantee_name=get_guarantee_name(guarantee),
         parameter_name=parameter_name,
         error_severity=guarantee.error_severity,

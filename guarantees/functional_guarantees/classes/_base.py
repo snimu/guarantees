@@ -9,8 +9,8 @@ from guarantees import severity
 @dataclass
 class Guarantee:
     parameter_name: str
-    function_name: str = ""
-    function_namespace: str = ""
+    qualname: str = ""
+    module: str = ""
     where: str = "parameter"
 
 

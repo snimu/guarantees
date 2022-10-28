@@ -14,8 +14,8 @@ def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
 
 
 def construct_err_str(
-        function_name: str,
-        function_namespace: str,
+        qualname: str,
+        module: str,
         guarantee_name: str,
         parameter_name: str,
         error_severity: int,
@@ -28,7 +28,9 @@ def construct_err_str(
         severity.ERROR: "ERROR",
         severity.FATAL: "FATAL"
     }
-    err_str = f"\nWhere: {function_namespace}.{function_name} \n"
+    err_str = f"\n\tWhere: \n"
+    err_str += f"\t\tModule: {module} \n"
+    err_str += f"\t\tName: {qualname} \n"
     err_str += f"\tSeverity: {severity_str_dict[error_severity]} \n"
     err_str += f"\tGuarantee: {guarantee_name} \n"
     err_str += f"\tParameter: {parameter_name} \n"

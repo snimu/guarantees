@@ -5,22 +5,22 @@ from guarantees import severity
 class ParameterGuaranteesValueError(ValueError):
     def __init__(
             self,
-            function_name="",
-            function_namespace="",
+            qualname="",
+            module="",
             guarantee_name="",
             parameter_name="",
             error_severity=severity.ERROR,
             what_dict=None
     ) -> None:
-        self.function_name = function_name
-        self.function_namespace = function_namespace
+        self.qualname = qualname
+        self.module = module
         self.guarantee_name = guarantee_name
         self.parameter_name = parameter_name
         self.error_severity = error_severity
         self.what_dict = what_dict
         self.err_str = construct_err_str(
-            function_name=function_name,
-            function_namespace=function_namespace,
+            qualname=qualname,
+            module=module,
             guarantee_name=guarantee_name,
             parameter_name=parameter_name,
             error_severity=error_severity,
@@ -32,22 +32,22 @@ class ParameterGuaranteesValueError(ValueError):
 class ParameterGuaranteesTypeError(TypeError):
     def __init__(
             self,
-            function_name="",
-            function_namespace="",
+            qualname="",
+            module="",
             guarantee_name="",
             parameter_name="",
             error_severity=severity.ERROR,
             what_dict=None
     ) -> None:
-        self.function_name = function_name
-        self.function_namespace = function_namespace
+        self.qualname = qualname
+        self.module = module
         self.guarantee_name = guarantee_name
         self.parameter_name = parameter_name
         self.error_severity = error_severity
         self.what_dict = what_dict
         self.err_str = construct_err_str(
-            function_name=function_name,
-            function_namespace=function_namespace,
+            qualname=qualname,
+            module=module,
             guarantee_name=guarantee_name,
             parameter_name=parameter_name,
             error_severity=error_severity,
@@ -59,23 +59,23 @@ class ParameterGuaranteesTypeError(TypeError):
 class ReturnGuaranteesValueError(ValueError):
     def __init__(
             self,
-            function_name="",
-            function_namespace="",
+            qualname="",
+            module="",
             guarantee_name="",
             parameter_name="return",
             error_severity=severity.ERROR,
             what_dict=None
     ) -> None:
-        self.function_name = function_name
-        self.function_namespace = function_namespace
+        self.qualname = qualname
+        self.module = module
         self.guarantee_name = guarantee_name
         parameter_name = "return"
         self.parameter_name = parameter_name
         self.error_severity = error_severity
         self.what_dict = what_dict
         self.err_str = construct_err_str(
-            function_name=function_name,
-            function_namespace=function_namespace,
+            qualname=qualname,
+            module=module,
             guarantee_name=guarantee_name,
             parameter_name=parameter_name,
             error_severity=error_severity,
@@ -87,23 +87,23 @@ class ReturnGuaranteesValueError(ValueError):
 class ReturnGuaranteesTypeError(TypeError):
     def __init__(
             self,
-            function_name="",
-            function_namespace="",
+            qualname="",
+            module="",
             guarantee_name="",
             parameter_name="return",
             error_severity=severity.ERROR,
             what_dict=None
     ) -> None:
-        self.function_name = function_name
-        self.function_namespace = function_namespace
+        self.qualname = qualname
+        self.module = module
         self.guarantee_name = guarantee_name
         parameter_name = "return"
         self.parameter_name = parameter_name
         self.error_severity = error_severity
         self.what_dict = what_dict
         self.err_str = construct_err_str(
-            function_name=function_name,
-            function_namespace=function_namespace,
+            qualname=qualname,
+            module=module,
             guarantee_name=guarantee_name,
             parameter_name=parameter_name,
             error_severity=error_severity,
@@ -115,22 +115,22 @@ class ReturnGuaranteesTypeError(TypeError):
 class FunctionalGuaranteesUserValueError(ValueError):
     def __init__(
             self,
-            function_name="",
-            function_namespace="",
+            qualname="",
+            module="",
             guarantee_name="",
             parameter_name="",
             error_severity=severity.ERROR,
             what_dict=None
     ) -> None:
-        self.function_name = function_name
-        self.function_namespace = function_namespace
+        self.qualname = qualname
+        self.module = module
         self.guarantee_name = guarantee_name
         self.parameter_name = parameter_name
         self.error_severity = error_severity
         self.what_dict = what_dict
         self.err_str = construct_err_str(
-            function_name=function_name,
-            function_namespace=function_namespace,
+            qualname=qualname,
+            module=module,
             guarantee_name=guarantee_name,
             parameter_name=parameter_name,
             error_severity=error_severity,
@@ -142,22 +142,22 @@ class FunctionalGuaranteesUserValueError(ValueError):
 class FunctionalGuaranteesUserTypeError(TypeError):
     def __init__(
             self,
-            function_name="",
-            function_namespace="",
+            qualname="",
+            module="",
             guarantee_name="",
             parameter_name="",
             error_severity=severity.ERROR,
             what_dict=None
     ) -> None:
-        self.function_name = function_name
-        self.function_namespace = function_namespace
+        self.qualname = qualname
+        self.module = module
         self.guarantee_name = guarantee_name
         self.parameter_name = parameter_name
         self.error_severity = error_severity
         self.what_dict = what_dict
         self.err_str = construct_err_str(
-            function_name=function_name,
-            function_namespace=function_namespace,
+            qualname=qualname,
+            module=module,
             guarantee_name=guarantee_name,
             parameter_name=parameter_name,
             error_severity=error_severity,

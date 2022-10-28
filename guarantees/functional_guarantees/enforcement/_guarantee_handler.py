@@ -1,4 +1,5 @@
-from typing import List, Tuple, Dict, Any, Union
+from typing import List, Tuple, Dict, Any
+import inspect
 
 from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, \
     IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
@@ -69,6 +70,8 @@ def register_parameter_guarantees(
         #   and the rest will be ignored.
         return
 
+    module, qualname = _get_module_qualname(fct)
+
     if type(param_guarantees) is not list \
             and not all(isinstance(g, Guarantee) for g in param_guarantees):
         handle_error(
@@ -90,8 +93,8 @@ def register_parameter_guarantees(
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
     for param_guarantee in param_guarantees:
-        param_guarantee.qualname = function_name
-        param_guarantee.module = function_namespace
+        param_guarantee.qualname = qualname
+        param_guarantee.module = module
         param_guarantee.where = "parameter"
 
         ParameterHandler.handles[fct]["args"].append(param_guarantee)
@@ -106,10 +109,28 @@ def register_return_guarantees(
     if fct in ReturnHandler.handles.keys():
         return
 
-    return_guarantee.qualname = function_name
-    return_guarantee.module = function_namespace
+    module, qualname = _get_module_qualname(fct)
+
+    return_guarantee.qualname = qualname
+    return_guarantee.module = module
     return_guarantee.where = "return"
     ReturnHandler.handles[fct] = return_guarantee
+
+
+def _get_module_qualname(fct) -> Tuple[str, str]:
+    members = inspect.getmembers(fct)
+
+    module = ""
+    qualname = ""
+
+    for member in members:
+        if member[0] == "__qualname__":
+            qualname = member[1]
+            continue
+        if member[0] == "__module__":
+            module = member[1]
+
+    return module, qualname
 
 
 def _check_duplicate_names(value_guarantees):

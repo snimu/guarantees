@@ -46,19 +46,19 @@ class TestBinary(unittest.TestCase):
         try:
             self.fct(123, self.bytearray, self.memoryview)
             self.assertTrue(False)   # should have raised an exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_false_input_bytearray(self):
         try:
             self.fct(self.bytes, 123, self.memoryview)
             self.assertTrue(False)   # should have raised an exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
 
     def test_false_input_memoryview(self):
         try:
             self.fct(self.bytes, self.bytearray, 123)
             self.assertTrue(False)   # should have raised an exception
-        except TypeError:
+        except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception

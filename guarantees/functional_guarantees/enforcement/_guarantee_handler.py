@@ -59,8 +59,6 @@ class ReturnHandler:
 
 def register_parameter_guarantees(
         fct,
-        function_name: str,
-        function_namespace: str,
         param_guarantees: List[Guarantee]):
     """Register the classes for the function."""
     if fct in ParameterHandler.handles.keys():
@@ -103,8 +101,6 @@ def register_parameter_guarantees(
 
 def register_return_guarantees(
         fct,
-        function_name,
-        function_namespace,
         return_guarantee: Guarantee):
     if fct in ReturnHandler.handles.keys():
         return

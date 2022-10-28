@@ -4,27 +4,19 @@ from guarantees import functional_guarantees as fg
 
 class TestBinary(unittest.TestCase):
     def setUp(self) -> None:
-        @fg.add_guarantees(
-            function_name="TestBinary.setUp.fct",
-            function_namespace="_test_parameters_binary",
-            param_guarantees=[
-                fg.IsBytes("a"),
-                fg.IsByteArray("b"),
-                fg.IsMemoryView("c")
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsBytes("a"),
+            fg.IsByteArray("b"),
+            fg.IsMemoryView("c")
+        ])
         def fct(a, b, c):
             return a, b, c
 
-        @fg.add_guarantees(
-            function_name="TestBinary.setUp.fct_conversion",
-            function_namespace="_test_parameters_binary",
-            param_guarantees=[
-                fg.IsBytes("a", force_conversion=True),
-                fg.IsByteArray("b", force_conversion=True),
-                fg.IsMemoryView("c", force_conversion=True)
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsBytes("a", force_conversion=True),
+            fg.IsByteArray("b", force_conversion=True),
+            fg.IsMemoryView("c", force_conversion=True)
+        ])
         def fct_conversion(a, b, c):
             return a, b, c
 

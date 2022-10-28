@@ -14,13 +14,9 @@ class TestCallback(unittest.TestCase):
         self.cb = cb
 
     def test_isint_cb(self):
-        @fg.add_guarantees(
-            function_name="TestCallback.test_isint_cb.fct",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsInt("a", error_callback=self.cb)
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsInt("a", error_callback=self.cb)
+        ])
         def fct(a):
             return a
 
@@ -31,13 +27,9 @@ class TestCallback(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_isstr_cb(self):
-        @fg.add_guarantees(
-            function_name="TestCallback.test_isstr_cb.fct",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsStr("a", error_callback=self.cb)
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsStr("a", error_callback=self.cb)
+        ])
         def fct(a):
             return a
 
@@ -48,13 +40,9 @@ class TestCallback(unittest.TestCase):
             self.assertTrue(True)  # successfully raised exception
 
     def test_islist_cb(self):
-        @fg.add_guarantees(
-            function_name="TestCallback.test_islist_cb.fct",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsList("a", error_callback=self.cb)
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsList("a", error_callback=self.cb)
+        ])
         def fct(a):
             return a
 
@@ -67,44 +55,38 @@ class TestCallback(unittest.TestCase):
 
 class TestCheckFunctions(unittest.TestCase):
     def setUp(self) -> None:
-        @fg.add_guarantees(
-            function_name="TestCheckFunctions.setUp.fct_list",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsInt(
-                    "a",
-                    check_functions=[
-                        lambda x: x % 3 == 0,
-                        lambda x: x ** 2 - 2 * x < 1e4
-                    ])])
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsInt(
+                "a",
+                check_functions=[
+                    lambda x: x % 3 == 0,
+                    lambda x: x ** 2 - 2 * x < 1e4
+                ])
+        ])
         def fct_list(a):
             return a
 
-        @fg.add_guarantees(
-            function_name="TestCheckFunctions.setUp.fct_dict_str_fct",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsInt(
-                    "a",
-                    check_functions={
-                        "divisible by 3": lambda x: x % 3 == 0,
-                        "on correct side of decision boundary":
-                            lambda x: x**2 - 2 * x < 1e4
-                    })])
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsInt(
+                "a",
+                check_functions={
+                    "divisible by 3": lambda x: x % 3 == 0,
+                    "on correct side of decision boundary":
+                        lambda x: x**2 - 2 * x < 1e4
+                })
+        ])
         def fct_dict_str_fct(a):
             return a
 
-        @fg.add_guarantees(
-            function_name="TestCheckFunctions.setUp.fct_dict_fct_str",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsInt(
-                    "a",
-                    check_functions={
-                        lambda x: x % 3 == 0: "divisible by 3",
-                        lambda x: x**2 - 2 * x < 1e4:
-                            "on correct side of decision boundary"
-                    })])
+        @fg.add_guarantees(param_guarantees=[
+            fg.IsInt(
+                "a",
+                check_functions={
+                    lambda x: x % 3 == 0: "divisible by 3",
+                    lambda x: x**2 - 2 * x < 1e4:
+                        "on correct side of decision boundary"
+                })
+        ])
         def fct_dict_fct_str(a):
             return a
 
@@ -177,24 +159,12 @@ class ClassWithMethods:
     def __init__(self):
         self.const = 1
 
-    @fg.add_guarantees(
-        function_name="ClassWithMethods.fct",
-        function_namespace="_test_parameters_common",
-        param_guarantees=[
-            fg.IsInt("a")
-        ]
-    )
+    @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
     def fct(self, a):
         return a + self.const
 
     @classmethod
-    @fg.add_guarantees(
-        function_name="ClassWithMethods.classfct",
-        function_namespace="_test_parameters_common",
-        param_guarantees=[
-            fg.IsInt("a")
-        ]
-    )
+    @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
     def classfct(cls, a):
         return a
 
@@ -228,13 +198,7 @@ class TestMethodGuarantees(unittest.TestCase):
 
 class TestOnOff(unittest.TestCase):
     def test_onoff(self):
-        @fg.add_guarantees(
-            function_name="TestOnOff.test_onoff.fct",
-            function_namespace="_test_parameters_common",
-            param_guarantees=[
-                fg.IsInt("a")
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
         def fct(a):
             return a
 

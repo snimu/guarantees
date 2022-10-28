@@ -5,13 +5,7 @@ from guarantees import functional_guarantees as fg
 
 class TestBooleanGuarantee(unittest.TestCase):
     def test_base(self):
-        @fg.add_guarantees(
-            function_name="TestBooleanGuarantee.test_base.fct",
-            function_namespace="_test_parameters_boolean",
-            param_guarantees=[
-                fg.IsBool("a")
-            ]
-        )
+        @fg.add_guarantees(param_guarantees=[fg.IsBool("a")])
         def fct(a):
             return a
 
@@ -28,11 +22,7 @@ class TestBooleanGuarantee(unittest.TestCase):
 
     def test_force_conversion(self):
         @fg.add_guarantees(
-            function_name="TestBooleanGuarantee.test_force_conversion.fct",
-            function_namespace="_test_parameters_boolean",
-            param_guarantees=[
-                fg.IsBool("a", force_conversion=True)
-            ]
+            param_guarantees=[fg.IsBool("a", force_conversion=True)]
         )
         def fct(a):
             return a

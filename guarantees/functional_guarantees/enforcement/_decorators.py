@@ -2,7 +2,6 @@
 
 
 import inspect
-import copy
 
 
 from ._guarantee_handler import enforce_parameter_guarantees, \
@@ -13,8 +12,6 @@ from guarantees.functional_guarantees import settings
 
 
 def add_guarantees(
-        function_name="",
-        function_namespace="",
         param_guarantees=None,
         return_guarantee=None
 ):
@@ -23,20 +20,10 @@ def add_guarantees(
             return fct
 
         if not ParameterHandler.contains(fct) and param_guarantees is not None:
-            register_parameter_guarantees(
-                fct,
-                function_name,
-                function_namespace,
-                param_guarantees
-            )
+            register_parameter_guarantees(fct, param_guarantees)
 
         if not ReturnHandler.contains(fct) and return_guarantee is not None:
-            register_return_guarantees(
-                fct,
-                function_name,
-                function_namespace,
-                return_guarantee
-            )
+            register_return_guarantees(fct, return_guarantee)
 
         def _enforce(*args, **kwargs):
             if param_guarantees is not None:

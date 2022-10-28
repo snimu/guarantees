@@ -173,6 +173,59 @@ class TestCheckFunctions(unittest.TestCase):
             self.assertTrue(True)
 
 
+class ClassWithMethods:
+    def __init__(self):
+        self.const = 1
+
+    @fg.add_guarantees(
+        function_name="ClassWithMethods.fct",
+        function_namespace="_test_parameters_common",
+        param_guarantees=[
+            fg.IsInt("a")
+        ]
+    )
+    def fct(self, a):
+        return a + self.const
+
+    @classmethod
+    @fg.add_guarantees(
+        function_name="ClassWithMethods.classfct",
+        function_namespace="_test_parameters_common",
+        param_guarantees=[
+            fg.IsInt("a")
+        ]
+    )
+    def classfct(cls, a):
+        return a
+
+
+class TestMethodGuarantees(unittest.TestCase):
+    def setUp(self) -> None:
+        self.class_with_methods = ClassWithMethods()
+
+    def test_self_correct(self):
+        val = self.class_with_methods.fct(3)
+        self.assertIsInstance(val, int)
+
+    def test_self_error(self):
+        try:
+            self.class_with_methods.fct("not an int!")
+            self.assertTrue(False)    # should have raised an exception
+        except fg.exceptions.ParameterGuaranteesTypeError:
+            self.assertTrue(True)
+
+    def test_cls_correct(self):
+        val = self.class_with_methods.classfct(3)
+        self.assertIsInstance(val, int)
+
+    def test_cls_error(self):
+        try:
+            self.class_with_methods.classfct("not an int")
+            self.assertTrue(False)   # should have raised an exception
+        except fg.exceptions.ParameterGuaranteesTypeError:
+            self.assertTrue(True)
+
+
 class TestOnOff(unittest.TestCase):
     def test_onoff(self):
         @fg.add_guarantees(

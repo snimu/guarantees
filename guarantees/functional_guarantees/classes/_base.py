@@ -9,9 +9,14 @@ from guarantees import severity
 @dataclass
 class Guarantee:
     parameter_name: str
+    guarantee_name: str = ""
     qualname: str = None
     module: str = None
     where: str = "parameter"
+    guaranteed_type = None
+
+    def enforce(self, arg):
+        pass
 
 
 @dataclass

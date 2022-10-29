@@ -1,26 +1,11 @@
 from typing import List, Tuple, Dict, Any
 import inspect
 
-from guarantees.functional_guarantees.classes import Guarantee, IsInt, IsFloat, \
-    IsComplex, IsBool, IsDict, IsSet, IsFrozenSet, IsStr, IsList, IsRange, \
-    IsTuple, IsClass, IsBytes, IsByteArray, IsMemoryView, NoOp, IsNone, IsUnion
-from guarantees.functional_guarantees.enforcement.util.typenames import \
-    get_guaranteed_type_name, get_type_name, get_guaranteed_type, \
-    get_guarantee_name
-from guarantees.functional_guarantees.enforcement.util.error_handeling import \
+from guarantees.functional_guarantees.classes import Guarantee, NoOp
+from guarantees.functional_guarantees.classes.util.typenames import \
+    get_arg_type_name
+from guarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
-from guarantees.functional_guarantees.enforcement.util.common_checks import \
-    enforce_check_functions
-
-from ._enforce_numeric import enforce_isint, enforce_isfloat, \
-     enforce_iscomplex
-from ._enforce_string import enforce_isstr
-from ._enforce_boolean import enforce_isbool
-from ._enforce_collections import enforce_islist, enforce_istuple, \
-    enforce_isdict, enforce_isset, enforce_isfrozenset, enforce_isrange
-from ._enforce_other import enforce_isclass, enforce_isnone
-from ._enforce_binary import enforce_isbytes, enforce_isbytearray, \
-    enforce_ismemoryview
 
 
 class ParameterHandler:
@@ -80,7 +65,7 @@ def register_parameter_guarantees(
                            "param_guarantees",
             what_dict={
                 "should_type": "List[Guarantee]",
-                "actual_type": f"{get_type_name(param_guarantees)}"
+                "actual_type": f"{get_arg_type_name(param_guarantees)}"
             }
         )
 
@@ -137,7 +122,7 @@ def _check_duplicate_names(value_guarantees):
                 where="internal",
                 type_or_value="value",
                 guarantee=param_guarantee,
-                parameter_name=f"{get_guarantee_name(param_guarantee)}.name",
+                parameter_name=f"{param_guarantee.guarantee_name}.name",
                 what_dict={
                     "error": f"duplicate parameter name "
                              f"'{param_guarantee.parameter_name}'"
@@ -174,77 +159,6 @@ def enforce_return_guarantees(fct, val) -> Any:
     return _enforce_val(val, ReturnHandler.handles[fct])
 
 
-def _enforce_isunion(arg: Any, param_guarantee: IsUnion) -> Any:
-    """`enforce_isunion` cannot make use of other `enforce_...`-fcts
-    without a circular import -> must be defined here."""
-    if arg is None:
-        return arg
-
-    enforce_check_functions(arg, param_guarantee)
-
-    for guarantee in param_guarantee.guarantees:
-        guarantee.qualname = f"{param_guarantee.qualname}: IsUnion"
-        guarantee.module = param_guarantee.module
-
-        # 1. Try to change arg to wanted type if allowed
-        # 1.1  If ValueError: definitely wrong type -> continue
-        # 2. Check type (whether force_conversion or not)
-        # 2.1  If wrong type: loop continues or type is false
-        # 2.2  If right type: enforce it
-        if guarantee.force_conversion:
-            try:
-                target_type = get_guaranteed_type(guarantee)
-                if isinstance(guarantee, IsClass):
-                    target_type = guarantee.class_type
-                arg = target_type(arg)
-            except ValueError:
-                continue
-
-        target_type = get_guaranteed_type(guarantee)
-        if isinstance(guarantee, IsClass):
-            target_type = guarantee.class_type
-        if type(arg) is target_type:
-            return _enforce_val(arg, guarantee)
-
-    # Didn't work
-    should_types = \
-        [get_guaranteed_type_name(g) for g in param_guarantee.guarantees]
-    handle_error(
-        where=param_guarantee.where,
-        type_or_value="type",
-        guarantee=param_guarantee,
-        parameter_name=param_guarantee.parameter_name,
-        what_dict={
-            "should_type": f"Union{should_types}",
-            "actual_type": get_type_name(arg)
-        }
-    )
-
-    # In case of warnings_only
-    return arg
-
-
-guarantee_enforcer_mapping = {
-    IsInt: enforce_isint,
-    IsFloat: enforce_isfloat,
-    IsComplex: enforce_iscomplex,
-    IsStr: enforce_isstr,
-    IsBool: enforce_isbool,
-    IsClass: enforce_isclass,
-    IsList: enforce_islist,
-    IsTuple: enforce_istuple,
-    IsDict: enforce_isdict,
-    IsSet: enforce_isset,
-    IsFrozenSet: enforce_isfrozenset,
-    IsRange: enforce_isrange,
-    IsNone: enforce_isnone,
-    IsUnion: _enforce_isunion,
-    IsBytes: enforce_isbytes,
-    IsByteArray: enforce_isbytearray,
-    IsMemoryView: enforce_ismemoryview
-}
-
-
 def _enforce_val(val, param_guarantee: Guarantee):
     """Enforce the classes on a single value."""
     if not isinstance(param_guarantee, Guarantee):
@@ -254,7 +168,5 @@ def _enforce_val(val, param_guarantee: Guarantee):
     if isinstance(param_guarantee, NoOp):
         return val
 
-    global guarantee_enforcer_mapping
-    enforce_fct = guarantee_enforcer_mapping[type(param_guarantee)]
-    return enforce_fct(val, param_guarantee)
+    return param_guarantee.enforce(val)
 

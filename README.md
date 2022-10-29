@@ -1,2 +1,2 @@
 # guarantees
-Python: type- and runtime guarantees for parameters, guarantee test coverage
+Python: guarantee test coverage, guarantee type and runtime-guarantees

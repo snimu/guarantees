@@ -6,7 +6,6 @@ from guarantees.functional_guarantees.exceptions import \
     ParameterGuaranteesTypeError, ParameterGuaranteesValueError, \
     ReturnGuaranteesValueError, ReturnGuaranteesTypeError, \
     FunctionalGuaranteesUserTypeError, FunctionalGuaranteesUserValueError
-from .typenames import get_guarantee_name
 
 from guarantees import severity
 
@@ -149,7 +148,7 @@ def handle_error(
         type_or_value=type_or_value,
         qualname=guarantee.qualname,
         module=guarantee.module,
-        guarantee_name=get_guarantee_name(guarantee),
+        guarantee_name=guarantee.guarantee_name,
         parameter_name=parameter_name,
         error_severity=guarantee.error_severity,
         what_dict=what_dict

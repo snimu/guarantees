@@ -1,10 +1,37 @@
-from guarantees.functional_guarantees import TypeGuarantee
 from .error_handeling import handle_error
-from .typenames import get_type_name, get_guarantee_name
+from .typenames import get_arg_type_name
 from typing import Callable, List
 
 
-def enforce_check_functions(arg, guarantee: TypeGuarantee) -> None:
+def check_type(arg, guarantee):
+    if isinstance(arg, guarantee.guaranteed_type):
+        return arg
+
+    if guarantee.force_conversion:
+        try:
+            return guarantee.guaranteed_type(arg)
+        except TypeError:
+            pass
+        except ValueError:
+            pass
+
+    # Type error occurred
+    handle_error(
+        where=guarantee.where,
+        type_or_value="type",
+        guarantee=guarantee,
+        parameter_name=guarantee.parameter_name,
+        what_dict={
+            "should_type": get_arg_type_name(guarantee.guaranteed_type),
+            "actual_type": get_arg_type_name(arg),
+            "force_conversion": guarantee.force_conversion
+        }
+    )
+
+    return arg   # in case of warnings_only
+
+
+def enforce_check_functions(arg, guarantee) -> None:
     cf = guarantee.check_functions
     if cf is None:
         return
@@ -32,7 +59,7 @@ def enforce_check_functions(arg, guarantee: TypeGuarantee) -> None:
                 "should_type":
                     "List[Callable] or Dict[str, Callable] "
                     "or Dict[Callable, str]",
-                "actual_type": f"{get_type_name(arg)}"
+                "actual_type": f"{get_arg_type_name(arg)}"
             }
         )
 
@@ -61,7 +88,7 @@ def _find_errors(
 
 def _get_what_dict(
         arg,
-        guarantee: TypeGuarantee,
+        guarantee,
         descriptions: List[str],
         error_indices: list
 ):
@@ -69,7 +96,7 @@ def _get_what_dict(
         return
 
     what_dict = {
-        "error": f"violated {get_guarantee_name(guarantee)}.check_functions",
+        "error": f"violated {guarantee.guarantee_name}.check_functions",
         "violations": {},
         "arg": arg
     }

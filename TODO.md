@@ -2,13 +2,8 @@
 
 1. Make `functional_guarantees` work properly with `staticmethod`s
     - Might have to add a `staticmethod`-member to `Guarantee`
-   
-2. Rewrite: Add method `Guarantee.enforce(value)`
-   - Can put `_enforce_isunion` out of the `_guarantee_handler.py`
-   - Is more readable
-   - Can more easily extend the library
 
-3. Save arg in Exceptions
+2. Save arg in Exceptions
     - add `arg` to Exception arguments
     - add `self.arg` in all Exceptions
 

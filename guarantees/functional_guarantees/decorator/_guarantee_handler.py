@@ -6,6 +6,7 @@ from guarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 from guarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
+from guarantees.functional_guarantees import IsUnion
 
 
 class ParameterHandler:
@@ -76,9 +77,7 @@ def register_parameter_guarantees(
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
     for param_guarantee in param_guarantees:
-        param_guarantee.qualname = qualname
-        param_guarantee.module = module
-        param_guarantee.where = "parameter"
+        _add_info_to_guarantee(param_guarantee, qualname, module, "parameter")
 
         ParameterHandler.handles[fct]["args"].append(param_guarantee)
         ParameterHandler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
@@ -92,10 +91,25 @@ def register_return_guarantees(
 
     module, qualname = _get_module_qualname(fct)
 
-    return_guarantee.qualname = qualname
-    return_guarantee.module = module
-    return_guarantee.where = "return"
+    _add_info_to_guarantee(return_guarantee, qualname, module, "return")
     ReturnHandler.handles[fct] = return_guarantee
+
+
+def _add_info_to_guarantee(
+        guarantee: Guarantee,
+        qualname: str,
+        module: str,
+        where: str
+) -> None:
+    """Add the given info to the given Guarantee. Add it to guarantees in
+    IsUnion, if the Guarantee is IsUnion."""
+    guarantee.qualname = qualname
+    guarantee.module = module
+    guarantee.where = where
+
+    if isinstance(guarantee, IsUnion):
+        for g in guarantee.guarantees:
+            _add_info_to_guarantee(g, qualname, module, where)
 
 
 def _get_module_qualname(fct) -> Tuple[str, str]:

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Type, List, Union
 
 from ._base import Guarantee, TypeGuarantee
@@ -12,15 +12,18 @@ from guarantees.functional_guarantees.classes.util.common_checks import \
 
 @dataclass
 class NoOp(Guarantee):
-    guarantee_name = "NoOp"
-    guaranteed_type = None
+    def __post_init__(self):
+        self.guarantee_name = "NoOp"
+        self.guaranteed_type = None
 
 
 @dataclass
 class IsClass(TypeGuarantee):
     class_type: Type = None
-    guaranteed_type = class_type
-    guarantee_name = "IsClass"
+
+    def __post_init__(self):
+        self.guarantee_name = "IsClass"
+        self.guaranteed_type = self.class_type
 
     def enforce(self, arg):
         arg = _check_isclass(arg, self)
@@ -30,8 +33,9 @@ class IsClass(TypeGuarantee):
 
 @dataclass
 class IsNone(TypeGuarantee):
-    guarantee_name = "IsNone"
-    guaranteed_type = None
+    def __post_init__(self):
+        self.guarantee_name = "IsNone"
+        self.guaranteed_type = None
 
     def enforce(self, arg):
         if arg is None:
@@ -52,9 +56,11 @@ class IsNone(TypeGuarantee):
 
 @dataclass
 class IsUnion(TypeGuarantee):
-    guarantee_name = "IsUnion"
     guarantees: List[TypeGuarantee] = None
-    guaranteed_type = Union
+
+    def __post_init__(self):
+        self.guarantee_name = "IsUnion"
+        self.guaranteed_type = Union
 
     def enforce(self, arg):
         enforce_check_functions(arg, self)

@@ -7,8 +7,9 @@ from guarantees.functional_guarantees.classes.util.common_checks import \
 
 @dataclass
 class IsBytes(TypeGuarantee):
-    guarantee_name = "IsBytes"
-    guaranteed_type = bytes
+    def __post_init__(self):
+        self.guarantee_name = "IsBytes"
+        self.guaranteed_type = bytes
 
     def enforce(self, arg) -> bytes:
         arg = check_type(arg, self)
@@ -18,8 +19,9 @@ class IsBytes(TypeGuarantee):
 
 @dataclass
 class IsByteArray(TypeGuarantee):
-    guarantee_name = "IsByteArray"
-    guaranteed_type = bytearray
+    def __post_init__(self):
+        self.guarantee_name = "IsByteArray"
+        self.guaranteed_type = bytearray
 
     def enforce(self, arg) -> bytearray:
         arg = check_type(arg, self)
@@ -29,8 +31,9 @@ class IsByteArray(TypeGuarantee):
 
 @dataclass
 class IsMemoryView(TypeGuarantee):
-    guarantee_name = "IsMemoryView"
-    guaranteed_type = memoryview
+    def __post_init__(self):
+        self.guarantee_name = "IsMemoryView"
+        self.guaranteed_type = memoryview
 
     def enforce(self, arg) -> memoryview:
         arg = check_type(arg, self)

@@ -1,19 +1,19 @@
 """The base of the classes."""
 
 
-from dataclasses import dataclass
-from typing import Callable, Union, Dict, List
+from dataclasses import dataclass, field
+from typing import Callable, Union, Dict, List, Type
 from guarantees import severity
 
 
 @dataclass
 class Guarantee:
     parameter_name: str
-    guarantee_name: str = ""
-    qualname: str = None
-    module: str = None
-    where: str = "parameter"
-    guaranteed_type = None
+    where: str = field(init=False)
+    guarantee_name: str = field(init=False)
+    guaranteed_type: Type = field(init=False)
+    qualname: str = field(init=False)
+    module: str = field(init=False)
 
     def enforce(self, arg):
         pass

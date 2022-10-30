@@ -18,9 +18,11 @@ class CollectionType(TypeGuarantee):
 
 @dataclass
 class IsList(CollectionType):
-    guarantee_name = "IsList"
     contains: List[Any] = None
-    guaranteed_type = list
+
+    def __post_init__(self):
+        self.guarantee_name = "IsList"
+        self.guaranteed_type = list
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -33,9 +35,11 @@ class IsList(CollectionType):
 
 @dataclass
 class IsTuple(CollectionType):
-    guarantee_name = "IsTuple"
     contains: List[Any] = None
-    guaranteed_type = tuple
+
+    def __post_init__(self):
+        self.guarantee_name = "IsTuple"
+        self.guaranteed_type = tuple
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -48,10 +52,12 @@ class IsTuple(CollectionType):
 
 @dataclass
 class IsDict(CollectionType):
-    guarantee_name = "IsDict"
     has_keys: List[Any] = None
     has_values: List[Any] = None
-    guaranteed_type = dict
+
+    def __post_init__(self):
+        self.guarantee_name = "IsDict"
+        self.guaranteed_type = dict
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -64,9 +70,11 @@ class IsDict(CollectionType):
 
 @dataclass
 class IsSet(CollectionType):
-    guarantee_name = "IsSet"
     contains: Any = None
-    guaranteed_type = set
+
+    def __post_init__(self):
+        self.guarantee_name = "IsSet"
+        self.guaranteed_type = set
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -79,9 +87,11 @@ class IsSet(CollectionType):
 
 @dataclass
 class IsFrozenSet(CollectionType):
-    guarantee_name = "IsFrozenSet"
     contains: Any = None
-    guaranteed_type = frozenset
+
+    def __post_init__(self):
+        self.guarantee_name = "IsFrozenSet"
+        self.guaranteed_type = frozenset
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -94,8 +104,9 @@ class IsFrozenSet(CollectionType):
 
 @dataclass
 class IsRange(TypeGuarantee):
-    guarantee_name = "IsRange"
-    guaranteed_type = range
+    def __post_init__(self):
+        self.guarantee_name = "IsRange"
+        self.guaranteed_type = range
 
     def enforce(self, arg):
         arg = check_type(arg, self)

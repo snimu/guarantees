@@ -7,8 +7,9 @@ from guarantees.functional_guarantees.classes.util.common_checks import \
 
 @dataclass
 class IsBool(TypeGuarantee):
-    guarantee_name = "IsBool"
-    guaranteed_type = bool
+    def __post_init__(self):
+        self.guarantee_name = "IsBool"
+        self.guaranteed_type = bool
 
     def enforce(self, arg):
         arg = check_type(arg, self)

@@ -22,8 +22,9 @@ class NumericGuarantee(TypeGuarantee):
 
 @dataclass
 class IsInt(NumericGuarantee):
-    guarantee_name = "IsInt"
-    guaranteed_type = int
+    def __post_init__(self):
+        self.guarantee_name = "IsInt"
+        self.guaranteed_type = int
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -46,8 +47,9 @@ class IsInt(NumericGuarantee):
 
 @dataclass
 class IsFloat(NumericGuarantee):
-    guarantee_name = "IsFloat"
-    guaranteed_type = float
+    def __post_init__(self):
+        self.guarantee_name = "IsFloat"
+        self.guaranteed_type = float
 
     def enforce(self, arg):
         arg = check_type(arg, self)
@@ -70,12 +72,14 @@ class IsFloat(NumericGuarantee):
 
 @dataclass
 class IsComplex(NumericGuarantee):
-    guarantee_name = "IsComplex"
-    guaranteed_type = complex
     minimum_re: float = None
     maximum_re: float = None
     minimum_im: float = None
     maximum_im: float = None
+
+    def __post_init__(self):
+        self.guarantee_name = "IsComplex"
+        self.guaranteed_type = complex
 
     def enforce(self, arg):
         arg = check_type(arg, self)

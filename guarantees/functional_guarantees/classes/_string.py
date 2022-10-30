@@ -12,11 +12,13 @@ from guarantees.functional_guarantees.classes.util.typenames import \
 
 @dataclass
 class IsStr(TypeGuarantee):
-    guarantee_name = "IsStr"
-    guaranteed_type = str
     minimum_len: int = None
     maximum_len: int = None
     isin: List = None
+
+    def __post_init__(self):
+        self.guarantee_name = "IsStr"
+        self.guaranteed_type = str
 
     def enforce(self, arg):
         arg = check_type(arg, self)

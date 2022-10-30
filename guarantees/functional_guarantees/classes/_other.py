@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Type, List, Union
 
 from ._base import Guarantee, TypeGuarantee

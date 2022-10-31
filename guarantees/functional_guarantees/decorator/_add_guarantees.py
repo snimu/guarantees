@@ -8,7 +8,7 @@ from ._guarantee_handler import enforce_parameter_guarantees, \
     register_parameter_guarantees, ParameterHandler, \
     register_return_guarantees, ReturnHandler, \
     enforce_return_guarantees
-from guarantees.functional_guarantees import settings
+from . import settings
 
 
 def add_guarantees(
@@ -26,6 +26,9 @@ def add_guarantees(
             register_return_guarantees(fct, return_guarantee)
 
         def _enforce(*args, **kwargs):
+            if not settings.ACTIVE:
+                return fct
+
             if param_guarantees is not None:
                 args, kwargs = _enforce_parameter_guarantees(
                     fct, *args, **kwargs)

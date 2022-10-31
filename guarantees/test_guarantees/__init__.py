@@ -1,2 +1,1 @@
-from ._decorators import guarantee_test_for, implements_test_for
-
+from ._decorators_and_functions import guarantee_test, implements_test_for, guarantee_usage, guarantee_test_for

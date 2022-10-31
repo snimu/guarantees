@@ -1,36 +1,50 @@
 fdata = {}   # all necessary data on guaranteed functions
 
 
+def guarantee_test(guarantee_usage: bool = False):
+    def _fct(fct):
+        global fdata
+        if fct not in fdata.keys():
+            fdata[fct] = {
+                "has_test": False,
+                "counter": 0,
+                "was_called": True,
+                "use_guaranteed": guarantee_usage
+            }
+
+        if guarantee_usage:
+            # To allow comparison of counter before and after test
+            #   -> if increased, fct was called
+            fdata[fct]["counter"] += 1
+
+        return fct
+    return _fct
+
+
 def guarantee_test_for(fct, /):
     global fdata
-    if fct in fdata.keys():
-        return
-
-    fdata[fct] = {
-        "has_test": False,
-        "counter": 0,
-        "was_called": True,
-        "use_guaranteed": False
-    }
-
-
-def enforce():
-    pass
+    if fct not in fdata.keys():
+        fdata[fct] = {
+            "has_test": False,
+            "counter": 0,
+            "was_called": True,
+            "use_guaranteed": False
+        }
 
 
 def guarantee_usage(fct, /):
     global fdata
     if fct not in fdata.keys():
-        return fct
+        return
 
-    if not fdata[fct]["use_guaranteed"]:
-        fdata[fct]["use_guaranteed"] = True
-
-    # To allow comparison of counter before and after test
-    #   -> if increased, fct was called
+    fdata[fct]["use_guaranteed"] = True
     fdata[fct]["counter"] += 1
 
     return fct
+
+
+def enforce():
+    pass
 
 
 def implements_test_for(guaranteed_fct, /):

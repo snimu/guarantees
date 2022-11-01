@@ -1,24 +1,35 @@
-fdata = {}   # all necessary data on guaranteed functions
+import copy
+from ._wrapper import Wrapper
 
 
 def guarantee_test(guarantee_usage: bool = False):
     def _fct(fct):
-        global fdata
-        if fct not in fdata.keys():
-            fdata[fct] = {
-                "has_test": False,
-                "counter": 0,
-                "was_called": True,
-                "use_guaranteed": guarantee_usage
-            }
-
-        if guarantee_usage:
-            # To allow comparison of counter before and after test
-            #   -> if increased, fct was called
-            fdata[fct]["counter"] += 1
-
-        return fct
+        return Wrapper(fct, guarantee_usage)
     return _fct
+
+
+def implements_test_for(guaranteed_fct: Wrapper, /):
+    guaranteed_fct.has_test = True
+
+    def _fct(test_fct):
+        def _execute(*args, **kwargs):
+            counter_old = copy.copy(guaranteed_fct.counter)
+            ret_val = test_fct(*args, **kwargs)
+
+            if guaranteed_fct.guarantee_usage:
+                if counter_old == guaranteed_fct.counter:
+                    # fct was not called (calling would have increased counter)
+                    guaranteed_fct.was_called = False
+
+            return ret_val
+
+        return _execute
+
+    return _fct
+
+
+"""
+fdata = {}   # all necessary data on guaranteed functions
 
 
 def guarantee_test_for(fct, /):
@@ -68,3 +79,4 @@ def implements_test_for(guaranteed_fct, /):
         return _execute
 
     return _fct
+"""

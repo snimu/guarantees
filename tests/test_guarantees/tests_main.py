@@ -9,14 +9,13 @@ from guarantees import test_guarantees as tg
 # Test:
 #   guarantee_usage
 
+# try:
+#   __import__(file)
 
-@tg.guarantee_usage
+
+@tg.guarantee_test()
 def foo():
     return 1
-
-
-tg.guarantee_test_for(foo)
-
 
 class TestRegisters(unittest.TestCase):
     @tg.implements_test_for(foo)

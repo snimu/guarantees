@@ -1,5 +1,4 @@
 import unittest
-from ._decorators_and_functions import fdata
 import exceptions
 
 

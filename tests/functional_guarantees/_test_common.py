@@ -196,39 +196,30 @@ class TestMethodGuarantees(unittest.TestCase):
             self.assertTrue(True)
 
 
-class TestOnOff(unittest.TestCase):
-    def test_onoff(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
+class TestReturnGuarantees(unittest.TestCase):
+    def test_correct(self) -> None:
+        @fg.add_guarantees(return_guarantee=fg.IsInt("a"))
         def fct(a):
             return a
 
-        # Check that it works in general
-        val = fct(1)
-        self.assertIsInstance(val, int)
+        ret_val = fct(1)
+        self.assertIsInstance(ret_val, int)
+
+    def test_false(self):
+        @fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+        def fct(a):
+            return float(a)
 
         try:
-            fct("not an int!")
-            self.assertTrue(False)
-        except TypeError:
-            self.assertTrue(True)
+            fct(1)
+            self.assertTrue(False)   # should have raised an exception
+        except fg.exceptions.ReturnGuaranteesTypeError:
+            self.assertTrue(True)    # successfully raised an exception
 
-        fg.settings.change_settings(active=False)
-        fct("not an int!")
+    def test_false_with_conversion(self):
+        @fg.add_guarantees(return_guarantee=fg.IsInt("a", force_conversion=True))
+        def fct(a):
+            return float(a)
 
-        fg.settings.change_settings(active=True)
-        try:
-            fct("not an int!")
-            self.assertTrue(False)
-        except TypeError:
-            self.assertTrue(True)
-
-
-def test_onoff():
-    """TestOnOff cannot be run as part of unittest.main(), because all tests
-    are run in parallel and guarantees.off() would impact all other tests.
-    Therefore, provide this function to be run before or after running
-    unittest.main()."""
-    suite = unittest.TestSuite()
-    suite.addTest(TestOnOff())
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+        ret_val = fct(1)
+        self.assertIsInstance(ret_val, int)

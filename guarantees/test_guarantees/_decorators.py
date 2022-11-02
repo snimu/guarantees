@@ -1,38 +1,82 @@
-from .exceptions import FunctionNotUsedError, TestNotImplementedError
-from ._data import TestGuarantees
+import copy
+from ._wrapper import Wrapper
 
 
-def guarantee_test_for(name, /, *, namespace=None, guarantee_use=False):
+def guarantee_test(guarantee_usage: bool = False):
     def _fct(fct):
-        if not TestGuarantees.contains(name, namespace):
-            TestGuarantees.register_for_testing(
-                name,
-                namespace,
-                fct if guarantee_use else None
-            )
-
-        if guarantee_use:
-            TestGuarantees.increment_counter(name, namespace)
-
-        return fct
+        return Wrapper(fct, guarantee_usage)
     return _fct
 
 
-def implements_test_for(name, /, *, namespace=""):
-    TestGuarantees.signal_has_test(name, namespace)
+def implements_test_for(guaranteed_fct: Wrapper, /):
+    guaranteed_fct.has_test = True
 
-    def _fct(fct):
+    def _fct(test_fct):
         def _execute(*args, **kwargs):
-            counter_old = TestGuarantees.get_counter(name, namespace)
-            ret_val = fct(*args, **kwargs)
+            counter_old = copy.copy(guaranteed_fct.counter)
+            ret_val = test_fct(*args, **kwargs)
 
-            if TestGuarantees.use_guaranteed(name, namespace):
-                counter_new = TestGuarantees.get_counter(name, namespace)
+            if guaranteed_fct.guarantee_usage:
+                if counter_old == guaranteed_fct.counter:
+                    # fct was not called (calling would have increased counter)
+                    guaranteed_fct.was_called = False
+
+            return ret_val
+
+        return _execute
+
+    return _fct
+
+
+"""
+fdata = {}   # all necessary data on guaranteed functions
+
+
+def guarantee_test_for(fct, /):
+    global fdata
+    if fct not in fdata.keys():
+        fdata[fct] = {
+            "has_test": False,
+            "counter": 0,
+            "was_called": True,
+            "use_guaranteed": False
+        }
+
+
+def guarantee_usage(fct, /):
+    global fdata
+    if fct not in fdata.keys():
+        return
+
+    fdata[fct]["use_guaranteed"] = True
+    fdata[fct]["counter"] += 1
+
+    return fct
+
+
+def enforce():
+    pass
+
+
+def implements_test_for(guaranteed_fct, /):
+    global fdata
+    fdata[guaranteed_fct]["has_test"] = True
+
+    def _fct(test_fct):
+        def _execute(*args, **kwargs):
+            counter_old = fdata[guaranteed_fct]["counter"]
+            ret_val = test_fct(*args, **kwargs)
+
+            if fdata[guaranteed_fct]["use_guaranteed"]:
+                counter_new = fdata[guaranteed_fct]["counter"]
 
                 if counter_old == counter_new:
                     # fct was not called (calling would have increased counter)
-                    TestGuarantees.set_was_called_false(name, namespace)
+                    fdata[guaranteed_fct]["was_called"] = False
 
             return ret_val
+
         return _execute
+
     return _fct
+"""

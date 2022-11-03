@@ -13,5 +13,5 @@ from tests.functional_guarantees._test_onoff import test_onoff
 
 
 if __name__ == '__main__':
-    r = unittest.main(exit=False)
+    unittest.main(exit=False)
     test_onoff()

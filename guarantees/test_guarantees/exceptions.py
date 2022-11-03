@@ -5,8 +5,8 @@ class TestsNotImplementedError(Exception):
     """Test for a function was guaranteed but not implemented."""
     def __init__(self, functions):
         self.functions = functions
-        self.err_str = "\nNo tests were implemented for the following " \
-                       "methods and functions: \n" + _where_str(functions)
+        self.err_str = "\n\n\tNo tests were implemented for the following " \
+                       "methods and functions: \n\n" + _where_str(functions)
         super().__init__(self.err_str)
 
 
@@ -15,8 +15,8 @@ class NotUsedInTestsError(Exception):
     function was never called."""
     def __init__(self, functions):
         self.functions = functions
-        self.err_str = "\nThe following methods and functions were not " \
-                       "executed in their assigned tests: \n" \
+        self.err_str = "\n\n\tThe following methods and functions were not " \
+                       "executed in their assigned tests: \n\n" \
                        + _where_str(functions)
 
         super().__init__(self.err_str)

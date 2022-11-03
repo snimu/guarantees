@@ -1,3 +1,6 @@
+from typing import Union, List
+
+
 fdata = {}   # all necessary data on guaranteed functions
 
 
@@ -11,9 +14,14 @@ def guarantee_test():
     return _fct
 
 
-def implements_test_for(guaranteed_fct, /):
+def implements_test_for(functions: Union[callable, List[callable]], /):
     global fdata
-    fdata[guaranteed_fct]["has_test"] = True
+
+    if callable(functions):
+        functions = [functions]
+
+    for function in functions:
+        fdata[function]["has_test"] = True
 
     def _fct(test_fct):
         return test_fct

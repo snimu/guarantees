@@ -35,10 +35,7 @@
 
 # TODO: `test_guarantees`
 
-## Issues
-
-- When doing a `from x import y`, 
-
-## Design
-
-- At the end of a file, use `guarantee_tests_for(functions: List[callable])`
+- More tests
+- GuaranteeUsage(fct)-class
+  - must implement all dunder methods that a fct has
+  - `__call__` increments the counter and returns `self.fct`

@@ -27,12 +27,12 @@ def _where_str(functions: callable) -> str:
 
     for i, fct in enumerate(functions):
         ftype = "method" if inspect.ismethod(fct) else "function"
-        where_str = f"\t{i + 1}. {ftype}\n"
+        where_str += f"\t{i + 1}. {ftype}\n"
 
         qualname, module = _get_qualname_and_module(fct)
 
-        where_str += f"\t\tName: \t{qualname}\n"
-        where_str += f"\t\tModule: \t{module}"
+        where_str += f"\t\tName: \t\t{qualname}\n"
+        where_str += f"\t\tModule: \t{module}\n"
 
     return where_str
 
@@ -42,11 +42,10 @@ def _get_qualname_and_module(fct):
 
     qualname = ""
     module = ""
-
     for member in members:
         if member[0] == "__qualname__":
             qualname = member[1]
-        elif member[1] == "__module__":
+        elif member[0] == "__module__":
             module = member[1]
 
     return qualname, module

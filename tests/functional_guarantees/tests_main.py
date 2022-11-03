@@ -9,7 +9,9 @@ from tests.functional_guarantees._test_collections import TestCollectionsGuarant
 from tests.functional_guarantees._test_common import TestCallback, TestCheckFunctions,\
     TestMethodGuarantees, TestReturnGuarantees
 from tests.functional_guarantees._test_binary import TestBinary
+from tests.functional_guarantees._test_onoff import test_onoff
 
 
 if __name__ == '__main__':
-    unittest.main()
+    r = unittest.main(exit=False)
+    test_onoff()

@@ -37,7 +37,3 @@ def test_onoff():
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestOnOff)
     a = unittest.TextTestRunner().run(suite)
     return a
-
-
-if __name__ == "__main__":
-    test_onoff()

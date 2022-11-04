@@ -46,8 +46,9 @@ def guarantee_test():
 
 def guarantee_usage():
     def _fct(fct):
+        global fdata
+
         def _run(*args, **kwargs):
-            global fdata
             if _run in fdata.keys():
                 fdata[_run]["call_counter"] += 1
             return fct(*args, **kwargs)

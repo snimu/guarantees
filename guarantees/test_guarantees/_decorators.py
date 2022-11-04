@@ -1,6 +1,7 @@
 from typing import Union, List
 import copy
 import inspect
+from dataclasses import dataclass
 
 
 fdata = {}   # all necessary data on guaranteed functions
@@ -20,6 +21,12 @@ def _get_qualname_and_module(fct):
     return qualname, module
 
 
+@dataclass
+class Info:
+    qualname: str
+    module: str
+
+
 def guarantee_test():
     def _fct(fct):
         global fdata
@@ -28,10 +35,9 @@ def guarantee_test():
             fdata[fct] = {
                 "num_tests": 0,
                 "call_counter": 0,
-                "num_tests_with_calls": 0,
                 "usage_guaranteed": False,
-                "qualname": qualname,
-                "module": module
+                "info": Info(qualname, module),
+                "testcases_without_exec": None
             }
 
         return fct
@@ -53,8 +59,8 @@ def guarantee_usage():
                 "call_counter": 0,
                 "num_tests_with_calls": 0,
                 "usage_guaranteed": True,
-                "qualname": qualname,
-                "module": module
+                "info": Info(qualname, module),
+                "testcases_without_exec": None
             }
         return _run
     return _fct
@@ -77,8 +83,12 @@ def implements_test_for(functions: Union[callable, List[callable]], /):
             counts_new = [copy.copy(fdata[fct]["call_counter"]) for fct in functions]
 
             for i, fct in enumerate(functions):
-                if counts_new[i] > counts_old[i]:
-                    fdata[fct]["num_tests_with_calls"] += 1
+                if counts_new[i] <= counts_old[i]:
+                    info = Info(*_get_qualname_and_module(test_fct))
+                    if fdata[fct]["testcases_without_exec"] is None:
+                        fdata[fct]["testcases_without_exec"] = [info]
+                    else:
+                        fdata[fct]["testcases_without_exec"].append(info)
 
             return ret_val
 

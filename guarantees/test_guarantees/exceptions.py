@@ -33,11 +33,20 @@ def _where_str(functions: callable, why: str) -> str:
                          f"Missing test-case for the following callable: \n"
         elif why == "unused":
             where_str += f"\t{i + 1}. " \
-                         f"The following callable was not used in test-cases: \n"
+                         f"The following callable was not called " \
+                         f"in its assigned tests: \n"
 
-        qualname, module = fdata[fct]["qualname"], fdata[fct]["module"]
+        qualname, module = fdata[fct]["info"].qualname, fdata[fct]["info"].module
 
         where_str += f"\t\tName: \t\t{qualname}\n"
         where_str += f"\t\tModule: \t{module}\n"
+
+        if why == "unused":
+            where_str += "\t\tThis callable is tested but not called " \
+                         "in the following test-cases: \n"
+
+            for tinfo in fdata[fct]["testcases_without_exec"]:
+                where_str += f"\t\t\t\t\t- Name: \t{tinfo.qualname}\n"
+                where_str += f"\t\t\t\t\t   Module: \t{tinfo.module}\n"
 
     return where_str

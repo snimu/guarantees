@@ -18,7 +18,7 @@ class TestGuarantees(unittest.TestCase):
         failed_fcts = []
         for fct in fdata.keys():
             if fdata[fct]["usage_guaranteed"] and \
-                    fdata[fct]["num_tests_with_calls"] < fdata[fct]["num_tests"]:
+                    fdata[fct]["testcases_without_exec"] is not None:
                 failed_fcts.append(fct)
 
         if failed_fcts:

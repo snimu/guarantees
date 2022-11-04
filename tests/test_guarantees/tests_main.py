@@ -15,6 +15,10 @@ class TestRegisters(unittest.TestCase):
     def test_same_module(self):
         self.assertEqual(foo(), 1)
 
+    @tg.implements_test_for(foo)
+    def test_same_module_again(self):
+        self.assertEqual(foo(), 1)
+
     @tg.implements_test_for([_fcts1.some_fct, _fcts1.SomeClass.some_method])
     def test_fcts1(self):
         self.assertEqual(_fcts1.some_fct(1, 2, 3), (1, 2, 3))

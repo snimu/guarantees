@@ -38,6 +38,7 @@
 # TODO: `test_guarantees`
 
 - More tests
-- GuaranteeUsage(fct)-class
-  - must implement all dunder methods that a fct has
-  - `__call__` increments the counter and returns `self.fct`
+- write plenty of comments so that my reasoning is understandable 
+   (or I won't understand the code soon)
+- Improve error messages by saving and printing the names of the test-cases 
+   in which the callable should have been used

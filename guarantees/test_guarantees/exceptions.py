@@ -1,5 +1,7 @@
 import inspect
 
+from ._decorators import fdata
+
 
 class TestsNotImplementedError(Exception):
     """Test for a function was guaranteed but not implemented."""
@@ -7,7 +9,7 @@ class TestsNotImplementedError(Exception):
         self.functions = functions
         self.err_str = "\n\n\tNo tests were implemented for the following " \
                        "methods and functions: \n\n" + _where_str(functions)
-        super().__init__(self.err_str)
+        super().__init__(self.err_str, "no test")
 
 
 class NotUsedInTestsError(Exception):
@@ -17,38 +19,25 @@ class NotUsedInTestsError(Exception):
         self.functions = functions
         self.err_str = "\n\n\tThe following methods and functions were not " \
                        "executed in their assigned tests: \n\n" \
-                       + _where_str(functions)
+                       + _where_str(functions, "unused")
 
         super().__init__(self.err_str)
 
 
-def _where_str(functions: callable) -> str:
+def _where_str(functions: callable, why: str) -> str:
     where_str = ""
 
     for i, fct in enumerate(functions):
-        ftype = "method" if inspect.ismethod(fct) else "function"
-        where_str += f"\t{i + 1}. {ftype}\n"
+        if why == "no test":
+            where_str += f"\t{i + 1}. " \
+                         f"Missing test-case for the following callable: \n"
+        elif why == "unused":
+            where_str += f"\t{i + 1}. " \
+                         f"The following callable was not used in test-cases: \n"
 
-        qualname, module = _get_qualname_and_module(fct)
+        qualname, module = fdata[fct]["qualname"], fdata[fct]["module"]
 
         where_str += f"\t\tName: \t\t{qualname}\n"
         where_str += f"\t\tModule: \t{module}\n"
 
     return where_str
-
-
-def _get_qualname_and_module(fct):
-    members = inspect.getmembers(fct)
-
-    qualname = ""
-    module = ""
-    for member in members:
-        if member[0] == "__qualname__":
-            qualname = member[1]
-        elif member[0] == "__module__":
-            module = member[1]
-
-    return qualname, module
-
-
-

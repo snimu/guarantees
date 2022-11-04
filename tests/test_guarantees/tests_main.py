@@ -5,6 +5,7 @@ from tests.test_guarantees import _fcts1, _fcts2
 
 
 @tg.guarantee_test()
+@tg.guarantee_usage()
 def foo():
     return 1
 

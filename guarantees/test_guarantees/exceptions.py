@@ -8,8 +8,8 @@ class TestsNotImplementedError(Exception):
     def __init__(self, functions):
         self.functions = functions
         self.err_str = "\n\n\tNo tests were implemented for the following " \
-                       "methods and functions: \n\n" + _where_str(functions)
-        super().__init__(self.err_str, "no test")
+                       "methods and functions: \n\n" + _where_str(functions, "no test")
+        super().__init__(self.err_str)
 
 
 class NotUsedInTestsError(Exception):

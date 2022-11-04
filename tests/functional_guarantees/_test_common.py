@@ -168,6 +168,11 @@ class ClassWithMethods:
     def classfct(cls, a):
         return a
 
+    @staticmethod
+    @fg.add_guarantees(is_staticmethod=True, param_guarantees=[fg.IsInt("a")])
+    def staticfct(a):
+        return a
+
 
 class TestMethodGuarantees(unittest.TestCase):
     def setUp(self) -> None:
@@ -191,6 +196,17 @@ class TestMethodGuarantees(unittest.TestCase):
     def test_cls_error(self):
         try:
             self.class_with_methods.classfct("not an int")
+            self.assertTrue(False)   # should have raised an exception
+        except fg.exceptions.ParameterGuaranteesTypeError:
+            self.assertTrue(True)
+
+    def test_static_correct(self):
+        val = self.class_with_methods.staticfct(3)
+        self.assertIsInstance(val, int)
+
+    def test_static_error(self):
+        try:
+            self.class_with_methods.staticfct("not an int")
             self.assertTrue(False)   # should have raised an exception
         except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)

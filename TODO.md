@@ -3,16 +3,18 @@
 ## Immediate steps
 
 1. Make `functional_guarantees` work properly with `staticmethod`s
-    - Might have to add a `staticmethod`-member to `Guarantee`
+    - Might have to add a `staticmethod`-member to `add_guarantees`
 
-2. Move each class in `_other.py` into its own file for clarity
+2. Add `hex` capabilities (and look for other, similar ones)
+
+3. Move each class in `_other.py` into its own file for clarity
     - Same for tests
 
-3. Save arg in Exceptions
+4. Save arg in Exceptions
     - add `arg` to Exception arguments
     - add `self.arg` in all Exceptions
 
-4. In `CollectionType`: `types`-member
+5. In `CollectionType`: `types`-member
   - Is list of more Guarantees
   - For dict: has `key_types` and `val_types`, where `types` checks both
 

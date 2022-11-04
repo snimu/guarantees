@@ -13,7 +13,8 @@ from . import settings
 
 def add_guarantees(
         param_guarantees=None,
-        return_guarantee=None
+        return_guarantee=None,
+        is_staticmethod: bool = False
 ):
     def _fct(fct):
         if not settings.ACTIVE:
@@ -31,7 +32,7 @@ def add_guarantees(
 
             if param_guarantees is not None:
                 args, kwargs = _enforce_parameter_guarantees(
-                    fct, *args, **kwargs)
+                    fct, is_staticmethod, *args, **kwargs)
 
             ret_val = fct(*args, **kwargs)
             if return_guarantee is not None:
@@ -47,7 +48,7 @@ def add_guarantees(
     return _fct
 
 
-def _enforce_parameter_guarantees(fct, *args, **kwargs):
+def _enforce_parameter_guarantees(fct, is_staticmethod, *args, **kwargs):
     """
     If a function is actually a method, the first arg will be self or cls.
     Accordingly, the first Guarantee will try to enforce itself on self or cls,
@@ -57,7 +58,7 @@ def _enforce_parameter_guarantees(fct, *args, **kwargs):
     Therefore, it is necessary to find out if a function is actually a method
     and, if it is, take this into consideration.
     """
-    if ismethod(fct):
+    if ismethod(fct) and not is_staticmethod:
         # Idea:
         #   With args = [self, ...] or [cls, ...]:
         #       1.  Split args into [self] (or [cls]) and [...]

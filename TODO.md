@@ -1,3 +1,7 @@
+# TODO: both
+
+- `functools.wraps` 
+
 # TODO: `functional_guarantees`
 
 ## Immediate steps

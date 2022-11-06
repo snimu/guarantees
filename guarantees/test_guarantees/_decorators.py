@@ -67,11 +67,11 @@ def guarantee_usage():
     return _fct
 
 
-def implements_test_for(functions: Union[callable, List[callable]], /):
+def implements_test_for(*functions, **kwfunctions):
     global fdata
 
-    if callable(functions):
-        functions = [functions]
+    functions = list(functions)
+    functions.extend(kwfunctions.values())
 
     for function in functions:
         fdata[function]["num_tests"] += 1

@@ -1,9 +1,8 @@
 """Defines the @guarantees.functional_guarantees decorator."""
 
 
+
 from ._util import ismethod
-
-
 from ._guarantee_handler import enforce_parameter_guarantees, \
     register_parameter_guarantees, ParameterHandler, \
     register_return_guarantees, ReturnHandler, \

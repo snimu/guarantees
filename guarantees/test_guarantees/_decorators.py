@@ -1,42 +1,17 @@
-from typing import Union, List
 import copy
-import inspect
-from dataclasses import dataclass
 
 
 fdata = {}   # all necessary data on guaranteed functions
-
-
-def _get_qualname_and_module(fct):
-    members = inspect.getmembers(fct)
-
-    qualname = ""
-    module = ""
-    for member in members:
-        if member[0] == "__qualname__":
-            qualname = member[1]
-        elif member[0] == "__module__":
-            module = member[1]
-
-    return qualname, module
-
-
-@dataclass
-class Info:
-    qualname: str
-    module: str
 
 
 def guarantee_test():
     def _fct(fct):
         global fdata
         if fct not in fdata.keys():
-            qualname, module = _get_qualname_and_module(fct)
             fdata[fct] = {
                 "num_tests": 0,
                 "call_counter": 0,
                 "usage_guaranteed": False,
-                "info": Info(qualname, module),
                 "testcases_without_exec": None
             }
 
@@ -54,13 +29,11 @@ def guarantee_usage():
             return fct(*args, **kwargs)
 
         if _run not in fdata.keys():
-            qualname, module = _get_qualname_and_module(fct)
             fdata[_run] = {
                 "num_tests": 0,
                 "call_counter": 0,
                 "num_tests_with_calls": 0,
                 "usage_guaranteed": True,
-                "info": Info(qualname, module),
                 "testcases_without_exec": None
             }
         return _run
@@ -85,11 +58,10 @@ def implements_test_for(*functions, **kwfunctions):
 
             for i, fct in enumerate(functions):
                 if counts_new[i] <= counts_old[i]:
-                    info = Info(*_get_qualname_and_module(test_fct))
                     if fdata[fct]["testcases_without_exec"] is None:
-                        fdata[fct]["testcases_without_exec"] = [info]
+                        fdata[fct]["testcases_without_exec"] = [fct]
                     else:
-                        fdata[fct]["testcases_without_exec"].append(info)
+                        fdata[fct]["testcases_without_exec"].append(fct)
 
             return ret_val
 

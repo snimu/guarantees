@@ -36,17 +36,15 @@ def _where_str(functions: callable, why: str) -> str:
                          f"The following callable was not called " \
                          f"in its assigned tests: \n"
 
-        qualname, module = fdata[fct]["info"].qualname, fdata[fct]["info"].module
-
-        where_str += f"\t\tName: \t\t{qualname}\n"
-        where_str += f"\t\tModule: \t{module}\n"
+        where_str += f"\t\tName: \t\t{fct.__qualname__}\n"
+        where_str += f"\t\tModule: \t{fct.__module__}\n"
 
         if why == "unused":
             where_str += "\t\tThis callable is tested but not called " \
                          "in the following test-cases: \n"
 
-            for tinfo in fdata[fct]["testcases_without_exec"]:
-                where_str += f"\t\t\t\t\t- Name: \t{tinfo.qualname}\n"
-                where_str += f"\t\t\t\t\t   Module: \t{tinfo.module}\n"
+            for tfct in fdata[fct]["testcases_without_exec"]:
+                where_str += f"\t\t\t\t\t- Name: \t{tfct.__qualname__}\n"
+                where_str += f"\t\t\t\t\t   Module: \t{tfct.__module__}\n"
 
     return where_str

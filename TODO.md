@@ -4,7 +4,7 @@
 
 # TODO: `functional_guarantees`
 
-## Immediate steps
+- Build system!
 
 - Move each class in `_other.py` into its own file for clarity
     - Same for tests
@@ -16,8 +16,6 @@
 - In `CollectionType`: `types`-member
   - Is list of more Guarantees
   - For dict: has `key_types` and `val_types`, where `types` checks both
-
-## Other
 
 - `description`-parameter?
 

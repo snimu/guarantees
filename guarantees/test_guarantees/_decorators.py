@@ -1,4 +1,5 @@
 import copy
+from functools import wraps
 
 
 fdata = {}   # all necessary data on guaranteed functions
@@ -23,6 +24,7 @@ def guarantee_usage():
     def _fct(fct):
         global fdata
 
+        @wraps(fct)
         def _run(*args, **kwargs):
             if _run in fdata.keys():
                 fdata[_run]["call_counter"] += 1

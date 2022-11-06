@@ -1,6 +1,7 @@
 """Defines the @guarantees.functional_guarantees decorator."""
 
 
+from functools import wraps
 
 from ._util import ismethod
 from ._guarantee_handler import enforce_parameter_guarantees, \
@@ -25,6 +26,7 @@ def add_guarantees(
         if not ReturnHandler.contains(fct) and return_guarantee is not None:
             register_return_guarantees(fct, return_guarantee)
 
+        @wraps(fct)
         def _enforce(*args, **kwargs):
             if not settings.ACTIVE:
                 return fct

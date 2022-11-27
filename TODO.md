@@ -1,11 +1,10 @@
+# TODO: both
+
+- Build system
+- Licence
+- Make project public
+
 # TODO: `functional_guarantees`
-
-- Build system!
-
-- Use `inspect.iscoroutinefunction` (`async await`) 
-  and `inspect.isgeneratorfunction` (`yield`) to handle those cases in my
-  decorators
-  - write tests for this
 
 - Move each class in `_other.py` into its own file for clarity
     - Same for tests

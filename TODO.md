@@ -1,7 +1,3 @@
-# TODO: both
-
-- `functools.wraps` 
-
 # TODO: `functional_guarantees`
 
 - Build system!

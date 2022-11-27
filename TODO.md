@@ -1,7 +1,6 @@
 # TODO: both
 
 - Build system
-- Licence
 - Make project public
 
 # TODO: `functional_guarantees`

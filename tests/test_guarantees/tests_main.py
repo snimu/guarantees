@@ -1,7 +1,7 @@
 import unittest
 import asyncio
 
-from guarantees import test_guarantees as tg
+from pyguarantees import test_guarantees as tg
 from tests.test_guarantees import _fcts1, _fcts2
 
 

@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from typing import Any, List, Union
 
 from ._base import TypeGuarantee
-from guarantees.functional_guarantees.classes.util.error_handeling import \
+from pyguarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
-from guarantees.functional_guarantees.classes.util.common_checks import \
+from pyguarantees.functional_guarantees.classes.util.common_checks import \
     enforce_check_functions, check_type
-from guarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 
 
@@ -118,7 +118,7 @@ def _check_minmax_len(
         arg: Union[list, tuple, dict, set, frozenset],
         guarantee: CollectionType
 ) -> None:
-    # if guarantees.warnings_only, this functon may be called even though
+    # if pyguarantees.warnings_only, this functon may be called even though
     #   the type-check failed --> check again and return if previous test failed
     if type(arg) is not guarantee.guaranteed_type:
         return

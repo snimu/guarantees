@@ -1,5 +1,5 @@
 import unittest
-from guarantees import functional_guarantees as fg
+from pyguarantees import functional_guarantees as fg
 
 
 class TestBinary(unittest.TestCase):

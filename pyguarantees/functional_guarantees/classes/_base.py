@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass, field
 from typing import Callable, Union, Dict, List, Type
-from guarantees import severity
+from pyguarantees import severity
 
 
 @dataclass

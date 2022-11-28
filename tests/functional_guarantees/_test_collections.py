@@ -1,7 +1,7 @@
 import unittest
 
-import guarantees.functional_guarantees.exceptions
-from guarantees import functional_guarantees as fg
+import pyguarantees.functional_guarantees.exceptions
+from pyguarantees import functional_guarantees as fg
 
 
 class TestCollectionsGuarantee(unittest.TestCase):

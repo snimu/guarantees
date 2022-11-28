@@ -1,5 +1,5 @@
 import unittest
-from guarantees import functional_guarantees as fg
+from pyguarantees import functional_guarantees as fg
 
 
 class TestOnOff(unittest.TestCase):
@@ -31,7 +31,7 @@ class TestOnOff(unittest.TestCase):
 
 def test_onoff():
     """TestOnOff cannot be run as part of unittest.main(), because all tests
-    are run in parallel and guarantees.off() would impact all other tests.
+    are run in parallel and pyguarantees.off() would impact all other tests.
     Therefore, provide this function to be run before or after running
     unittest.main()."""
     suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestOnOff)

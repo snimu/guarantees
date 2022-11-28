@@ -1,5 +1,5 @@
 from ._util import construct_err_str
-from guarantees import severity
+from pyguarantees import severity
 
 
 class ParameterGuaranteesValueError(ValueError):

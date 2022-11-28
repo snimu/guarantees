@@ -1,6 +1,6 @@
 import unittest
 
-from guarantees.test_guarantees import exceptions
+from pyguarantees.test_guarantees import exceptions
 from ._decorators import fdata
 
 

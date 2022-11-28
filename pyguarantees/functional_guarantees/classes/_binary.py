@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from ._base import TypeGuarantee
-from guarantees.functional_guarantees.classes.util.common_checks import \
+from pyguarantees.functional_guarantees.classes.util.common_checks import \
     enforce_check_functions, check_type
 
 

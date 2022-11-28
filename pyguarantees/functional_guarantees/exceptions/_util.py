@@ -1,4 +1,4 @@
-from guarantees import severity
+from pyguarantees import severity
 
 
 def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:

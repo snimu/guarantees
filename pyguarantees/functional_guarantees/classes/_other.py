@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from typing import Type, List, Union
 
 from ._base import Guarantee, TypeGuarantee
-from guarantees.functional_guarantees.classes.util.error_handeling import \
+from pyguarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
-from guarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name, get_type_name
-from guarantees.functional_guarantees.classes.util.common_checks import \
+from pyguarantees.functional_guarantees.classes.util.common_checks import \
     enforce_check_functions
 
 

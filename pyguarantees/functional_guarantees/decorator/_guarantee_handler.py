@@ -1,27 +1,27 @@
 from typing import List, Tuple, Dict, Any
 import inspect
 
-from guarantees.functional_guarantees.classes import Guarantee, NoOp
-from guarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees.functional_guarantees.classes import Guarantee, NoOp
+from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
-from guarantees.functional_guarantees.classes.util.error_handeling import \
+from pyguarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
-from guarantees.functional_guarantees import IsUnion
+from pyguarantees.functional_guarantees import IsUnion
 
 
 class ParameterHandler:
     """
     Since it is possible to call functions and methods with a mixture of
     args and kwargs (and a different mixture at different calls!), and kwargs
-    can be used in any order, figuring out which kwarg is given which guarantees
-    from the function call + guarantees-ordering alone is impossible.
+    can be used in any order, figuring out which kwarg is given which pyguarantees
+    from the function call + pyguarantees-ordering alone is impossible.
 
     Instead, a dict has to be created with an entry for every function and
     method. For each fct, all classes will be entered into an args-list
     responsible for handling args (the order is determined by the order in
-    which the classes appear in the list given to @guarantees.functional_guarantees()),
+    which the classes appear in the list given to @pyguarantees.functional_guarantees()),
     and a kwargs-dict responsible for handling kwargs (where the key is the
-    name given to the guarantees  ->  the parameter-names and guarantees-names
+    name given to the pyguarantees  ->  the parameter-names and pyguarantees-names
     must match for this library to handle keyword arguments!
     """
     handles = {}
@@ -49,7 +49,7 @@ def register_parameter_guarantees(
     """Register the classes for the function."""
     if fct in ParameterHandler.handles.keys():
         # only need to register once
-        #   -> when more than one call to @guarantees.functional_guarantees
+        #   -> when more than one call to @pyguarantees.functional_guarantees
         #   is made on the same function / method, only the first will be used
         #   and the rest will be ignored.
         return
@@ -62,7 +62,7 @@ def register_parameter_guarantees(
             where="internal",
             type_or_value="type",
             guarantee=None,
-            parameter_name="@guarantees.functional_guarantees.add_guarantees: "
+            parameter_name="@pyguarantees.functional_guarantees.add_guarantees: "
                            "param_guarantees",
             what_dict={
                 "should_type": "List[Guarantee]",
@@ -101,7 +101,7 @@ def _add_info_to_guarantee(
         module: str,
         where: str
 ) -> None:
-    """Add the given info to the given Guarantee. Add it to guarantees in
+    """Add the given info to the given Guarantee. Add it to pyguarantees in
     IsUnion, if the Guarantee is IsUnion."""
     guarantee.qualname = qualname
     guarantee.module = module
@@ -176,7 +176,7 @@ def enforce_return_guarantees(fct, val) -> Any:
 def _enforce_val(val, param_guarantee: Guarantee):
     """Enforce the classes on a single value."""
     if not isinstance(param_guarantee, Guarantee):
-        raise TypeError("Parameter guarantees is not a Guarantee. "
+        raise TypeError("Parameter pyguarantees is not a Guarantee. "
                         "@functional_guarantees only takes Guarantees.")
 
     if isinstance(param_guarantee, NoOp):

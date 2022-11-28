@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from typing import List
 
 from ._base import TypeGuarantee
-from guarantees.functional_guarantees.classes.util.common_checks import \
+from pyguarantees.functional_guarantees.classes.util.common_checks import \
     check_type, enforce_check_functions
-from guarantees.functional_guarantees.classes.util.error_handeling import \
+from pyguarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
-from guarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 
 
@@ -30,7 +30,7 @@ class IsStr(TypeGuarantee):
 
 
 def _check_len(arg, guarantee: IsStr) -> None:
-    if type(arg) is not str:   # Can happen if guarantees.warnings_only is True
+    if type(arg) is not str:   # Can happen if pyguarantees.warnings_only is True
         return
 
     _check_min_len_ge_max_len(guarantee)

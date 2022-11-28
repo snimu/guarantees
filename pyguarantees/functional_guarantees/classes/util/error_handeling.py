@@ -1,13 +1,13 @@
 import warnings
 from typing import Union
 
-from guarantees.functional_guarantees.classes import TypeGuarantee
-from guarantees.functional_guarantees.exceptions import \
+from pyguarantees.functional_guarantees.classes import TypeGuarantee
+from pyguarantees.functional_guarantees.exceptions import \
     ParameterGuaranteesTypeError, ParameterGuaranteesValueError, \
     ReturnGuaranteesValueError, ReturnGuaranteesTypeError, \
     FunctionalGuaranteesUserTypeError, FunctionalGuaranteesUserValueError
 
-from guarantees import severity
+from pyguarantees import severity
 
 
 def choose_exception(

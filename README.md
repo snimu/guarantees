@@ -80,7 +80,7 @@ that is decorated by [`@implements_test_for`](#implements-test-for), if
 - `args`: Give any function or method that the corresponding test is meant for.
 - `kwargs`: The value will be used like an `arg`, while the key will be ignored.
 
-Functions and methods that weren't decorated by [`@guarantee_test`](#guarantee-test) 
+Functions and methods that weren't decorated by [`@guarantee_test`](#guarantee_test) 
 lead to a user-warning but are ignored otherwise.
 
 ## Functions

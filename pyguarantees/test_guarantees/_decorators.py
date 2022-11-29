@@ -1,5 +1,6 @@
 import copy
 from functools import wraps
+import warnings
 
 
 fdata = {}   # all necessary data on guaranteed functions
@@ -47,6 +48,19 @@ def implements_test_for(*functions, **kwfunctions):
 
     functions = list(functions)
     functions.extend(kwfunctions.values())
+
+    # Only handle functions and methods
+    #  that have a @guarantee_test decorator.
+    tmp_functions = []
+    for function in functions:
+        if function in fdata.keys():
+            tmp_functions.append(function)
+        else:
+            warnings.warn(
+                f"The following function was given to implements_test_for "
+                f"but was not decorated with @guarantee_test: "
+                f" {function.__qualname__}")
+    functions = tmp_functions
 
     for function in functions:
         fdata[function]["num_tests"] += 1

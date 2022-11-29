@@ -56,7 +56,7 @@ Takes no arguments.
 
 Any function or method (however nested) decorated with `guarantee_test`
 that is in the scope of unittest will force unittest to throw and exception should 
-it not be in an [`@implements_test_for`](#implements-test-for).
+it not be in an [`@implements_test_for`](#implements_test_for).
 
 Currently, it is necessary to include the brackets &ndash; `()` &ndash; so that 
 the function is registered. 
@@ -65,13 +65,13 @@ the function is registered.
 
 Takes no arguments.
 
-Must be used below [`@guarentee_test`](#guarantee-test), otherwise, it is ignored.
+Must be used below [`@guarentee_test`](#guarantee_test), otherwise, it is ignored.
 
 Brackets are not optional, meaning that it has to be used as 
 `@guarantee_usage()`, not just `@guarantee_usage`.
 
 Guarantees that a given function or method is used by any test-function
-that is decorated by [`@implements_test_for`](#implements-test-for), if 
+that is decorated by [`@implements_test_for`](#implements_test_for), if 
 `@implements_test_for` takes the function or method as an argument.
 
 

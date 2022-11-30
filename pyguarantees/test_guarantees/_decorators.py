@@ -75,9 +75,9 @@ def implements_test_for(*functions, **kwfunctions):
             for i, fct in enumerate(functions):
                 if counts_new[i] <= counts_old[i]:
                     if fdata[fct]["testcases_without_exec"] is None:
-                        fdata[fct]["testcases_without_exec"] = [fct]
+                        fdata[fct]["testcases_without_exec"] = [test_fct]
                     else:
-                        fdata[fct]["testcases_without_exec"].append(fct)
+                        fdata[fct]["testcases_without_exec"].append(test_fct)
 
             return ret_val
 

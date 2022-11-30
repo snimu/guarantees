@@ -3,10 +3,12 @@ Python: guarantee test coverage, guarantee type and runtime-guarantees.
 
 This package has two components: `test_guarantees` and `functional_guarantees`.
 
+
 # test_guarantees
 
-`pyguarantees.test_guarantees` allows the use of decorators that guarantee the
+`pyguarantees.test_guarantees` provides decorators that guarantee the
 usage of a decorated function or method in a `unittest.TestCase`. 
+
 
 ## Example
 
@@ -48,10 +50,12 @@ All are explained below.
 As in the example, `pyguarantees.test_guarantees` will be abbreviated with `tg` from
 here on out.
 
+
 ## Decorators
 
 The three decorators shown below cannot be used without the [functions](#functions) 
 of this package.
+
 
 ### `guarantee_test`
 
@@ -62,7 +66,8 @@ that is in the scope of unittest will force unittest to throw and exception shou
 it not be in an [@tg.implements_test_for](#implements_test_for).
 
 Currently, it is necessary to include the brackets &ndash; `()` &ndash; so that 
-the function is registered. 
+the function is registered. This executes the decorator but not the callable that 
+it decorates, making it computationally inexpensive.
 
 Having a function (or method) decorated like follows:
 
@@ -75,14 +80,15 @@ def foo():
 but not having a test in your `unittest.TestCase` decorated by `@implements_test_for(foo)` 
 would lead to a [TestsNotImplementedError](#testsnotimplementederror) being raised.
 
+
 ### `guarantee_usage`
 
 Takes no arguments.
 
-Must be used below [@tg.guarentee_test](#guarantee_test), otherwise, it is ignored.
+Must be used below [@tg.guarantee_test](#guarantee_test), otherwise it is ignored.
 
-Brackets are not optional, meaning that it has to be used as 
-`@tg.guarantee_usage()`, not just `@tg.guarantee_usage`.
+Just like with `@tg.guarantee_test`, brackets are not optional, but the execution of 
+the decorator is computationally inexpensive.
 
 A function decorated as follows:
 
@@ -99,14 +105,15 @@ with a unittest that looks something like this:
 class TestExample(unittest.TestCase):
     @tg.implements_test_for(foo)
     def test_foo(self):
-        self.assertTrue(True)
+        ...   # some code that doesn't call foo
 ```
 
 would lead to a [NotUsedInTestsError](#notusedintestserror) being raised. 
 
-Guarantees that a given function or method is used by any test-function
-that is decorated by [@tg.implements_test_for](#implements_test_for), if 
-`@tg.implements_test_for` takes the function or method as an argument.
+In this scenario, if `foo` is an argument in several 
+[@tg.implements_test_for](#implements_test_for),
+`@tg.guarantee_usage` makes certain that `foo` is used in every test-function 
+decorated in such a way.
 
 
 ### `implements_test_for`
@@ -128,8 +135,9 @@ class TestExample(unittest.TestCase):
 
 ## Functions
 
-There are two functions. At least one has to be used for the [decorators](#decorators)
-to have an effect.
+Two functions are provided by `pyguarantees.test_guarantees`, both directly under
+`tg`. At least one has to be used for the [decorators](#decorators)
+to have an effect. 
 
 ### `enforce`
 
@@ -156,6 +164,11 @@ There are two custom `Exception`s as presented below.
 
 ### `TestsNotImplementedError`
 
+Arguments of `tg.exceptions.TestsNotImplementedError`:
+
+- `functions` (type: `callable`): The callables that weren't mentioned in a 
+[`@tg.implements_test_for`](#implements_test_for).
+
 Members of `tg.exceptions.TestsNotImplementedError`:
 
 - `functions` (type: `callable`): The callables that weren't mentioned in a 
@@ -164,6 +177,8 @@ Members of `tg.exceptions.TestsNotImplementedError`:
 and not caught.
 
 The output of raising this exception might look something like:
+
+    <Traceback...>
 
     pyguarantees.test_guarantees.exceptions.TestsNotImplementedError: 
 
@@ -177,6 +192,10 @@ The output of raising this exception might look something like:
             Module: 	__main__
 
 ### `NotUsedInTestsError`
+Arguments of `tg.exceptions.NotUsedInTestsError`:
+
+- `functions` (type: `callable`): The callables that were mentioned in a 
+[`@tg.implements_test_for`](#implements_test_for) but not used in the corresponding
 
 Members of `tg.exceptions.NotUsedInTestsError`:
 
@@ -188,6 +207,9 @@ and not caught.
 
 A possible error message might look like the following:
     
+    <Traceback...>
+
+    pyguarantees.test_guarantees.exceptions.NotUsedInTestsError:
 
     The following methods and functions were not executed in their assigned tests: 
 

@@ -1,7 +1,6 @@
 # TODO: both
 
-- Build system
-- Make project public
+- Ensure that everything is thread-save.
 
 # TODO: `functional_guarantees`
 
@@ -23,7 +22,7 @@
 - Guarantees for types from package `collections` 
   - Just add those to `_collections.py`
 
-- Support for third-party libraries
+- Support for third-party libraries (a.k.a. `IsTorchTensor` or `IsNumpyArray` or `IsDataFrame`)
 
 - Dynamic guarantees for other languages
   - One branch per language
@@ -36,3 +35,5 @@
 - More tests
 - write plenty of comments so that my reasoning is understandable 
    (or I won't understand the code soon)
+- Make `enforce` and `main` take more arguments, so that they can be used more 
+flexibly (like `unittest.main`).

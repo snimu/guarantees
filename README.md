@@ -45,6 +45,9 @@ if __name__ == '__main__':
 The package consists of three decorators and two functions, as well as two `Exception`s.
 All are explained below.
 
+As in the example, `pyguarantees.test_guarantees` will be abbreviated with `tg` from
+here on out.
+
 ## Decorators
 
 The three decorators shown below cannot be used without the [functions](#functions) 
@@ -54,9 +57,9 @@ of this package.
 
 Takes no arguments.
 
-Any function or method (however nested) decorated with `guarantee_test`
+Any function or method (however nested) decorated with `@tg.guarantee_test`
 that is in the scope of unittest will force unittest to throw and exception should 
-it not be in an [`@implements_test_for`](#implements_test_for).
+it not be in an [`@tg.implements_test_for`](#implements_test_for).
 
 Currently, it is necessary to include the brackets &ndash; `()` &ndash; so that 
 the function is registered. 
@@ -65,14 +68,14 @@ the function is registered.
 
 Takes no arguments.
 
-Must be used below [`@guarentee_test`](#guarantee_test), otherwise, it is ignored.
+Must be used below [`@tg.guarentee_test`](#guarantee_test), otherwise, it is ignored.
 
 Brackets are not optional, meaning that it has to be used as 
-`@guarantee_usage()`, not just `@guarantee_usage`.
+`@tg.guarantee_usage()`, not just `@tg.guarantee_usage`.
 
 Guarantees that a given function or method is used by any test-function
-that is decorated by [`@implements_test_for`](#implements_test_for), if 
-`@implements_test_for` takes the function or method as an argument.
+that is decorated by [`@tg.implements_test_for`](#implements_test_for), if 
+`@tg.implements_test_for` takes the function or method as an argument.
 
 
 ### `implements_test_for`
@@ -80,7 +83,7 @@ that is decorated by [`@implements_test_for`](#implements_test_for), if
 - `args`: Give any function or method that the corresponding test is meant for.
 - `kwargs`: The value will be used like an `arg`, while the key will be ignored.
 
-Functions and methods that weren't decorated by [`@guarantee_test`](#guarantee_test) 
+Functions and methods that weren't decorated by [`tg.@guarantee_test`](#guarantee_test) 
 lead to a user-warning but are ignored otherwise.
 
 ## Functions
@@ -107,12 +110,25 @@ Calls `unittest.main()` followed by [`tg.enforce`](#enforce).
 
 ## Exceptions
 
+`Exception`s are located under `tg.exceptions`.
+
 There are two custom `Exception`s as presented below.
 
 ### `TestsNotImplementedError`
 
-The `tg.exceptions.TestsNotImplementedError`.
+Members of `tg.exceptions.TestsNotImplementedError`:
+
+- `functions` (type: `callable`): The callables that weren't mentioned in a 
+[`@tg.implements_test_for`](#implements_test_for).
+- `description` (type: `str`): The error string printed when the exception is raised
+and not caught.
 
 ### `NotUsedInTestsError`
 
-The `tg.exceptions.NotUsedInTestsError`.
+Members of `tg.exceptions.NotUsedInTestsError`:
+
+- `functions` (type: `callable`): The callables that were mentioned in a 
+[`@tg.implements_test_for`](#implements_test_for) but not used in the corresponding
+test.
+- `description` (type: `str`): The error string printed when the exception is raised
+and not caught.

@@ -1,5 +1,5 @@
 # pyguarantees
-Python: guarantee test coverage, guarantee type and runtime-guarantees.
+guarantee unittest coverage, guarantee type- and runtime-properties.
 
 This package has two components: `test_guarantees` and `functional_guarantees`.
 
@@ -9,6 +9,11 @@ This package has two components: `test_guarantees` and `functional_guarantees`.
 `pyguarantees.test_guarantees` provides decorators that guarantee the
 usage of a decorated function or method in a `unittest.TestCase`. 
 
+Use this package to help you remember what unittests you still have to write, 
+in case a short script without unittests suddenly becomes permanent, or you change 
+something about your `TestCase`s, or you simply want to make sure that any function
+and method that should be tested will have a test written for it, and (optionally) 
+that it will actually be used in that test.
 
 ## Example
 
@@ -53,11 +58,11 @@ here on out.
 
 ## Decorators
 
-The three decorators shown below cannot be used without the [functions](#functions) 
+The three decorators shown below have no effect without the [functions](#functions) 
 of this package.
 
 
-### `guarantee_test`
+### guarantee_test
 
 Takes no arguments.
 
@@ -66,7 +71,7 @@ that is in the scope of unittest will force unittest to throw and exception shou
 it not be in an [@tg.implements_test_for](#implements_test_for).
 
 Currently, it is necessary to include the brackets &ndash; `()` &ndash; so that 
-the function is registered. This executes the decorator but not the callable that 
+the function is registered. This executes the decorator once but not the callable that 
 it decorates, making it computationally inexpensive.
 
 Having a function (or method) decorated like follows:
@@ -81,7 +86,7 @@ but not having a test in your `unittest.TestCase` decorated by `@implements_test
 would lead to a [TestsNotImplementedError](#testsnotimplementederror) being raised.
 
 
-### `guarantee_usage`
+### guarantee_usage
 
 Takes no arguments.
 
@@ -116,7 +121,7 @@ In this scenario, if `foo` is an argument in several
 decorated in such a way.
 
 
-### `implements_test_for`
+### implements_test_for
 
 - `args`: Give any function or method that the corresponding test is meant for.
 - `kwargs`: The value will be used like an `arg`, while the key will be ignored.
@@ -139,7 +144,7 @@ Two functions are provided by `pyguarantees.test_guarantees`, both directly unde
 `tg`. At least one has to be used for the [decorators](#decorators)
 to have an effect. 
 
-### `enforce`
+### enforce
 
 Takes no arguments.
 
@@ -150,11 +155,11 @@ accordingly.
 It is recommended to only use this function when using a complicated unittest-setup.
 When using `unittest.main()`, it is recommended to use `tg.main()` instead.
 
-### `main`
+### main
 
 Takes no arguments.
 
-Calls `unittest.main()` followed by [`tg.enforce`](#enforce).
+Calls `unittest.main()` followed by [tg.enforce](#enforce).
 
 ## Exceptions
 
@@ -162,18 +167,18 @@ Calls `unittest.main()` followed by [`tg.enforce`](#enforce).
 
 There are two custom `Exception`s as presented below.
 
-### `TestsNotImplementedError`
+### TestsNotImplementedError
 
 Arguments of `tg.exceptions.TestsNotImplementedError`:
 
-- `functions` (type: `callable`): The callables that weren't mentioned in a 
+- `functions` (type `callable`): The callables that weren't mentioned in a 
 [`@tg.implements_test_for`](#implements_test_for).
 
 Members of `tg.exceptions.TestsNotImplementedError`:
 
-- `functions` (type: `callable`): The callables that weren't mentioned in a 
+- `functions` (type `callable`): The callables that weren't mentioned in a 
 [`@tg.implements_test_for`](#implements_test_for).
-- `description` (type: `str`): The error string printed when the exception is raised
+- `description` (type `str`): The error string printed when the exception is raised
 and not caught.
 
 The output of raising this exception might look something like:
@@ -191,11 +196,12 @@ The output of raising this exception might look something like:
             Name: 		bar
             Module: 	__main__
 
-### `NotUsedInTestsError`
+### NotUsedInTestsError
 Arguments of `tg.exceptions.NotUsedInTestsError`:
 
 - `functions` (type: `callable`): The callables that were mentioned in a 
 [`@tg.implements_test_for`](#implements_test_for) but not used in the corresponding
+test.
 
 Members of `tg.exceptions.NotUsedInTestsError`:
 

@@ -1,13 +1,13 @@
 # pyguarantees
-guarantee unittest coverage, guarantee type- and runtime-properties.
 
-This package has two components: `test_guarantees` and `functional_guarantees`.
+This package has two components: 
+
+- `test_guarantees`: guarantee unittest-coverage.
+- `functional_guarantees`: guarantee types and other properties for parameters and return values of callables &ndash; 
+functions and methods. 
 
 
 # test_guarantees
-
-`pyguarantees.test_guarantees` provides decorators that guarantee the
-usage of a decorated function or method in a `unittest.TestCase`. 
 
 Use this package to help you remember what unittests you still have to write, 
 in case a short script without unittests suddenly becomes permanent, or you change 
@@ -35,11 +35,11 @@ def add_one(a):
 
 
 class ExampleTest(unittest.TestCase):
-  @implements_test_for(foo)
+  @tg.implements_test_for(foo)
   def test_foo(self):
       foo()
 
-  @implements_test_for(add_one, some_fct_with_test_guarantee)
+  @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
   def test_other(self):
     val = foo(1)
     self.assertEqual(val, 2)
@@ -49,11 +49,16 @@ if __name__ == '__main__':
     tg.main()
 ```
 
+As in the example, `pyguarantees.test_guarantees` will be abbreviated with `tg` from here on out.
+
+Failing to use an [@tg.implements_test_for](#implements_test_for) for a function or method decorated with [@tg.guarantee_test](#guarantee_test)
+leads to a [tg.exceptions.TestsNotImplementedError](#testsnotimplementederror), while failing to use this function or method in the 
+corresponding test will lead to a [tg.exceptions.NotUsedInTestsError](#notusedintestserror) if it is decorated by 
+[@tg.guarantee_usage](#guarantee_usage). These exceptions are only raised if the `unittest.TestCase`s are called first 
+and then checked by [tg.enforce](#enforce), or [tg.main](#main) is called to do both automatically.
+
 The package consists of three decorators and two functions, as well as two `Exception`s.
 All are explained below.
-
-As in the example, `pyguarantees.test_guarantees` will be abbreviated with `tg` from
-here on out.
 
 
 ## Decorators

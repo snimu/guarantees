@@ -73,7 +73,8 @@ of this package.
 
 Takes no arguments.
 
-Any function or method (however nested) decorated with `@tg.guarantee_test`
+Any function or method (except, for the moment, classmethods and functions nested inside of methods) 
+decorated with `@tg.guarantee_test`
 that is in the scope of unittest will force unittest to throw and exception should 
 it not be in an [@tg.implements_test_for](#implements_test_for).
 

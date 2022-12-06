@@ -25,6 +25,33 @@ async def async_fct(item):
     return item
 
 
+class ExampleClass:
+    @staticmethod
+    @tg.guarantee_test()
+    @tg.guarantee_usage()
+    def static_method():
+        return True
+
+    @classmethod
+    @tg.guarantee_test()
+    @tg.guarantee_usage()
+    def class_method(cls):
+        return None
+
+    @tg.guarantee_test()
+    @tg.guarantee_usage()
+    def method(self):
+        return None
+
+    def nested_method(self):
+        @tg.guarantee_test()
+        @tg.guarantee_usage()
+        def function_in_method():
+            return 1
+
+        return function_in_method()
+
+
 class TestRegisters(unittest.TestCase):
     @tg.implements_test_for(foo)
     def test_same_module(self):
@@ -52,6 +79,16 @@ class TestRegisters(unittest.TestCase):
     def test_async_fct(self):
         for i in range(3):
             self.assertEqual(asyncio.run(async_fct(i)), i)
+
+    @tg.implements_test_for(
+        ExampleClass.static_method,
+        ExampleClass.class_method,
+        ExampleClass.method
+    )
+    def test_example_class(self):
+        ExampleClass.static_method()
+        ExampleClass.class_method()
+        ExampleClass().method()
 
 
 if __name__ == "__main__":

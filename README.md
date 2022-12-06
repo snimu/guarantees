@@ -57,6 +57,8 @@ corresponding test will lead to a [tg.exceptions.NotUsedInTestsError](#notusedin
 [@tg.guarantee_usage](#guarantee_usage). These exceptions are only raised if the `unittest.TestCase`s are called first 
 and then checked by [tg.enforce](#enforce), or [tg.main](#main) is called to do both automatically.
 
+Currently doesn't work with classmethods and functions nested inside of methods. This will be fixed at some point.
+
 The package consists of three decorators and two functions, as well as two `Exception`s.
 All are explained below.
 

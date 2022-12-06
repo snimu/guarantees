@@ -32,6 +32,8 @@
 
 # TODO: `test_guarantees`
 
+[] make it work with classmethods
+[] make it work with functions nested inside of methods
 - More tests
 - write plenty of comments so that my reasoning is understandable 
    (or I won't understand the code soon)

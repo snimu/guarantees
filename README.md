@@ -241,3 +241,67 @@ A possible error message might look like the following:
 		This callable is tested but not called in the following test-cases: 
 					- Name: 	TestBar.test_bar
 					   Module: 	test_some_module
+
+
+# functional_guarantees
+
+Few things are more useful in programming than the ability to constrain a program's possible behaviors 
+and communicate those constraints clearly in code. Statically typed languages do this with types, scope modifiers, 
+and lifetime modifiers, among others. These are static constraints&mdash;or static guarantees&mdash;in that 
+they are evaluated statically, before runtime.
+
+Oftentimes, a program also has dynamic guarantees, evaluated during runtime. A function dealing with division, for example, has to deal with the 
+special case of denominator of zero. 
+
+`pyguarantees.functional_guarantees`, abbreviated with `fg` from here on out, enables both types of guarantees to be 
+defined in Python where they should happen: function (or method) signatures. This is where statically typed 
+languages put their static guarantees (a typical function signature looks something like 
+`scope-etc-modifiers return-type function-name(parameter-type parameter-name)`) and where in my opinion, dynamic 
+guarantees belong as well.
+
+This might have the following advantages:
+- Make code more readable by having constraints in a predefined place.
+- Make code easier to write by providing important information about and API in a glancable way.
+- Make it possible to include information on dynamic constraints in automatically generated documentation.
+- Encourage programmers to think about these constraints. 
+
+This package is an attempt to open up at least some of these advantages to Python-users at least partially, 
+given the constraints of the Python-language. 
+
+## Example 
+
+```python
+import numpy as np
+from pyguarantees import functional_guarantees as fg
+
+from your_module import your_custom_error_callback
+
+
+# One of many built-in guarantees using one of many built-in options
+@fg.add_guarantees(param_guarantees=[fg.IsInt("num", minimum=3)])
+def add_one(num):
+    return num + 1 
+
+
+# Use fg.IsClass to guarantee all types and classes that don't have specific guarantees 
+#  in fg. If they do, it is recommended to use those specific guarantees.
+@fg.add_guarantees(
+    param_guarantees=[
+        fg.IsClass(
+            "X", 
+            class_type=np.ndarray,
+            check_functions=[
+                lambda x: x.min() > 0,
+                lambda x: x.var() < 5,
+                lambda x: x.shape == (3, 80, 80)
+            ],
+            error_callback=your_custom_error_callback 
+        ),
+        fg.IsClass("mean", class_type=np.ndarray),
+        fg.IsClass("std", class_type=np.ndarray)
+    ],
+    return_guarantee=fg.IsClass("", class_type=np.ndarray)
+)
+def normalize(X, mean, std):
+    return (X - mean) / std
+```

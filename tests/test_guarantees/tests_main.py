@@ -26,6 +26,11 @@ async def async_fct(item):
 
 
 class ExampleClass:
+    cls_var = True
+
+    def __init__(self):
+        self.instance_var = True
+
     @staticmethod
     @tg.guarantee_test()
     @tg.guarantee_usage()
@@ -36,12 +41,12 @@ class ExampleClass:
     @tg.guarantee_test()
     @tg.guarantee_usage()
     def class_method(cls):
-        return None
+        return cls.cls_var
 
     @tg.guarantee_test()
     @tg.guarantee_usage()
     def method(self):
-        return None
+        return self.instance_var
 
     def nested_method(self):
         @tg.guarantee_test()
@@ -86,9 +91,9 @@ class TestRegisters(unittest.TestCase):
         ExampleClass.method
     )
     def test_example_class(self):
-        ExampleClass.static_method()
-        ExampleClass.class_method()
-        ExampleClass().method()
+        self.assertTrue(ExampleClass.static_method())
+        self.assertTrue(ExampleClass.class_method())
+        self.assertTrue(ExampleClass().method())
 
 
 if __name__ == "__main__":

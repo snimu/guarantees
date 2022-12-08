@@ -35,8 +35,8 @@ class IsInt(NumericGuarantee):
             maximum=self.maximum
         )
 
-        _check_min(arg, self.minimum, self, "int")
-        _check_max(arg, self.maximum, self, "int")
+        _check_min(arg, self.minimum, self)
+        _check_max(arg, self.maximum, self)
 
         _check_isin(arg, self)
 

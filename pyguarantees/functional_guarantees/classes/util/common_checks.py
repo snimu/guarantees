@@ -1,5 +1,5 @@
 from .error_handeling import handle_error
-from .typenames import get_arg_type_name
+from .typenames import get_arg_type_name, get_type_name
 from typing import Callable, List
 
 
@@ -22,7 +22,7 @@ def check_type(arg, guarantee):
         guarantee=guarantee,
         parameter_name=guarantee.parameter_name,
         what_dict={
-            "should_type": guarantee.guaranteed_type,
+            "should_type": get_type_name(guarantee.guaranteed_type),
             "actual_type": get_arg_type_name(arg),
             "force_conversion": guarantee.force_conversion
         }

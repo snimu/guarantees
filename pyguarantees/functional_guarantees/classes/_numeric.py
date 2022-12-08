@@ -200,7 +200,7 @@ def _check_min(
             what_dict={
                 "error": f"violated "
                          f"{guarantee.guarantee_name}.{minimum_name}",
-                "minimum": minimum,
+                minimum_name: minimum,
                 "actual": arg
             }
         )
@@ -227,7 +227,7 @@ def _check_max(
             what_dict={
                 "error": f"violated "
                          f"{guarantee.guarantee_name}.{maximum_name}",
-                "minimum": maximum,
+                maximum_name: maximum,
                 "actual": arg
             }
         )

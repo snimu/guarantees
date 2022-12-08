@@ -102,10 +102,6 @@ def _get_what_dict(
     }
 
     for i, ind in enumerate(error_indices):
-        err_msg = f"Check function at index {ind}"
-        if descriptions:  # description only given in dict -> error_indies okay
-            err_msg += f" - {descriptions[ind]}"
-
-        what_dict["violations"][i] = err_msg
+        what_dict["violations"][f"check {i}"] = descriptions[ind] if descriptions else "fail"
 
     return what_dict

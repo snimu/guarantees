@@ -41,8 +41,8 @@ class ExampleTest(unittest.TestCase):
 
   @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
   def test_other(self):
-    val = foo(1)
-    self.assertEqual(val, 2)
+    val = add_one(1)
+    self.assertEqual(val, 2)   
     
     
 if __name__ == '__main__':

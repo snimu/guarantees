@@ -5,7 +5,7 @@ def _parse_what_dict(what_dict: dict, tabs: str = "\t") -> str:
     err_str = ""
     for key, val in what_dict.items():
         if type(val) is dict:
-            err_str += f"{tabs}key: \n"
+            err_str += f"{tabs}{key}: \n"
             err_str += _parse_what_dict(val, tabs + "\t")
         else:
             err_str += f"{tabs}{str(key)}: {str(val)} \n"

@@ -8,8 +8,6 @@
 - README: explain how severity allows to treat things like using the default value as a warning but a problem with 
 the actual argument as an error &rarr; example: default `None` but should be `list` &rarr; warn when using `None`
 
-- Use [shields.io](https://shields.io/) in README.md for nice badges.
-
 - Give `TypeGuarantee`s a `use_isinstance` parameter to use `isinstance(a, b)` instead of `type(a) is b`, 
 which should be the default behavior.
 
@@ -41,7 +39,6 @@ which should be the default behavior.
 
 # TODO: `test_guarantees`
 
-[] make it work with classmethods
 [] make it work with functions nested inside of methods
 - More tests
 - write plenty of comments so that my reasoning is understandable 

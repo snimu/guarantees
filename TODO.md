@@ -8,10 +8,7 @@
 - README: explain how severity allows to treat things like using the default value as a warning but a problem with 
 the actual argument as an error &rarr; example: default `None` but should be `list` &rarr; warn when using `None`
 
-- Redesign `check_functions`:
-  - Should have clearer interface.
-  - For example: be given a class `fg.DynamicCheck(check: callable, error_handler: callable = None, description: str = None)`.
-  - Allows user to define the check and what happens when it fails, or the message that appears when it fails.
+- Use [shields.io](https://shields.io/) in README.md for nice badges.
 
 - Give `TypeGuarantee`s a `use_isinstance` parameter to use `isinstance(a, b)` instead of `type(a) is b`, 
 which should be the default behavior.

@@ -10,7 +10,6 @@ authors = [
 ]
 description = "Guarantee tests, guarantee types and their properties"
 readme = "README.md"
-licence = {file="LICENCE.md"}
 requires-python = ">=3.7"
 keywords = ["python", "unittest", "test", "guarantee", "guarantees",
     "parameter", "parameters"]

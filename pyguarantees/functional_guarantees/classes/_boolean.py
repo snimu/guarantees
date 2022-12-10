@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from ._base import TypeGuarantee
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    enforce_check_functions, check_type
+    enforce_dynamic_checks, check_type
 
 
 @dataclass
@@ -13,5 +13,5 @@ class IsBool(TypeGuarantee):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
-        enforce_check_functions(arg, self)
+        enforce_dynamic_checks(arg, self)
         return arg

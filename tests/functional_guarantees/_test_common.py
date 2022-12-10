@@ -58,101 +58,73 @@ class TestCheckFunctions(unittest.TestCase):
         @fg.add_guarantees(param_guarantees=[
             fg.IsInt(
                 "a",
-                check_functions=[
-                    lambda x: x % 3 == 0,
-                    lambda x: x ** 2 - 2 * x < 1e4
+                dynamic_checks=[
+                    fg.DynamicCheck(check=lambda x: x % 3 == 0),
+                    fg.DynamicCheck(check=lambda x: x ** 2 - 2 * x < 1e4)
                 ])
         ])
-        def fct_list(a):
+        def fct(a):
             return a
 
         @fg.add_guarantees(param_guarantees=[
             fg.IsInt(
                 "a",
-                check_functions={
-                    "divisible by 3": lambda x: x % 3 == 0,
-                    "on correct side of decision boundary":
-                        lambda x: x**2 - 2 * x < 1e4
-                })
+                dynamic_checks=[
+                    fg.DynamicCheck(
+                        description="divisible by 3",
+                        check=lambda x: x % 3 == 0
+                    ),
+                    fg.DynamicCheck(
+                        description="on correct side of decision boundary",
+                        check=lambda x: x**2 - 2 * x < 1e4
+                    )
+                ])
         ])
-        def fct_dict_str_fct(a):
+        def fct_description(a):
             return a
 
         @fg.add_guarantees(param_guarantees=[
             fg.IsInt(
                 "a",
-                check_functions={
-                    lambda x: x % 3 == 0: "divisible by 3",
-                    lambda x: x**2 - 2 * x < 1e4:
-                        "on correct side of decision boundary"
-                })
+                dynamic_checks=[
+                    fg.DynamicCheck(
+                        description="divisible by 3",
+                        check=lambda x: x % 3 == 0,
+                        callback=lambda x: print(x)
+                    ),
+                    fg.DynamicCheck(
+                        description="on correct side of decision boundary",
+                        check=lambda x: x ** 2 - 2 * x < 1e4,
+                        callback=lambda x: print(x)
+                    )
+                ])
         ])
-        def fct_dict_fct_str(a):
+        def fct_description_callback(a):
             return a
 
-        self.fct_list = fct_list
-        self.fct_dict_str_fct = fct_dict_str_fct
-        self.fct_dict_fct_str = fct_dict_fct_str
+        self.functions = [fct, fct_description, fct_description_callback]
 
-    def test_list_isint_correct(self):
-        self.fct_list(3)
-        self.fct_list(9)
+    def test_correct(self):
+        for f in self.functions:
+            f(3)
+            f(6)
+            f(9)
 
-    def test_list_isint_error_fct_1(self):
-        try:
-            self.fct_list(2)         # not divisible by 3
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised an exception
+    def test_check1_err(self):
+        for f in self.functions:
+            try:
+                f(2)
+                self.assertTrue(False)   # should have raised an exception
+            except fg.exceptions.ParameterGuaranteesValueError:
+                self.assertTrue(True)    # successfully raised exception
 
-    def test_list_isint_error_fct_2(self):
-        try:
-            self.fct_list(3**10)     # divisible by 3, but too large
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised an exception
-
-    def test_dict_str_fct_isint_correct(self):
-        ret = self.fct_dict_str_fct(3)
-        self.assertIsInstance(ret, int)
-
-        ret = self.fct_dict_str_fct(9)
-        self.assertIsInstance(ret, int)
-
-    def test_dict_str_fct_isint_error_1(self):
-        try:
-            self.fct_dict_str_fct(2)
-            self.assertTrue(False)
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)
-
-    def test_dict_str_fct_isint_error_2(self):
-        try:
-            self.fct_dict_str_fct(3 ** 10)
-            self.assertTrue(False)
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)
-
-    def test_dict_fct_str_isint_correct(self):
-        ret = self.fct_dict_fct_str(3)
-        self.assertIsInstance(ret, int)
-
-        ret = self.fct_dict_fct_str(9)
-        self.assertIsInstance(ret, int)
-
-    def test_dict_fct_str_isint_error_1(self):
-        try:
-            self.fct_dict_fct_str(2)
-            self.assertTrue(False)
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)
-
-    def test_dict_fct_str_isint_error_2(self):
-        try:
-            self.fct_dict_fct_str(3 ** 10)
-            self.assertTrue(False)
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)
+    def test_check2_err(self):
+        for f in self.functions:
+            try:
+                f(3**10)
+                self.assertTrue(False)  # should have raised an exception
+            except fg.exceptions.ParameterGuaranteesValueError:
+                self.assertTrue(True)   # successfully raised exception
 
 
 class ClassWithMethods:

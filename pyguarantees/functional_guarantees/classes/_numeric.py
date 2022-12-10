@@ -10,7 +10,7 @@ from pyguarantees.functional_guarantees.classes.util.error_handeling import \
 from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    check_type, enforce_check_functions
+    check_type, enforce_dynamic_checks
 
 
 @dataclass
@@ -40,7 +40,7 @@ class IsInt(NumericGuarantee):
 
         _check_isin(arg, self)
 
-        enforce_check_functions(arg, self)
+        enforce_dynamic_checks(arg, self)
 
         return arg
 
@@ -65,7 +65,7 @@ class IsFloat(NumericGuarantee):
 
         _check_isin(arg, self)
 
-        enforce_check_functions(arg, self)
+        enforce_dynamic_checks(arg, self)
 
         return arg
 
@@ -111,7 +111,7 @@ class IsComplex(NumericGuarantee):
 
         _check_isin(arg, self)
 
-        enforce_check_functions(arg, self)
+        enforce_dynamic_checks(arg, self)
 
         return arg
 

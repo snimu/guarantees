@@ -31,77 +31,42 @@ def check_type(arg, guarantee):
     return arg   # in case of warnings_only
 
 
-def enforce_check_functions(arg, guarantee) -> None:
-    cf = guarantee.check_functions
-    if cf is None:
+def enforce_dynamic_checks(arg, guarantee) -> None:
+    if guarantee.dynamic_checks is None:
         return
 
-    descriptions = None
-    error_indices = []
+    errors = [dg for dg in guarantee.dynamic_checks if not dg.check(arg)]
 
-    if type(cf) is list and all(callable(f) for f in cf):
-        error_indices = _find_errors(arg, cf)
-    elif all(isinstance(k, str) for k in cf.keys()) \
-            and all(callable(f) for f in cf.values()):
-        descriptions = list(cf.keys())
-        error_indices = _find_errors(arg, list(cf.values()))
-    elif all(callable(f) for f in cf.keys()) \
-            and all(isinstance(v, str) for v in cf.values()):
-        descriptions = list(cf.values())
-        error_indices = _find_errors(arg, list(cf.keys()))
-    else:
-        handle_error(
-            where="internal",
-            type_or_value="type",
-            guarantee=guarantee,
-            parameter_name=guarantee.parameter_name,
-            what_dict={
-                "should_type":
-                    "List[Callable] or Dict[str, Callable] "
-                    "or Dict[Callable, str]",
-                "actual_type": f"{get_arg_type_name(arg)}"
-            }
-        )
-
-    if error_indices:
-        handle_error(
-            where=guarantee.where,
-            type_or_value="value",
-            guarantee=guarantee,
-            parameter_name=guarantee.parameter_name,
-            what_dict=_get_what_dict(
-                arg, guarantee, descriptions, error_indices)
-        )
-
-
-def _find_errors(
-        arg,
-        check_functions: List[Callable]
-) -> list:
-    errors = []
-    for i, f in enumerate(check_functions):
-        if not f(arg):
-            errors.append(i)
-
-    return errors
-
-
-def _get_what_dict(
-        arg,
-        guarantee,
-        descriptions: List[str],
-        error_indices: list
-):
-    if not error_indices:
+    if not errors:
         return
 
+    # Use custom error handles
+    for err in errors:
+        if err.callback is not None:
+            err.callback(arg)
+
+    # Show error if callbacks didn't exist or didn't stop execution
+    handle_error(
+        where=guarantee.where,
+        type_or_value="value",
+        guarantee=guarantee,
+        parameter_name=guarantee.parameter_name,
+        what_dict=_get_what_dict(arg, guarantee, errors)
+    )
+
+
+def _get_what_dict(arg, guarantee, errors: list):
     what_dict = {
         "error": f"violated {guarantee.guarantee_name}.check_functions",
         "violations": {},
         "arg": arg
     }
 
-    for i, ind in enumerate(error_indices):
-        what_dict["violations"][f"check {i}"] = descriptions[ind] if descriptions else "fail"
+    for i, error in enumerate(errors):
+        key = f"check {i}"
+        key = key + f" (called callback {error.callback.__name__})" if error.callback is not None else key
+        val = error.description if error.description != "" else "fail"
+
+        what_dict["violations"][key] = val
 
     return what_dict

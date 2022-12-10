@@ -6,3 +6,4 @@ from ._string import IsStr
 from ._binary import IsMemoryView, IsBytes, IsByteArray
 from ._boolean import IsBool
 from ._other import NoOp, IsClass, IsNone, IsUnion
+from ._dynamic_check import DynamicCheck

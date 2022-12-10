@@ -7,7 +7,7 @@ from pyguarantees.functional_guarantees.classes.util.error_handeling import \
 from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name, get_type_name
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    enforce_check_functions
+    enforce_dynamic_checks
 
 
 @dataclass
@@ -27,7 +27,7 @@ class IsClass(TypeGuarantee):
 
     def enforce(self, arg):
         arg = _check_isclass(arg, self)
-        enforce_check_functions(arg, self)
+        enforce_dynamic_checks(arg, self)
         return arg
 
 
@@ -39,7 +39,7 @@ class IsNone(TypeGuarantee):
 
     def enforce(self, arg):
         if arg is None:
-            enforce_check_functions(arg, self)
+            enforce_dynamic_checks(arg, self)
             return
 
         handle_error(
@@ -63,7 +63,7 @@ class IsUnion(TypeGuarantee):
         self.guaranteed_type = Union
 
     def enforce(self, arg):
-        enforce_check_functions(arg, self)
+        enforce_dynamic_checks(arg, self)
         return self.__enforce_union_guarantees(arg)
 
     def __enforce_union_guarantees(self, arg):

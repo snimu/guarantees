@@ -2,8 +2,10 @@
 
 
 from dataclasses import dataclass, field
-from typing import Callable, Union, Dict, List, Type
+from typing import Callable, Type, List
 from pyguarantees import severity
+
+from ._dynamic_check import DynamicCheck
 
 
 @dataclass
@@ -24,9 +26,4 @@ class TypeGuarantee(Guarantee):
     error_severity: int = severity.ERROR
     force_conversion: bool = False
     error_callback: Callable = None
-    check_functions: \
-        Union[
-            List[Callable],
-            Dict[Callable, str],
-            Dict[str, Callable]
-        ] = None
+    dynamic_checks: List[DynamicCheck] = None

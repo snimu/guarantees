@@ -268,7 +268,7 @@ This might have the following advantages:
 This package is an attempt to open up at least some of these advantages to Python-users at least partially, 
 given the constraints of the Python-language. 
 
-## Example 
+## Example
 
 ```python
 import numpy as np
@@ -280,7 +280,7 @@ from your_module import your_custom_error_callback
 # One of many built-in guarantees using one of many built-in options
 @fg.add_guarantees(param_guarantees=[fg.IsInt("num", minimum=3)])
 def add_one(num):
-    return num + 1 
+    return num + 1
 
 
 # Use fg.IsClass to guarantee all types and classes that don't have specific guarantees 
@@ -288,14 +288,14 @@ def add_one(num):
 @fg.add_guarantees(
     param_guarantees=[
         fg.IsClass(
-            "X", 
+            "X",
             class_type=np.ndarray,
-            check_functions=[
-                lambda x: x.min() > 0,
-                lambda x: x.var() < 5,
-                lambda x: x.shape == (3, 80, 80)
+            dynamic_checks=[
+                fg.DynamicCheck(check=lambda x: x.min() > 0, description="min: 0"),
+                fg.DynamicCheck(check=lambda x: x.var() < 5, description="var < 5"),
+                fg.DynamicCheck(lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
             ],
-            error_callback=your_custom_error_callback 
+            error_callback=your_custom_error_callback
         ),
         fg.IsClass("mean", class_type=np.ndarray),
         fg.IsClass("std", class_type=np.ndarray)

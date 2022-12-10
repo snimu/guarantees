@@ -1,5 +1,8 @@
 # pyguarantees
 
+![License](https://img.shields.io/github/license/snimu/guarantees)
+![PyPI Version](https://img.shields.io/pypi/v/pyguarantees)
+
 This package has two components: 
 
 - `test_guarantees`: guarantee unittest-coverage.

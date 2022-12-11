@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyguarantees"
-version = "0.0.9"
+version = "0.0.10"
 authors = [
-    {name="Sebastian Müller", email="sebastian.nicolas.mueller@gmail.com"}
+    {name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}
 ]
 description = "Guarantee unittests for functions and methods, guarantee types and their properties"
 readme = "README.md"
@@ -19,12 +19,13 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[license]
+[project.license]
 file = "LICENCE.md"
 
 
 [project.urls]
-"homepage" = "https://github.com/snimu/guarantees"
+repository = "https://github.com/snimu/guarantees"
+documentation = "https://github.com/snimu/guarantees#readme"
 
 [tool.setuptools.packages.find]
 include = ["pyguarantees*"]

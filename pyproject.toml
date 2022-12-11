@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyguarantees"
-version = "0.0.7"
+version = "0.0.9"
 authors = [
-  { name="Sebastian Mueller", email="sebastian.nicolas.mueller@gmail.com" },
+    {name="Sebastian Müller", email="sebastian.nicolas.mueller@gmail.com"}
 ]
-description = "Guarantee tests, guarantee types and their properties"
+description = "Guarantee unittests for functions and methods, guarantee types and their properties"
 readme = "README.md"
 requires-python = ">=3.7"
 keywords = ["python", "unittest", "test", "guarantee", "guarantees",
@@ -18,6 +18,10 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+[license]
+file = "LICENCE.md"
+
 
 [project.urls]
 "homepage" = "https://github.com/snimu/guarantees"

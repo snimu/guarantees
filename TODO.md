@@ -39,7 +39,10 @@ which should be the default behavior.
 
 # TODO: `test_guarantees`
 
-[] make it work with functions nested inside of methods
+- make it work with functions nested inside of methods
+- Make it independent of the `unittest`-framework
+  - Can in principle decorate any function
+  - Make `enforce` independent of framework&mdash;just call it after you've run your tests.
 - More tests
 - write plenty of comments so that my reasoning is understandable 
    (or I won't understand the code soon)

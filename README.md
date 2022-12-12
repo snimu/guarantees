@@ -5,18 +5,18 @@
 
 This package has two components: 
 
-- `test_guarantees`: guarantee unittest-coverage.
-- `functional_guarantees`: guarantee types and other properties for parameters and return values of callables &ndash; 
-functions and methods. 
+- `test_guarantees`: guarantee unittest-coverage for functions and methods.
+- `functional_guarantees`: guarantee types and other properties for parameters and return values of 
+callables&mdash;functions and methods. 
 
 
 # test_guarantees
 
-Use this package to help you remember what unittests you still have to write, 
-in case a short script without unittests suddenly becomes permanent, or you change 
-something about your `TestCase`s, or you simply want to make sure that any function
-and method that should be tested will have a test written for it, and (optionally) 
-that it will actually be used in that test.
+"I will have to write a unittest for this function later", you say. Well this package ensures that you 
+will not forget.
+
+"Why does this function fail? I've tested it... omg I didn't even call it in my TestCase." Use this 
+package to make sure that a function will be called in its respective test-case.
 
 ## Example
 
@@ -26,10 +26,21 @@ from pyguarantees import test_guarantees as tg
 from some_package import some_fct_with_test_guarantee
  
 
-@tg.guarantee_test()
-def foo():
-    pass
-
+class ExampleClass:
+    @tg.guarantee_test()
+    def foo(self):
+        return self
+    
+    @classmethod
+    @tg.guarantee_test()
+    def class_method(cls):
+        return cls
+    
+    @staticmethod
+    @tg.guarantee_test()
+    def static_method():
+        return "static!"
+    
 
 @tg.guarantee_test()
 @tg.guarantee_usage()
@@ -38,9 +49,15 @@ def add_one(a):
 
 
 class ExampleTest(unittest.TestCase):
-  @tg.implements_test_for(foo)
+  @tg.implements_test_for(
+      ExampleClass.foo,
+      ExampleClass.class_method,
+      ExampleClass.static_method
+  )
   def test_foo(self):
-      foo()
+      ExampleClass().foo()
+      ExampleClass.class_method()
+      ExampleClass.static_method()
 
   @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
   def test_other(self):
@@ -60,7 +77,7 @@ corresponding test will lead to a [tg.exceptions.NotUsedInTestsError](#notusedin
 [@tg.guarantee_usage](#guarantee_usage). These exceptions are only raised if the `unittest.TestCase`s are called first 
 and then checked by [tg.enforce](#enforce), or [tg.main](#main) is called to do both automatically.
 
-Currently doesn't work with functions nested inside of methods. This will be fixed at some point.
+Currently doesn't work with nested functions (defined inside of other callables). This will be fixed at some point.
 
 The package consists of three decorators and two functions, as well as two `Exception`s.
 All are explained below.
@@ -81,7 +98,7 @@ decorated with `@tg.guarantee_test`
 that is in the scope of unittest will force unittest to throw and exception should 
 it not be in an [@tg.implements_test_for](#implements_test_for).
 
-Currently, it is necessary to include the brackets &ndash; `()` &ndash; so that 
+Currently, it is necessary to include the brackets&mdash;`()`&mdash; so that 
 the function is registered. This executes the decorator once but not the callable that 
 it decorates, making it computationally inexpensive.
 
@@ -308,3 +325,5 @@ def add_one(num):
 def normalize(X, mean, std):
     return (X - mean) / std
 ```
+
+to be finished ...

@@ -1,6 +1,7 @@
 """The base of the classes."""
 
 
+import logging
 from dataclasses import dataclass, field
 from typing import Callable, Type, List
 from pyguarantees import severity
@@ -23,7 +24,9 @@ class Guarantee:
 
 @dataclass
 class TypeGuarantee(Guarantee):
-    error_severity: int = severity.ERROR
     force_conversion: bool = False
+    logger: logging.Logger = None
+    logger_only: bool = False
+    error_severity: int = severity.ERROR
     error_callback: Callable = None
     dynamic_checks: List[DynamicCheck] = None

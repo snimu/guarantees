@@ -95,13 +95,28 @@ def output_exception(
         ],
         guarantee: TypeGuarantee
 ):
-    def esc(code):
-        return f'\033[{code}m'
-
     if guarantee is None:
         raise exception
 
     err_str_preamble = "\nThere was an error in pyguarantees.functional_guarantees: "
+
+    if guarantee.logger is not None:
+        if guarantee.error_severity == severity.DEBUG:
+            guarantee.logger.debug(exception.err_str)
+        elif guarantee.error_severity == severity.INFO:
+            guarantee.logger.info(exception.err_str)
+        elif guarantee.error_severity == severity.WARNING:
+            guarantee.logger.warning(exception.err_str)
+        elif guarantee.error_severity == severity.ERROR:
+            guarantee.logger.error(exception.err_str)
+        else:
+            guarantee.logger.critical(exception.err_str)
+
+    if guarantee.logger_only:
+        return
+
+    def esc(code):
+        return f'\033[{code}m'
 
     if guarantee.error_severity == severity.DEBUG:
         print(esc(32) + err_str_preamble + exception.err_str + esc(0))     # green

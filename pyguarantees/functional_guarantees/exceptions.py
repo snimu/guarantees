@@ -24,9 +24,9 @@ def construct_err_str(
     severity_str_dict = {
         severity.DEBUG: "DEBUG",
         severity.INFO: "INFO",
-        severity.WARN: "WARN",
+        severity.WARNING: "WARN",
         severity.ERROR: "ERROR",
-        severity.FATAL: "FATAL"
+        severity.CRITICAL: "FATAL"
     }
     err_str = f"\n\tWhere: \n"
     err_str += f"\t\tModule: {module} \n"

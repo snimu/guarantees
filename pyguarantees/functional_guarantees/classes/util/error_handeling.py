@@ -78,7 +78,7 @@ def raise_warning_or_exception(
         ],
         type_guarantee: TypeGuarantee
 ):
-    if type_guarantee.error_severity <= severity.WARN:
+    if type_guarantee.error_severity <= severity.WARNING:
         warnings.warn(exception.err_str + "\t**Ignoring** \n")
     else:
         raise exception
@@ -107,7 +107,7 @@ def output_exception(
         print(esc(32) + err_str_preamble + exception.err_str + esc(0))     # green
     elif guarantee.error_severity == severity.INFO:
         print(err_str_preamble + exception.err_str)                        # default
-    elif guarantee.error_severity == severity.WARN:
+    elif guarantee.error_severity == severity.WARNING:
         print(esc(31) + err_str_preamble + exception.err_str + esc(0))     # red
     else:
         raise exception
@@ -166,7 +166,7 @@ def raise_type_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee
 ) -> None:
-    if type_guarantee.error_severity <= severity.WARN:
+    if type_guarantee.error_severity <= severity.WARNING:
         warnings.warn(err_msg + "\t **Ignoring** \n")
     else:
         raise TypeError(err_msg)
@@ -176,7 +176,7 @@ def raise_value_warning_or_exception(
         err_msg: str,
         type_guarantee: TypeGuarantee
 ) -> None:
-    if type_guarantee.error_severity <= severity.WARN:
+    if type_guarantee.error_severity <= severity.WARNING:
         warnings.warn(err_msg + "\t **Ignoring** \n")
     else:
         raise ValueError(err_msg)

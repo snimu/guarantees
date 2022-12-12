@@ -9,9 +9,6 @@
 - README: explain how severity allows to treat things like using the default value as a warning but a problem with 
 the actual argument as an error &rarr; example: default `None` but should be `list` &rarr; warn when using `None`
 
-- Give `TypeGuarantee`s a `use_isinstance` parameter to use `isinstance(a, b)` instead of `type(a) is b`, 
-which should be the default behavior.
-
 - Move each class in `_other.py` into its own file for clarity
     - Same for tests
 

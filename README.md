@@ -79,7 +79,7 @@ and then checked by [tg.enforce](#enforce), or [tg.main](#main) is called to do 
 
 Currently doesn't work with nested functions (defined inside of other callables). This will be fixed at some point.
 
-The package consists of three decorators and two functions, as well as two `Exception`s.
+The package consists of three decorators and two functions, as well as two `Exceptions`.
 All are explained below.
 
 
@@ -191,9 +191,9 @@ Calls `unittest.main()` followed by [tg.enforce](#enforce).
 
 ## Exceptions
 
-`Exception`s are located under `tg.exceptions`.
+`Exceptions` are located under `tg.exceptions`.
 
-There are two custom `Exception`s as presented below.
+There are two custom `Exceptions` as presented below.
 
 ### TestsNotImplementedError
 

@@ -127,6 +127,8 @@ def foo():
 but not having a test in your `unittest.TestCase` decorated by `@implements_test_for(foo)` 
 would lead to a [TestsNotImplementedError](#testsnotimplementederror) being raised.
 
+The same works for classes.
+
 
 ### guarantee_usage
 

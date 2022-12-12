@@ -37,11 +37,8 @@ class ErrorHandler:
     ]:
         exception = ErrorHandler.choose_exception(where, type_or_value)
         return exception(
-            qualname=self.guarantee.qualname,
-            module=self.guarantee.module,
-            guarantee_name=self.guarantee.guarantee_name,
+            guarantee=self.guarantee,
             parameter_name=parameter_name,
-            error_severity=self.guarantee.error_severity,
             what_dict=what_dict
         )
 

@@ -1,4 +1,3 @@
-import warnings
 from typing import Union
 
 from pyguarantees.functional_guarantees.classes import TypeGuarantee
@@ -10,119 +9,108 @@ from pyguarantees.functional_guarantees.exceptions import \
 from pyguarantees import severity
 
 
-def choose_exception(
-        where: str,
-        type_or_value: str
-) -> Union[
-    ParameterGuaranteesTypeError,
-    ParameterGuaranteesValueError,
-    ReturnGuaranteesValueError,
-    ReturnGuaranteesTypeError,
-    FunctionalGuaranteesUserTypeError,
-    FunctionalGuaranteesUserValueError
-]:
-    exception_dict = {
-        "parameter": {
-            "type": ParameterGuaranteesTypeError,
-            "value": ParameterGuaranteesValueError
-        },
-        "return": {
-            "type": ReturnGuaranteesTypeError,
-            "value": ReturnGuaranteesValueError
-        },
-        "internal": {
-            "type": FunctionalGuaranteesUserTypeError,
-            "value": FunctionalGuaranteesUserValueError
+class ErrorHandler:
+    def __init__(
+            self,
+            where: str,
+            type_or_value: str,
+            guarantee: TypeGuarantee,
+            parameter_name: str,
+            what_dict: dict
+    ):
+        self.guarantee = guarantee
+        self.exception = self.make_exception(where, type_or_value, parameter_name, what_dict)
+
+    def make_exception(
+            self,
+            where: str,
+            type_or_value: str,
+            parameter_name: str,
+            what_dict: dict
+    ) -> Union[
+        ParameterGuaranteesTypeError,
+        ParameterGuaranteesValueError,
+        ReturnGuaranteesValueError,
+        ReturnGuaranteesTypeError,
+        FunctionalGuaranteesUserTypeError,
+        FunctionalGuaranteesUserValueError
+    ]:
+        exception = ErrorHandler.choose_exception(where, type_or_value)
+        return exception(
+            qualname=self.guarantee.qualname,
+            module=self.guarantee.module,
+            guarantee_name=self.guarantee.guarantee_name,
+            parameter_name=parameter_name,
+            error_severity=self.guarantee.error_severity,
+            what_dict=what_dict
+        )
+
+    @staticmethod
+    def choose_exception(
+            where: str,
+            type_or_value: str
+    ) -> Union[
+        ParameterGuaranteesTypeError,
+        ParameterGuaranteesValueError,
+        ReturnGuaranteesValueError,
+        ReturnGuaranteesTypeError,
+        FunctionalGuaranteesUserTypeError,
+        FunctionalGuaranteesUserValueError
+    ]:
+        exception_dict = {
+            "parameter": {
+                "type": ParameterGuaranteesTypeError,
+                "value": ParameterGuaranteesValueError
+            },
+            "return": {
+                "type": ReturnGuaranteesTypeError,
+                "value": ReturnGuaranteesValueError
+            },
+            "internal": {
+                "type": FunctionalGuaranteesUserTypeError,
+                "value": FunctionalGuaranteesUserValueError
+            }
         }
-    }
 
-    return exception_dict[where][type_or_value]
+        return exception_dict[where][type_or_value]
 
+    def output_exception(self):
+        if self.guarantee is None:
+            raise self.exception
 
-def make_exception(
-        where: str,
-        type_or_value: str,
-        guarantee: TypeGuarantee,
-        parameter_name: str,
-        what_dict: dict
-) -> Union[
-    ParameterGuaranteesTypeError,
-    ParameterGuaranteesValueError,
-    ReturnGuaranteesValueError,
-    ReturnGuaranteesTypeError,
-    FunctionalGuaranteesUserTypeError,
-    FunctionalGuaranteesUserValueError
-]:
-    exception = choose_exception(where, type_or_value)
-    return exception(
-        qualname=guarantee.qualname,
-        module=guarantee.module,
-        guarantee_name=guarantee.guarantee_name,
-        parameter_name=parameter_name,
-        error_severity=guarantee.error_severity,
-        what_dict=what_dict
-    )
+        err_str = "\nThere was an error in pyguarantees.functional_guarantees: " + self.exception.err_str
 
+        if self.guarantee.logger is not None:
+            self._log(err_str)
+            if self.guarantee.logger_only:
+                return
 
-def raise_warning_or_exception(
-        exception: Union[
-            ParameterGuaranteesTypeError,
-            ParameterGuaranteesValueError,
-            ReturnGuaranteesValueError,
-            ReturnGuaranteesTypeError,
-            FunctionalGuaranteesUserTypeError,
-            FunctionalGuaranteesUserValueError
-        ],
-        type_guarantee: TypeGuarantee
-):
-    if type_guarantee.error_severity <= severity.WARNING:
-        warnings.warn(exception.err_str + "\t**Ignoring** \n")
-    else:
-        raise exception
+        self._print_or_raise(err_str)
 
-
-def output_exception(
-        exception: Union[
-            ParameterGuaranteesTypeError,
-            ParameterGuaranteesValueError,
-            ReturnGuaranteesValueError,
-            ReturnGuaranteesTypeError,
-            FunctionalGuaranteesUserTypeError,
-            FunctionalGuaranteesUserValueError
-        ],
-        guarantee: TypeGuarantee
-):
-    if guarantee is None:
-        raise exception
-
-    err_str_preamble = "\nThere was an error in pyguarantees.functional_guarantees: "
-
-    if guarantee.logger is not None:
-        if guarantee.error_severity == severity.DEBUG:
-            guarantee.logger.debug(exception.err_str)
-        elif guarantee.error_severity == severity.INFO:
-            guarantee.logger.info(exception.err_str)
-        elif guarantee.error_severity == severity.WARNING:
-            guarantee.logger.warning(exception.err_str)
-        elif guarantee.error_severity == severity.ERROR:
-            guarantee.logger.error(exception.err_str)
+    def _log(self, err_str: str):
+        if self.guarantee.error_severity == severity.DEBUG:
+            self.guarantee.logger.debug(err_str)
+        elif self.guarantee.error_severity == severity.INFO:
+            self.guarantee.logger.info(err_str)
+        elif self.guarantee.error_severity == severity.WARNING:
+            self.guarantee.logger.warning(err_str)
+        elif self.guarantee.error_severity == severity.ERROR:
+            self.guarantee.logger.error(err_str)
         else:
-            guarantee.logger.critical(exception.err_str)
+            self.guarantee.logger.critical(err_str)
 
-    if guarantee.logger_only:
-        return
+    def _print_or_raise(self, err_str):
+        def esc(code):
+            return f'\033[{code}m'
 
-    def esc(code):
-        return f'\033[{code}m'
-
-    if guarantee.error_severity == severity.DEBUG:
-        print(esc(32) + err_str_preamble + exception.err_str + esc(0))     # green
-    elif guarantee.error_severity == severity.INFO:
-        print(err_str_preamble + exception.err_str)                        # default
-    elif guarantee.error_severity == severity.WARNING:
-        print(esc(31) + err_str_preamble + exception.err_str + esc(0))     # red
-    else:
-        raise exception
+        if self.guarantee.error_severity == severity.DEBUG:
+            print(esc(32) + err_str + esc(0))  # green
+        elif self.guarantee.error_severity == severity.INFO:
+            print(err_str)  # default
+        elif self.guarantee.error_severity == severity.WARNING:
+            print(esc(31) + err_str + esc(0))  # red
+        else:
+            raise self.exception
 
 
 def handle_error(
@@ -157,17 +145,11 @@ def handle_error(
 
     what_dict:  A dictionary for all other information.
     """
-    exception = make_exception(
-        where=where,
-        type_or_value=type_or_value,
-        guarantee=guarantee,
-        parameter_name=parameter_name,
-        what_dict=what_dict
-    )
+    error_handler = ErrorHandler(where, type_or_value, guarantee, parameter_name, what_dict)
 
     if guarantee is not None and guarantee.error_callback is not None:
-        guarantee.error_callback(exception)
+        guarantee.error_callback(error_handler.exception)
     elif guarantee is not None:
-        output_exception(exception, guarantee)
+        error_handler.output_exception()
     else:
-        raise exception
+        raise error_handler.exception

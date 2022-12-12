@@ -76,9 +76,7 @@ def implements_test_for(*functions, **kwfunctions):
                         fdata[fct]["testcases_without_exec"].append(test_fct)
 
             return ret_val
-
         return _run
-
     return _fct
 
 
@@ -90,28 +88,34 @@ def _choose_valid_functions(*functions, **kwfunctions):
 
     # Only handle functions and methods
     #  that have a @guarantee_test decorator.
-    tmp_functions = []
+    valid_functions = []
     for function in functions:
         if function in fdata.keys():
-            tmp_functions.append(function)
+            valid_functions.append(function)
         else:
-            # This is meant for classmethods; in them , function is not function.__func__.
-            #   @classmethod is above @tg.guarantee_tests/@tg.guarantee_usage
-            #   -> function.__func__ added to fdata, not function.
-            #   Fix this here and use function from now on.
-            if function is not function.__func__:
-                tmp_functions.append(function)
-                fdata[function] = copy.deepcopy(fdata[function.__func__])
-                fdata.pop(function.__func__)
+            valid_functions = _handle_classmethods(function, valid_functions)
 
-                # Add the relationship between function and function.__func__ to
-                #   classmethods in order to allow @tg.guarantee_usage to work properly.
-                global classmethods
-                classmethods[function.__func__] = function
-            else:
-                warnings.warn(
-                    f"The following function was given to implements_test_for "
-                    f"but was not decorated with @guarantee_test: "
-                    f" {function.__qualname__}")
+    return valid_functions
 
-    return tmp_functions
+
+def _handle_classmethods(function: callable, valid_functions: list) -> list:
+    # This is meant for classmethods; in them , function is not function.__func__.
+    #   @classmethod is above @tg.guarantee_tests/@tg.guarantee_usage
+    #   -> function.__func__ added to fdata, not function.
+    #   Fix this here and use function from now on.
+    if function is not function.__func__:
+        valid_functions.append(function)
+        fdata[function] = copy.deepcopy(fdata[function.__func__])
+        fdata.pop(function.__func__)
+
+        # Add the relationship between function and function.__func__ to
+        #   classmethods in order to allow @tg.guarantee_usage to work properly.
+        global classmethods
+        classmethods[function.__func__] = function
+    else:
+        warnings.warn(
+            f"The following function was given to implements_test_for "
+            f"but was not decorated with @guarantee_test: "
+            f" {function.__qualname__}")
+
+    return valid_functions

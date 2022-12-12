@@ -101,12 +101,14 @@ def output_exception(
     if guarantee is None:
         raise exception
 
+    err_str_preamble = "\nThere was an error in pyguarantees.functional_guarantees: "
+
     if guarantee.error_severity == severity.DEBUG:
-        print(esc(32) + exception.err_str + esc(0))     # green
+        print(esc(32) + err_str_preamble + exception.err_str + esc(0))     # green
     elif guarantee.error_severity == severity.INFO:
-        print(exception.err_str)                        # default
+        print(err_str_preamble + exception.err_str)                        # default
     elif guarantee.error_severity == severity.WARN:
-        print(esc(31) + exception.err_str + esc(0))     # red
+        print(esc(31) + err_str_preamble + exception.err_str + esc(0))     # red
     else:
         raise exception
 

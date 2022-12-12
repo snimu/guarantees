@@ -1,6 +1,5 @@
 from .error_handeling import handle_error
 from .typenames import get_arg_type_name, get_type_name
-from typing import Callable, List
 
 
 def check_type(arg, guarantee):

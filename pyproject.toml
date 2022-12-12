@@ -5,14 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyguarantees"
 version = "0.0.10"
-authors = [
-    {name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}
-]
+authors = [{name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}]
 description = "Guarantee unittests for functions and methods, guarantee types and their properties"
 readme = "README.md"
 requires-python = ">=3.7"
-keywords = ["python", "unittest", "test", "guarantee", "guarantees",
-    "parameter", "parameters"]
+keywords = ["python", "unittest", "test", "guarantees", "parameters"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",

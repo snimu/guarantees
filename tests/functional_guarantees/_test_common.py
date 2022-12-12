@@ -255,3 +255,28 @@ class TestLogger(unittest.TestCase):
             self.assertTrue(TestLogger.logger_called)   # logger must be called
 
         TestLogger.logger_called = False   # reset for other tests
+
+
+class TestParameterMatching(unittest.TestCase):
+    def setUp(self) -> None:
+        @fg.add_guarantees(
+            param_guarantees=[
+                fg.IsInt("a"), fg.IsInt("b"), fg.IsInt("c")
+            ]
+        )
+        def fct(a, b, c):
+            return a, b, c
+
+        self.fct = fct
+
+    def test_correct_parameter_mixings(self):
+        self.fct(1, 2, 3)
+        self.fct(c=1, a=2, b=3)
+        self.fct(1, c=3, b=1)
+
+    def test_raise_exceptions_with_mixed_params(self):
+        try:
+            self.fct(1, b=2., c=3)
+            self.assertTrue(False)   # should have raised an exception
+        except fg.exceptions.ParameterGuaranteesTypeError:
+            self.assertTrue(True)    # successfully raised exception

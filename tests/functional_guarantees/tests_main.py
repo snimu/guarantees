@@ -7,7 +7,7 @@ from tests.functional_guarantees._test_string import TestStringGuarantee
 from tests.functional_guarantees._test_boolean import TestBooleanGuarantee
 from tests.functional_guarantees._test_collections import TestCollectionsGuarantee
 from tests.functional_guarantees._test_common import TestCallback, TestCheckFunctions,\
-    TestMethodGuarantees, TestReturnGuarantees, TestLogger
+    TestMethodGuarantees, TestReturnGuarantees, TestLogger, TestParameterMatching
 from tests.functional_guarantees._test_binary import TestBinary
 from tests.functional_guarantees._test_onoff import test_onoff
 

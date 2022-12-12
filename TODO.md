@@ -22,8 +22,6 @@ the actual argument as an error &rarr; example: default `None` but should be `li
 
 - `description`-parameter?
 
-- test_mixed_arg_kwarg in _test_parameters_guarantee_common
-  
 - Guarantees for types from package `collections` 
   - Just add those to `_collections.py`
 

@@ -2,6 +2,7 @@
 
 - Ensure that everything is thread-save.
 - Docstrings!!!
+- Make `severity` part of `functional_guarnatees`
 
 # TODO: `functional_guarantees`
 

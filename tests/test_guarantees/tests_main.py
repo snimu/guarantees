@@ -57,6 +57,22 @@ class ExampleClass:
         return function_in_method()
 
 
+@tg.guarantee_test()
+@tg.guarantee_usage()
+class CallableClass:
+    x = 1
+
+    def __call__(self, *args, **kwargs):
+        return args, kwargs
+
+
+@tg.guarantee_test()
+@tg.guarantee_usage()
+class RegularClass:
+    def __init__(self):
+        self.x = 3
+
+
 class TestRegisters(unittest.TestCase):
     @tg.implements_test_for(foo)
     def test_same_module(self):
@@ -94,6 +110,14 @@ class TestRegisters(unittest.TestCase):
         self.assertTrue(ExampleClass.static_method())
         self.assertTrue(ExampleClass.class_method())
         self.assertTrue(ExampleClass().method())
+
+    @tg.implements_test_for(CallableClass)
+    def test_callble_class(self):
+        CallableClass()(CallableClass.x)
+
+    @tg.implements_test_for(RegularClass)
+    def test_regular_class(self):
+        RegularClass()
 
 
 if __name__ == "__main__":

@@ -11,13 +11,7 @@ def guarantee_test():
     def _fct(fct):
         global fdata
         if fct not in fdata.keys():
-            fdata[fct] = {
-                "num_tests": 0,
-                "call_counter": 0,
-                "usage_guaranteed": False,
-                "testcases_without_exec": None
-            }
-
+            _add_fct_to_fdata(fct)
         return fct
     return _fct
 
@@ -41,16 +35,24 @@ def guarantee_usage():
                 fdata[classmethods[_run]]["call_counter"] += 1
             return fct(*args, **kwargs)
 
+        # Add _run here because it will be executed later;
+        #   but guarantee_test would add _fct -> neither would work.
         if _run not in fdata.keys():
-            fdata[_run] = {
-                "num_tests": 0,
-                "call_counter": 0,
-                "num_tests_with_calls": 0,
-                "usage_guaranteed": True,
-                "testcases_without_exec": None
-            }
+            _add_fct_to_fdata(_run, usage_guaranteed=True)
         return _run
     return _fct
+
+
+def _add_fct_to_fdata(fct: callable, usage_guaranteed: bool = False):
+    global fdata
+
+    fdata[fct] = {
+        "num_tests": 0,
+        "call_counter": 0,
+        "num_tests_with_calls": 0,
+        "usage_guaranteed": usage_guaranteed,
+        "testcases_without_exec": None
+    }
 
 
 def implements_test_for(*functions, **kwfunctions):

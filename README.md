@@ -289,7 +289,9 @@ This might have the following advantages:
 This package is an attempt to open up at least some of these advantages to Python-users at least partially, 
 given the constraints of the Python-language. 
 
-## Example
+## Example 1
+
+This example shows basic usage of the `fg` package for parameters of functions.
 
 ```python
 import numpy as np
@@ -325,6 +327,33 @@ def add_one(num):
 )
 def normalize(X, mean, std):
     return (X - mean) / std
+```
+
+
+## Example 2
+
+This example shows the use of the `fg`-package for testing.
+
+```python 
+import unittest
+from pyguarantees import functional_guarantees as fg
+
+
+@fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+def foo(a):
+    return a 
+
+
+@fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+def bar(a):
+    return a 
+
+
+class TestExample(unittest.TestCase):
+    def test_example(self):
+        # chain functions and automatically raise exceptions if at any point
+        #   the guarantees for parameters and/or return values aren't fulfilled.
+        foo(bar(1))   
 ```
 
 to be finished ...

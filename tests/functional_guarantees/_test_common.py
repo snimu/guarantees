@@ -1,3 +1,4 @@
+import logging
 import unittest
 from pyguarantees import functional_guarantees as fg
 
@@ -211,3 +212,46 @@ class TestReturnGuarantees(unittest.TestCase):
 
         ret_val = fct(1)
         self.assertIsInstance(ret_val, int)
+
+
+class TestLogger(unittest.TestCase):
+    logger_called = False
+
+    class Logger(logging.Logger):
+        def __init__(self):
+            super().__init__("testLogger")
+
+        def error(self, *args, **kwargs) -> None:
+            TestLogger.logger_called = True
+
+    logger = Logger()
+
+    def setUp(self) -> None:
+        @fg.add_guarantees(
+            param_guarantees=[
+                fg.IsInt("a", logger=TestLogger.logger, logger_only=True)
+            ]
+        )
+        def fct_logger_only(a):
+            return a
+
+        @fg.add_guarantees(param_guarantees=[fg.IsInt("a", logger=TestLogger.logger)])
+        def fct_logger_and_error(a):
+            return a
+
+        self.fct_logger_only = fct_logger_only
+        self.fct_logger_and_error = fct_logger_and_error
+
+    def test_logger_only(self):
+        self.fct_logger_only(3.)   # not an int
+        self.assertTrue(TestLogger.logger_called)
+        TestLogger.logger_called = False   # reset for other tests
+
+    def test_logger_and_error(self):
+        try:
+            self.fct_logger_and_error(3.)
+            self.assertTrue(False)   # should have raised an exception
+        except fg.exceptions.ParameterGuaranteesTypeError:
+            self.assertTrue(TestLogger.logger_called)   # logger must be called
+
+        TestLogger.logger_called = False   # reset for other tests

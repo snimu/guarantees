@@ -18,7 +18,7 @@ won't forget.
 
 "Why does this function fail? I've tested it... omg I didn't even call it in my TestCase." Use this 
 package to make sure that a function/method will be called or a class instance constructed 
-in its respective test-case.
+in its respective `TestCase`.
 
 ## Example
 

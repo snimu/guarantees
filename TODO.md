@@ -9,13 +9,6 @@
 - README: explain how severity allows to treat things like using the default value as a warning but a problem with 
 the actual argument as an error &rarr; example: default `None` but should be `list` &rarr; warn when using `None`
 
-- Add argument `logger`:
-  - if `None`, behavior as is.
-  - if some logger, the error-message will be logged by that logger
-- Add argument `logger_only: bool`
-  - if `True`, only the logger will be used
-- Make `severity` correspond to the severities in `logging`.
-
 - Give `TypeGuarantee`s a `use_isinstance` parameter to use `isinstance(a, b)` instead of `type(a) is b`, 
 which should be the default behavior.
 

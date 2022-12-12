@@ -13,11 +13,12 @@ callables&mdash;functions and methods.
 
 # test_guarantees
 
-"I will have to write a unittest for this function later", you say. Well this package ensures that you 
-will not forget.
+"I will have to write a unittest for this function later", you say. This package ensures that you 
+won't forget.
 
 "Why does this function fail? I've tested it... omg I didn't even call it in my TestCase." Use this 
-package to make sure that a function will be called in its respective test-case.
+package to make sure that a function/method will be called or a class instance constructed 
+in its respective test-case.
 
 ## Example
 
@@ -49,21 +50,33 @@ def add_one(a):
   return a + 1
 
 
-class ExampleTest(unittest.TestCase):
-  @tg.implements_test_for(
-      ExampleClass.foo,
-      ExampleClass.class_method,
-      ExampleClass.static_method
-  )
-  def test_foo(self):
-      ExampleClass().foo()
-      ExampleClass.class_method()
-      ExampleClass.static_method()
+@tg.guarantee_test()
+@tg.guarantee_usage()   # Makes sure that __init__ is called in the test
+class RegularClass:
+    def __init__(self):
+        self.x = 2
 
-  @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
-  def test_other(self):
-    val = add_one(1)
-    self.assertEqual(val, 2)   
+
+class ExampleTest(unittest.TestCase):
+    @tg.implements_test_for(
+        ExampleClass.foo,
+        ExampleClass.class_method,
+        ExampleClass.static_method
+    )
+    def test_foo(self):
+        ExampleClass().foo()
+        ExampleClass.class_method()
+        ExampleClass.static_method()
+    
+    @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
+    def test_other(self):
+        val = add_one(1)
+        self.assertEqual(val, 2)  
+      
+    @tg.implements_test_for(RegularClass)
+    def test_regular_class(self):
+        regular_class = RegularClass()
+        ... 
     
     
 if __name__ == '__main__':

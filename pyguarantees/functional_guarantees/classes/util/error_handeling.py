@@ -42,11 +42,8 @@ def choose_exception(
 def make_exception(
         where: str,
         type_or_value: str,
-        qualname: str,
-        module: str,
-        guarantee_name: str,
+        guarantee: TypeGuarantee,
         parameter_name: str,
-        error_severity: int,
         what_dict: dict
 ) -> Union[
     ParameterGuaranteesTypeError,
@@ -58,11 +55,11 @@ def make_exception(
 ]:
     exception = choose_exception(where, type_or_value)
     return exception(
-        qualname=qualname,
-        module=module,
-        guarantee_name=guarantee_name,
+        qualname=guarantee.qualname,
+        module=guarantee.module,
+        guarantee_name=guarantee.guarantee_name,
         parameter_name=parameter_name,
-        error_severity=error_severity,
+        error_severity=guarantee.error_severity,
         what_dict=what_dict
     )
 
@@ -163,35 +160,14 @@ def handle_error(
     exception = make_exception(
         where=where,
         type_or_value=type_or_value,
-        qualname=guarantee.qualname,
-        module=guarantee.module,
-        guarantee_name=guarantee.guarantee_name,
+        guarantee=guarantee,
         parameter_name=parameter_name,
-        error_severity=guarantee.error_severity,
         what_dict=what_dict
     )
 
     if guarantee is not None and guarantee.error_callback is not None:
         guarantee.error_callback(exception)
-    else:
+    elif guarantee is not None:
         output_exception(exception, guarantee)
-
-
-def raise_type_warning_or_exception(
-        err_msg: str,
-        type_guarantee: TypeGuarantee
-) -> None:
-    if type_guarantee.error_severity <= severity.WARNING:
-        warnings.warn(err_msg + "\t **Ignoring** \n")
     else:
-        raise TypeError(err_msg)
-
-
-def raise_value_warning_or_exception(
-        err_msg: str,
-        type_guarantee: TypeGuarantee
-) -> None:
-    if type_guarantee.error_severity <= severity.WARNING:
-        warnings.warn(err_msg + "\t **Ignoring** \n")
-    else:
-        raise ValueError(err_msg)
+        raise exception

@@ -81,14 +81,15 @@ class IsUnion(TypeGuarantee):
             # 2.2  If right type: enforce it
 
             # Different type-check for None
-            if guarantee.guaranteed_type is None:
-                if arg is None:
-                    return guarantee.enforce(arg)
-                continue   # no conversion attempt necessary
+            if arg is guarantee.guaranteed_type is None:
+                return guarantee.enforce(arg)
+            elif guarantee.guaranteed_type is None:
+                continue # no conversion attempt necessary
 
+            # Attempt conversion
             if guarantee.force_conversion:
                 try:
-                    arg = guarantee.guaranteed_type(arg)
+                    arg = guarantee.guaranteed_type(arg)   # might be int or float -> int(arg) or float(arg)
                 except ValueError:
                     continue
 

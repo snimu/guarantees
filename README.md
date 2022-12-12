@@ -162,6 +162,10 @@ In this scenario, if `foo` is an argument in several
 `@tg.guarantee_usage` makes certain that `foo` is used in every test-function 
 decorated in such a way.
 
+Special case: For classes, `@tg.guarantee_usage` guarantees that `__init__` is called.
+For a callable class, this still holds; to guarantee that the `__call__`-method is called
+in the test, it has to be decorated by `@tg.guarantee_usage` itself, not the class it belongs to. 
+
 
 ### implements_test_for
 

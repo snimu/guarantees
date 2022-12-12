@@ -2,6 +2,7 @@
 
 ![License](https://img.shields.io/github/license/snimu/guarantees)
 ![PyPI Version](https://img.shields.io/pypi/v/pyguarantees)
+![Maintainability](https://img.shields.io/codeclimate/maintainability/snimu/guarantees)
 
 This package has two components: 
 

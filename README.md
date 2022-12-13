@@ -29,23 +29,23 @@ from some_package import some_fct_with_test_guarantee
  
 
 class ExampleClass:
-    @tg.guarantee_test()
+    @tg.guarantee_test()   # tg.main will raise exception if there is not test for this method
     def foo(self):
         return self
     
-    @classmethod
-    @tg.guarantee_test()
+    @classmethod           # works for classmethods
+    @tg.guarantee_test()   # @tg.guarantee_usage possible in any of these methods, but optional
     def class_method(cls):
         return cls
     
-    @staticmethod
+    @staticmethod          # works for staticmethods
     @tg.guarantee_test()
     def static_method():
         return "static!"
     
 
 @tg.guarantee_test()
-@tg.guarantee_usage()
+@tg.guarantee_usage()   # make sure that this is called in all its tests
 def add_one(a):
   return a + 1
 
@@ -88,10 +88,10 @@ As in the example, `pyguarantees.test_guarantees` will be abbreviated with `tg` 
 Failing to use an [@tg.implements_test_for](#implements_test_for) for a function or method decorated with [@tg.guarantee_test](#guarantee_test)
 leads to a [tg.exceptions.TestsNotImplementedError](#testsnotimplementederror), while failing to use this function or method in the 
 corresponding test will lead to a [tg.exceptions.NotUsedInTestsError](#notusedintestserror) if it is decorated by 
-[@tg.guarantee_usage](#guarantee_usage). These exceptions are only raised if the `unittest.TestCase`s are called first 
+[@tg.guarantee_usage](#guarantee_usage). These exceptions are only raised if the `unittest.TestCase` are called first 
 and then checked by [tg.enforce](#enforce), or [tg.main](#main) is called to do both automatically.
 
-Currently doesn't work with nested functions (defined inside of other callables). This will be fixed at some point.
+Currently doesn't work with nested functions (defined inside of other callables). This might be fixed at some point.
 
 The package consists of three decorators and two functions, as well as two `Exceptions`.
 All are explained below.
@@ -107,9 +107,9 @@ of this package.
 
 Takes no arguments.
 
-Any function or method (except, for the moment, functions nested inside of methods) 
+Any function, method, or class (except, for the moment, ones nested inside of other callables) 
 decorated with `@tg.guarantee_test`
-that is in the scope of unittest will force unittest to throw and exception should 
+that is in the scope of unittest will force unittest to throw an exception should 
 it not be in an [@tg.implements_test_for](#implements_test_for).
 
 Currently, it is necessary to include the brackets&mdash;`()`&mdash; so that 
@@ -265,7 +265,7 @@ A possible error message might look like the following:
 
     pyguarantees.test_guarantees.exceptions.NotUsedInTestsError:
 
-    The following methods and functions were not executed in their assigned tests: 
+    The following objects were not used in their assigned tests: 
 
 	1. The following callable was not called in its assigned tests: 
 		Name: 		foo

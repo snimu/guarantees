@@ -8,7 +8,7 @@ class TestsNotImplementedError(Exception):
     def __init__(self, functions):
         self.functions = functions
         self.description = "\n\n\tNo tests were implemented for the following " \
-                       "methods and functions: \n\n" + _where_str(functions, "no test")
+                           "objects: \n\n" + _where_str(functions, "no test")
         super().__init__(self.description)
 
 
@@ -17,8 +17,8 @@ class NotUsedInTestsError(Exception):
     function was never called."""
     def __init__(self, functions):
         self.functions = functions
-        self.description = "\n\n\tThe following methods and functions were not " \
-                       "executed in their assigned tests: \n\n" \
+        self.description = "\n\n\tThe following objects were not " \
+                           "used in their assigned tests: \n\n" \
                            + _where_str(functions, "unused")
 
         super().__init__(self.description)

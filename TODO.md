@@ -3,6 +3,18 @@
 - Ensure that everything is thread-save.
 - Docstrings!!!
 - Make `severity` part of `functional_guarantees`
+- VSCode Plugin for syntax highlighting setting the `fg`- and `tg`-decorators apart from regular code
+- Good build system
+  - Upload to PyPI
+  - Upload to Conda
+  - Make Docker Image
+- Version Numbers:
+  - 1.x.x only when
+    - No more API changes
+    - Documentation & build system & git page at acceptable level
+  - 0.1.x only when
+    - README.md version 1 finished
+    - `collections` work in `fg`
 
 # TODO: `functional_guarantees`
 

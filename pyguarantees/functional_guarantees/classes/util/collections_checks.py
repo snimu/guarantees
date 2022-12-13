@@ -6,7 +6,7 @@ from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 
 
-def _check_minmax_len(
+def check_minmax_len(
         arg: Union[list, tuple, dict, set, frozenset],
         guarantee
 ) -> None:
@@ -124,7 +124,7 @@ def _check_max_len(
         )
 
 
-def _check_contains(
+def check_contains(
         arg: Union[list, tuple, set, frozenset],
         guarantee
 ) -> None:
@@ -154,7 +154,7 @@ def _check_contains(
         )
 
 
-def _check_has_keys_values(
+def check_has_keys_values(
         arg: dict,
         guarantee
 ) -> None:

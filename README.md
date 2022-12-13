@@ -287,11 +287,11 @@ A possible error message might look like the following:
 
 Few things are more useful in programming than the ability to constrain a program's possible behaviors 
 and communicate those constraints clearly in code. Statically typed languages do this with types, scope modifiers, 
-and lifetime modifiers, among others. These are static constraints&mdash;or static guarantees&mdash;in that 
-they are evaluated statically, before runtime.
+and lifetime modifiers, among others (`int`, `static`, `private`, `const`, etc.). These are static constraints&mdash;or 
+static guarantees&mdash;in that they are evaluated statically, before runtime.
 
-Oftentimes, a program also has dynamic guarantees, evaluated during runtime. A function dealing with division, for example, has to deal with the 
-special case of denominator of zero. 
+Oftentimes, a program also has dynamic guarantees, evaluated during runtime&mdash;assertions, for example. 
+A function dealing with division, for example, has to deal with the special case of division by zero. 
 
 `pyguarantees.functional_guarantees`, abbreviated with `fg` from here on out, enables both types of guarantees to be 
 defined in Python where they should happen: function (or method) signatures. This is where statically typed 
@@ -301,9 +301,11 @@ guarantees belong as well.
 
 This might have the following advantages:
 - Make code more readable by having constraints in a predefined place.
-- Make code easier to write by providing important information about and API in a glancable way.
+- Make code easier to write by providing important information about APIs in a glancable way.
 - Make it possible to include information on dynamic constraints in automatically generated documentation.
-- Encourage programmers to think about these constraints. 
+- Encourage programmers to think about these constraints while writing the functions&mdash;a type of 
+test-driven development directly at the function (seeing parts of the "tests" in the function-signature
+might assist readability of code, as well). 
 
 This package is an attempt to open up at least some of these advantages to Python-users at least partially, 
 given the constraints of the Python-language. 
@@ -375,4 +377,4 @@ class TestExample(unittest.TestCase):
         foo(bar(1))   
 ```
 
-to be finished ...
+> this README is currently under development. More is coming.

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyguarantees"
-version = "0.0.11"
+version = "0.0.12"
 authors = [{name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}]
 description = "Guarantee unittests for functions and methods, guarantee types and their properties"
 readme = "README.md"

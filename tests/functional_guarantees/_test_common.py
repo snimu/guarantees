@@ -280,3 +280,35 @@ class TestParameterMatching(unittest.TestCase):
             self.assertTrue(False)   # should have raised an exception
         except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)    # successfully raised exception
+
+
+class TestForbiddenValues(unittest.TestCase):
+    def setUp(self) -> None:
+        @fg.add_guarantees(
+            param_guarantees=[
+                fg.IsInt("a", forbidden_values=[1, 2, 3]),
+                fg.IsBytes("b", forbidden_values=[b"123", b"111"])
+            ]
+        )
+        def fct(a, b):
+            return a, b
+
+        self.fct = fct
+
+    def test_legal_values(self):
+        self.fct(0, b"000")
+        self.fct(5, b"321")
+        self.fct(-10, b"001")
+
+    def test_forbidden_values(self):
+        try:
+            self.fct(1, b"000")
+            self.assertTrue(False)   # should have raised an exception
+        except fg.exceptions.ParameterGuaranteesValueError:
+            self.assertTrue(True)    # successfully raised exception
+
+        try:
+            self.fct(0, b"123")
+            self.assertTrue(False)   # should have raised exception
+        except fg.exceptions.ParameterGuaranteesValueError:
+            self.assertTrue(True)    # successfully raised exception

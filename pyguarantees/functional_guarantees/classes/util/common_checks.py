@@ -30,6 +30,26 @@ def check_type(arg, guarantee):
     return arg   # in case of warnings_only
 
 
+def check_forbidden_values(arg, guarantee):
+    if guarantee.forbidden_values is None:
+        return arg
+
+    if arg not in guarantee.forbidden_values:
+        return arg
+
+    handle_error(
+        where=guarantee.where,
+        type_or_value="value",
+        guarantee=guarantee,
+        parameter_name=guarantee.parameter_name,
+        what_dict={
+            "error": f"violated {guarantee.guarantee_name}.forbidden_values",
+            "forbidden_values": guarantee.forbidden_values,
+            "arg": arg
+        }
+    )
+
+
 def enforce_dynamic_checks(arg, guarantee) -> None:
     if guarantee.dynamic_checks is None:
         return

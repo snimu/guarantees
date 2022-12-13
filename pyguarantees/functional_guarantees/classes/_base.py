@@ -30,3 +30,4 @@ class TypeGuarantee(Guarantee):
     error_severity: int = severity.ERROR
     error_callback: Callable = None
     dynamic_checks: List[DynamicCheck] = None
+    forbidden_values: list = None

@@ -5,7 +5,7 @@ from ._base import TypeGuarantee
 from pyguarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    enforce_dynamic_checks, check_type
+    enforce_dynamic_checks, check_type, check_forbidden_values
 from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 
@@ -26,6 +26,7 @@ class IsList(CollectionType):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         _check_minmax_len(arg, self)
         _check_contains(arg, self)
 
@@ -43,6 +44,7 @@ class IsTuple(CollectionType):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         _check_minmax_len(arg, self)
         _check_contains(arg, self)
 
@@ -61,6 +63,7 @@ class IsDict(CollectionType):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         _check_minmax_len(arg, self)
         _check_has_keys_values(arg, self)
 
@@ -78,6 +81,7 @@ class IsSet(CollectionType):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         _check_minmax_len(arg, self)
         _check_contains(arg, self)
 
@@ -95,6 +99,7 @@ class IsFrozenSet(CollectionType):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         _check_minmax_len(arg, self)
         _check_contains(arg, self)
 
@@ -110,6 +115,7 @@ class IsRange(TypeGuarantee):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         enforce_dynamic_checks(arg, self)
         return arg
 

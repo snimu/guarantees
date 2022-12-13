@@ -3,7 +3,7 @@ from typing import List
 
 from ._base import TypeGuarantee
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    check_type, enforce_dynamic_checks
+    check_type, enforce_dynamic_checks, check_forbidden_values
 from pyguarantees.functional_guarantees.classes.util.error_handeling import \
     handle_error
 from pyguarantees.functional_guarantees.classes.util.typenames import \
@@ -22,6 +22,7 @@ class IsStr(TypeGuarantee):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         _check_len(arg, self)
         _check_isin(arg, self)
 

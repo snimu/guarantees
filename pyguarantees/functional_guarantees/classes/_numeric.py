@@ -10,7 +10,7 @@ from pyguarantees.functional_guarantees.classes.util.error_handeling import \
 from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    check_type, enforce_dynamic_checks
+    check_type, enforce_dynamic_checks, check_forbidden_values
 
 
 @dataclass
@@ -28,6 +28,7 @@ class IsInt(NumericGuarantee):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
 
         _check_min_ge_max(
             guarantee=self,
@@ -53,6 +54,7 @@ class IsFloat(NumericGuarantee):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
 
         _check_min_ge_max(
             guarantee=self,
@@ -83,6 +85,7 @@ class IsComplex(NumericGuarantee):
 
     def enforce(self, arg):
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
 
         _check_min_ge_max(
             guarantee=self,

@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 from ._base import TypeGuarantee
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    enforce_dynamic_checks, check_type
+    enforce_dynamic_checks, check_type, check_forbidden_values
 
 
 @dataclass
@@ -13,6 +13,7 @@ class IsBytes(TypeGuarantee):
 
     def enforce(self, arg) -> bytes:
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         enforce_dynamic_checks(arg, self)
         return arg
 
@@ -25,6 +26,7 @@ class IsByteArray(TypeGuarantee):
 
     def enforce(self, arg) -> bytearray:
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         enforce_dynamic_checks(arg, self)
         return arg
 
@@ -37,6 +39,7 @@ class IsMemoryView(TypeGuarantee):
 
     def enforce(self, arg) -> memoryview:
         arg = check_type(arg, self)
+        arg = check_forbidden_values(arg, self)
         enforce_dynamic_checks(arg, self)
         return arg
 

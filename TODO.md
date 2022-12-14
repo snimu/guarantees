@@ -18,6 +18,13 @@
 
 # TODO: `functional_guarantees`
 
+- Add `Guarantee` to `fg`-namespace -> can do an `isinstance` for example.
+
+- Change `return_guarantee` to `return_guarantees` -> when you do something like `return a, b, c`
+  - Advantage: Clearer.
+  - Can still guarantee several `tuple` values (or a `tuple` and some other values).
+  - Point is: Gives more flexibility *and* works while `CollectionType`-guarantees dont't have a `types`-member.
+
 - README: explain how severity allows to treat things like using the default value as a warning but a problem with 
 the actual argument as an error &rarr; example: default `None` but should be `list` &rarr; warn when using `None`
 

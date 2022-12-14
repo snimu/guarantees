@@ -377,4 +377,33 @@ class TestExample(unittest.TestCase):
         foo(bar(1))   
 ```
 
+
+## add_guarantees
+
+Add [guarantees](#guarantees) to a callable. 
+
+**Arguments**:
+- **param_guarantees** A list of [Guarantees](#guarantee) that will work on the parameters of the callable 
+decorated by `add_guarantees`. Must fulfill the following properties:
+  - Be in the order that the arguments are defined in the callable-signature. If you have for example
+    a function `def foo(a, b)`, where `a` should be an `int` and `b` a `str`, `param_guarantees` has to 
+    be something like `[fg.IsInt("a"), fg.IsStr("b")`.
+  - 
+- **return_guarantee** A single [Guarantee](#guarantee) on the return values. 
+- **is_staticmethod** Needed to deal with `staticmethods` (`classmethod` and regular methods work automatically).
+
+## Guarantees
+
+There are several pre-defined guarantees. Most are based on the [TypeGuarantee](#typeguarantee).
+
+### Guarantee
+
+The base class of all guarantees in `fg`.
+
+### TypeGuarantee
+
+
+
+
+
 > this README is currently under development. More is coming.

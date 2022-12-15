@@ -24,63 +24,63 @@ in its respective `TestCase`.
 
 ```python 
 import unittest
-from pyguarantees import test_guarantees as tg
+from src.pyguarantees import test_guarantees as tg
 from some_package import some_fct_with_test_guarantee
- 
+
 
 class ExampleClass:
-    @tg.guarantee_test()   # tg.main will raise exception if there is not test for this method
-    def foo(self):
-        return self
-    
-    @classmethod           # works for classmethods
-    @tg.guarantee_test()   # @tg.guarantee_usage possible in any of these methods, but optional
-    def class_method(cls):
-        return cls
-    
-    @staticmethod          # works for staticmethods
-    @tg.guarantee_test()
-    def static_method():
-        return "static!"
-    
+  @tg.guarantee_test()  # tg.main will raise exception if there is not test for this method
+  def foo(self):
+    return self
+
+  @classmethod  # works for classmethods
+  @tg.guarantee_test()  # @tg.guarantee_usage possible in any of these methods, but optional
+  def class_method(cls):
+    return cls
+
+  @staticmethod  # works for staticmethods
+  @tg.guarantee_test()
+  def static_method():
+    return "static!"
+
 
 @tg.guarantee_test()
-@tg.guarantee_usage()   # make sure that this is called in all its tests
+@tg.guarantee_usage()  # make sure that this is called in all its tests
 def add_one(a):
   return a + 1
 
 
 @tg.guarantee_test()
-@tg.guarantee_usage()   # Makes sure that __init__ is called in the test
+@tg.guarantee_usage()  # Makes sure that __init__ is called in the test
 class RegularClass:
-    def __init__(self):
-        self.x = 2
+  def __init__(self):
+    self.x = 2
 
 
 class ExampleTest(unittest.TestCase):
-    @tg.implements_test_for(
-        ExampleClass.foo,
-        ExampleClass.class_method,
-        ExampleClass.static_method
-    )
-    def test_foo(self):
-        ExampleClass().foo()
-        ExampleClass.class_method()
-        ExampleClass.static_method()
-    
-    @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
-    def test_other(self):
-        val = add_one(1)
-        self.assertEqual(val, 2)  
-      
-    @tg.implements_test_for(RegularClass)
-    def test_regular_class(self):
-        regular_class = RegularClass()
-        ... 
-    
-    
+  @tg.implements_test_for(
+    ExampleClass.foo,
+    ExampleClass.class_method,
+    ExampleClass.static_method
+  )
+  def test_foo(self):
+    ExampleClass().foo()
+    ExampleClass.class_method()
+    ExampleClass.static_method()
+
+  @tg.implements_test_for(add_one, some_fct_with_test_guarantee)
+  def test_other(self):
+    val = add_one(1)
+    self.assertEqual(val, 2)
+
+  @tg.implements_test_for(RegularClass)
+  def test_regular_class(self):
+    regular_class = RegularClass()
+    ...
+
+
 if __name__ == '__main__':
-    tg.main()
+  tg.main()
 ```
 
 As in the example, `pyguarantees.test_guarantees` will be abbreviated with `tg` from here on out.

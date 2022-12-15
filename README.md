@@ -24,7 +24,7 @@ in its respective `TestCase`.
 
 ```python 
 import unittest
-from src.pyguarantees import test_guarantees as tg
+from pyguarantees import test_guarantees as tg
 from some_package import some_fct_with_test_guarantee
 
 

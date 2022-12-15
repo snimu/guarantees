@@ -18,10 +18,10 @@ class TestOnOff(unittest.TestCase):
         except fg.exceptions.ParameterGuaranteesTypeError:
             self.assertTrue(True)
 
-        fg.settings.change_settings(active=False)
+        fg.decorator.settings.change_settings(active=False)
         fct("not an int!")
 
-        fg.settings.change_settings(active=True)
+        fg.decorator.settings.change_settings(active=True)
         try:
             fct("not an int!")
             self.assertTrue(False)

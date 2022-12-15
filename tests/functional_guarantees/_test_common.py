@@ -21,11 +21,7 @@ class TestCallback(unittest.TestCase):
         def fct(a):
             return a
 
-        try:
-            fct(1.)
-            self.assertTrue(False)  # should have raised an exception
-        except CbException:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(CbException, fct, 1.)
 
     def test_isstr_cb(self):
         @fg.add_guarantees(param_guarantees=[
@@ -34,11 +30,7 @@ class TestCallback(unittest.TestCase):
         def fct(a):
             return a
 
-        try:
-            fct(1.)
-            self.assertTrue(False)  # should have raised an exception
-        except CbException:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(CbException, fct, 1.)
 
     def test_islist_cb(self):
         @fg.add_guarantees(param_guarantees=[
@@ -47,11 +39,7 @@ class TestCallback(unittest.TestCase):
         def fct(a):
             return a
 
-        try:
-            fct(1.)
-            self.assertTrue(False)  # should have raised an exception
-        except CbException:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(CbException, fct, 1.)
 
 
 class TestCheckFunctions(unittest.TestCase):
@@ -113,19 +101,11 @@ class TestCheckFunctions(unittest.TestCase):
 
     def test_check1_err(self):
         for f in self.functions:
-            try:
-                f(2)
-                self.assertTrue(False)   # should have raised an exception
-            except fg.exceptions.ParameterGuaranteesValueError:
-                self.assertTrue(True)    # successfully raised exception
+            self.assertRaises(fg.exceptions.ParameterGuaranteesValueError, f, 2)
 
     def test_check2_err(self):
         for f in self.functions:
-            try:
-                f(3**10)
-                self.assertTrue(False)  # should have raised an exception
-            except fg.exceptions.ParameterGuaranteesValueError:
-                self.assertTrue(True)   # successfully raised exception
+            self.assertRaises(fg.exceptions.ParameterGuaranteesValueError, f, 3**10)
 
 
 class ClassWithMethods:
@@ -156,33 +136,30 @@ class TestMethodGuarantees(unittest.TestCase):
         self.assertIsInstance(val, int)
 
     def test_self_error(self):
-        try:
-            self.class_with_methods.fct("not an int!")
-            self.assertTrue(False)    # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            self.class_with_methods.fct, "not an int!"
+        )
 
     def test_cls_correct(self):
         val = self.class_with_methods.classfct(3)
         self.assertIsInstance(val, int)
 
     def test_cls_error(self):
-        try:
-            self.class_with_methods.classfct("not an int")
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            self.class_with_methods.classfct, "not an int!"
+        )
 
     def test_static_correct(self):
         val = self.class_with_methods.staticfct(3)
         self.assertIsInstance(val, int)
 
     def test_static_error(self):
-        try:
-            self.class_with_methods.staticfct("not an int")
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            self.class_with_methods.staticfct, "not an int!"
+        )
 
 
 class TestReturnGuarantees(unittest.TestCase):
@@ -199,11 +176,7 @@ class TestReturnGuarantees(unittest.TestCase):
         def fct(a):
             return float(a)
 
-        try:
-            fct(1)
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ReturnGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised an exception
+        self.assertRaises(fg.exceptions.ReturnGuaranteesTypeError, fct, 1)
 
     def test_false_with_conversion(self):
         @fg.add_guarantees(return_guarantee=fg.IsInt("a", force_conversion=True))
@@ -248,11 +221,11 @@ class TestLogger(unittest.TestCase):
         TestLogger.logger_called = False   # reset for other tests
 
     def test_logger_and_error(self):
-        try:
-            self.fct_logger_and_error(3.)
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(TestLogger.logger_called)   # logger must be called
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            self.fct_logger_and_error, 3.
+        )
+        self.assertTrue(TestLogger.logger_called)   # logger must be called
 
         TestLogger.logger_called = False   # reset for other tests
 
@@ -301,14 +274,8 @@ class TestForbiddenValues(unittest.TestCase):
         self.fct(-10, b"001")
 
     def test_forbidden_values(self):
-        try:
-            self.fct(1, b"000")
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            self.fct(0, b"123")
-            self.assertTrue(False)   # should have raised exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        for inputs in [[1, b"000"], [0, b"123"]]:
+            self.assertRaises(
+                fg.exceptions.ParameterGuaranteesValueError,
+                self.fct, *inputs
+            )

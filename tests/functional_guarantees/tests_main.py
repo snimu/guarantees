@@ -2,8 +2,12 @@ import unittest
 
 # Import unittest from their respective files
 #   -> unittest.main() will run them all
-from tests.functional_guarantees._test_numeric import TestNumericGuarantee
-from tests.functional_guarantees._test_string import TestStringGuarantee
+from tests.functional_guarantees._test_numeric import \
+    TestNumericBase, TestNumericForceConversion, TestNumericMinMax, \
+    TestNumericIsIn, TestNumericIncorrectGuaranteeInputs
+from tests.functional_guarantees._test_string import \
+    TestStringBasic, TestStringForceConversion, TestStringMinMaxLen, \
+    TestStringIsIn, TestStringIncorrectParameters
 from tests.functional_guarantees._test_boolean import TestBooleanGuarantee
 from tests.functional_guarantees._test_collections import TestCollectionsGuarantee
 from tests.functional_guarantees._test_common import TestCallback, TestCheckFunctions,\

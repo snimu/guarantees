@@ -4,3 +4,4 @@ from .classes import IsBool, IsStr, IsBytes, IsByteArray, IsSet, IsFrozenSet,\
     DynamicCheck, CollectionType
 from .decorator import add_guarantees, settings
 import pyguarantees.functional_guarantees.decorator.settings
+import pyguarantees.functional_guarantees.exceptions

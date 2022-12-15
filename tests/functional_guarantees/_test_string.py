@@ -3,23 +3,23 @@ import unittest
 from pyguarantees import functional_guarantees as fg
 
 
-class TestStringGuarantee(unittest.TestCase):
-    def test_basic(self):
+class TestStringBasic(unittest.TestCase):
+    def setUp(self):
         @fg.add_guarantees(param_guarantees=[fg.IsStr("a")])
         def fct(a):
             return a
 
-        # Check allows correct type
-        fct("Hi :)")
+        self.fct = fct
 
-        # Check raises errors
-        try:
-            fct(1)
-            self.assertTrue(False)   # should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_correct(self):
+        self.fct("Hi :)")
 
-    def test_force_conversion(self):
+    def test_violations(self):
+        self.assertRaises(fg.exceptions.ParameterGuaranteesTypeError, self.fct, 1)
+
+
+class TestStringForceConversion(unittest.TestCase):
+    def test_correct(self):
         @fg.add_guarantees(param_guarantees=[
             fg.IsStr("a", force_conversion=True)
         ])
@@ -34,85 +34,89 @@ class TestStringGuarantee(unittest.TestCase):
         s = fct([1, 2, 3])
         self.assertIs(type(s), str)
 
-    def test_minmax_len(self):
+
+class TestStringMinMaxLen(unittest.TestCase):
+    def setUp(self):
         @fg.add_guarantees(param_guarantees=[
             fg.IsStr("a", minimum_len=2, maximum_len=5)
         ])
         def fct(a):
             return a
 
+        self.fct = fct
+
+    def test_correct(self):
         # Check correct inputs pass
-        fct("12")
-        fct("123")
-        fct("1234")
-        fct("12345")
+        self.fct("12")
+        self.fct("123")
+        self.fct("1234")
+        self.fct("12345")
 
-        # Check exceptions raised
-        try:
-            fct("1")
-            self.assertTrue(False)   # should have raised exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_violations(self):
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesValueError,
+            self.fct, "1"
+        )
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesValueError,
+            self.fct, "123456"
+        )
 
-        try:
-            fct("123456")
-            self.assertTrue(False)   # should have raised exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
 
-    def test_isin(self):
+class TestStringIsIn(unittest.TestCase):
+    def setUp(self):
         @fg.add_guarantees(param_guarantees=[
             fg.IsStr("a", isin=["hi", "ciao"])
         ])
         def fct(a):
             return a
 
-        # Check correct inputs work
-        fct("hi")
-        fct("ciao")
+        self.fct = fct
 
-        # Check errors caught
-        try:
-            fct("nope")
-            self.assertTrue(False)   # should have raised exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_correct(self):
+        self.fct("hi")
+        self.fct("ciao")
 
-    def test_incorrect_guarantee_parameters_min(self):
+    def test_violations(self):
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesValueError,
+            self.fct, "nope"
+        )
+
+
+class TestStringIncorrectParameters(unittest.TestCase):
+    def test_min(self):
         @fg.add_guarantees(param_guarantees=[
             fg.IsStr("a", minimum_len="nope")
         ])
         def fct(a):
             return a
 
-        try:
-            fct("hi")
-            self.assertTrue(False)   # should have raised exception
-        except fg.exceptions.FunctionalGuaranteesUserTypeError:
-            self.assertTrue(True)    # successfully raised exception
+        self.assertRaises(
+            fg.exceptions.FunctionalGuaranteesUserTypeError,
+            fct, "hi"
+        )
 
-    def test_incorrect_guarantee_parameters_max(self):
+    def test_max(self):
         @fg.add_guarantees(param_guarantees=[
             fg.IsStr("a", maximum_len="nope")
         ])
         def fct(a):
             return a
 
-        try:
-            fct("hi")
-            self.assertTrue(False)  # should have raised exception
-        except fg.exceptions.FunctionalGuaranteesUserTypeError:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(
+            fg.exceptions.FunctionalGuaranteesUserTypeError,
+            fct, "hi"
+        )
 
-    def test_incorrect_guarantee_parameters_isin(self):
+    def test_isin(self):
         @fg.add_guarantees(param_guarantees=[
             fg.IsStr("a", isin="nope")
         ])
         def fct(a):
             return a
 
-        try:
-            fct("hi")
-            self.assertTrue(False)  # should have raised exception
-        except fg.exceptions.FunctionalGuaranteesUserTypeError:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(
+            fg.exceptions.FunctionalGuaranteesUserTypeError,
+            fct, "hi"
+        )

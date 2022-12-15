@@ -57,163 +57,86 @@ class TestCollectionsGuarantee(unittest.TestCase):
 
         self.keysvals_fct = keysvals_fct
 
-    def test_base(self):
+    def test_base_correct(self):
         # Check working inputs produce no errors
         self.base_fct(self.lst, self.tup, self.dic, self.st, self.fst, self.rng)
 
-        # Check false inputs
-        try:
-            self.base_fct(1, self.tup, self.dic, self.st, self.fst, self.rng)
-            self.assertTrue(False)   # param lst should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_base_violations(self):
+        def type_test(index: int):
+            inputs = [self.lst, self.tup, self.dic, self.st, self.fst, self.rng]
+            inputs[index] = 1   # Add false type at the index
+            self.assertRaises(
+                fg.exceptions.ParameterGuaranteesTypeError,
+                self.base_fct, *inputs
+            )
 
-        try:
-            self.base_fct(self.lst, 1, self.dic, self.st, self.fst, self.rng)
-            self.assertTrue(False)   # param tup should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            self.base_fct(self.lst, self.tup, 1, self.st, self.fst, self.rng)
-            self.assertTrue(False)   # param dic should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            self.base_fct(self.lst, self.tup, self.dic, 1, self.fst, self.rng)
-            self.assertTrue(False)   # param st should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            self.base_fct(self.lst, self.tup, self.dic, self.st, 1, self.rng)
-            self.assertTrue(False)   # param fst should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            self.base_fct(self.lst, self.tup, self.dic, self.st, self.fst, 1)
-            self.assertTrue(False)   # param rng should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
+        for i in range(6):
+            type_test(i)
 
     def test_minmax_len_correct(self):
         # Check correct inputs don't raise exceptions
         self.minmax_fct(self.lst, self.tup, self.dic, self.st, self.fst)
 
-    def test_minmax_len_violation_lst(self):
-        try:
-            self.minmax_fct([], self.tup, self.dic, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_min_len_violations(self):
+        too_shorts = [[], (), {}, set(), frozenset()]   # prepare false inputs
 
-        try:
-            self.minmax_fct([1, 2, 3, 4], self.tup, self.dic, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        def len_test_min(index):
+            inputs = [self.lst, self.tup, self.dic, self.st, self.fst]
+            inputs[index] = too_shorts[index]   # add false input at index
+            self.assertRaises(
+                fg.exceptions.ParameterGuaranteesValueError,
+                self.minmax_fct, *inputs
+            )
 
-    def test_minmax_len_violation_tup(self):
-        try:
-            self.minmax_fct(self.lst, (), self.dic, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        for i in range(5):
+            len_test_min(i)
 
-        try:
-            self.minmax_fct(self.lst, (1, 2, 3, 4), self.dic, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_max_len_violations(self):
+        # Prepare false inputs
+        base = [1, 2, 3, 4]
+        too_longs = [base, tuple(base), {i: i for i in base}, set(base), frozenset(base)]
 
-    def test_minmax_len_violation_dic(self):
-        try:
-            self.minmax_fct(self.lst, self.tup, {}, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        def len_test_max(index):
+            inputs = [self.lst, self.tup, self.dic, self.st, self.fst]
+            inputs[index] = too_longs[index]
+            self.assertRaises(
+                fg.exceptions.ParameterGuaranteesValueError,
+                self.minmax_fct, *inputs
+            )
 
-        try:
-            wrong_dict = {1: 1, 2: 2, 3: 3, 4: 4}
-            self.minmax_fct(self.lst, self.tup, wrong_dict, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
-
-    def test_minmax_len_violation_set(self):
-        try:
-            self.minmax_fct(self.lst, self.tup, self.dic, set(), self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            wrong_set = {1, 2, 3, 4}
-            self.minmax_fct(self.lst, self.tup, self.dic, wrong_set, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
-
-    def test_minmax_len_violation_fset(self):
-        try:
-            self.minmax_fct(self.lst, self.tup, self.dic, self.st, frozenset())
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
-
-        try:
-            wrong_fset = frozenset({1, 2, 3, 4})
-            self.minmax_fct(self.lst, self.tup, self.dic, self.st, wrong_fset)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        for i in range(5):
+            len_test_max(i)
 
     def test_contains_correct(self):
         self.contains_fct(self.lst, self.tup, self.st, self.fst)
 
-    def test_contains_violated_lst(self):
-        try:
-            self.contains_fct([1, 2], self.tup, self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+    def test_contains_violated(self):
+        # Prepare false inputs
+        base = [1]
+        false_inputs = [base, tuple(base), set(base), frozenset(base)]
 
-    def test_contains_violated_tup(self):
-        try:
-            self.contains_fct(self.lst, (1, 2), self.st, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        def contains_test(index):
+            inputs = [self.lst, self.tup, self.st, self.fst]
+            inputs[index] = false_inputs[index]
+            self.assertRaises(
+                fg.exceptions.ParameterGuaranteesValueError,
+                self.contains_fct, *inputs
+            )
 
-    def test_contains_violated_st(self):
-        try:
-            self.contains_fct(self.lst, self.tup, {1, 2}, self.fst)
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
-
-    def test_contains_violated_fst(self):
-        try:
-            self.contains_fct(self.lst, self.tup, self.st, frozenset((1, 2)))
-            self.assertTrue(False)   # param lst should have raised an exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)    # successfully raised exception
+        for i in range(4):
+            contains_test(i)
 
     def test_has_keys_vals(self):
         self.keysvals_fct(self.dic)
 
-        try:
-            self.keysvals_fct({1: 1, 2: 2, "nope": 3})
-            self.assertTrue(False)    # param dic should have raised exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesValueError,
+            self.keysvals_fct,
+            {1: 1, 2: 2, "nope": 3}
+        )
 
-        try:
-            self.keysvals_fct({1: 1, 2: 2, 3: "nope"})
-            self.assertTrue(False)    # param dic should have raised exception
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)
-
-# TODO: Refactor: one class for each of the four functions
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesValueError,
+            self.keysvals_fct,
+            {1: 1, 2: 2, 3: "nope"}
+        )

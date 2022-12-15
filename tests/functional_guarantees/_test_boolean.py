@@ -14,11 +14,10 @@ class TestBooleanGuarantee(unittest.TestCase):
         fct(False)
 
         # Check if incorrect inputs raise exceptions
-        try:
-            fct("nope")
-            self.assertTrue(False)   # should have raised an exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)    # successfully raised exception
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            fct, "nope"
+        )
 
     def test_force_conversion(self):
         @fg.add_guarantees(

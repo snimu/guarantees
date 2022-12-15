@@ -8,10 +8,6 @@ class TestIsClass(unittest.TestCase):
             def __init__(self, a=1):
                 self.a = a
 
-        self.test_class = TestClass
-        self.test_class_instance = TestClass()
-
-    def test_base(self):
         @fg.add_guarantees(param_guarantees=[
             fg.NoOp("a"),
             fg.IsClass("b", class_type=self.test_class)
@@ -19,32 +15,30 @@ class TestIsClass(unittest.TestCase):
         def fct(a, b):
             return a, b
 
-        # Check correct input
-        fct("whatever", self.test_class_instance)
-        fct(self.test_class_instance, self.test_class_instance)
+        self.test_class = TestClass
+        self.test_class_instance = TestClass()
+        self.fct = fct
 
-        # Check errors
-        try:
-            fct(1, 1)
-            self.assertTrue(False)  # should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)  # successfully raised exception
+    def test_correct(self):
+        self.fct("whatever", self.test_class_instance)
+        self.fct(self.test_class_instance, self.test_class_instance)
+
+    def test_violations(self):
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            self.fct, 1, 1
+        )
 
 
 class TestIsNone(unittest.TestCase):
-    def test_type(self):
+    def test_is_none(self):
         @fg.add_guarantees(param_guarantees=[fg.IsNone("a")])
         def fct(a):
             return a
 
         out = fct(None)
         self.assertIs(out, None)
-
-        try:
-            fct(1)
-            self.assertTrue(False)  # should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(fg.exceptions.ParameterGuaranteesTypeError, fct, 1)
 
 
 class TestIsUnion(unittest.TestCase):
@@ -73,11 +67,10 @@ class TestIsUnion(unittest.TestCase):
         self.assertIsInstance(out, str)
 
     def test_wrong_inputs(self):
-        try:
-            self.fct(complex(1., 1.))
-            self.assertTrue(False)  # should have raised exception
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            self.fct, complex(1., 1.)
+        )
 
     def test_value_error(self):
         @fg.add_guarantees(param_guarantees=[
@@ -94,9 +87,4 @@ class TestIsUnion(unittest.TestCase):
 
         self.assertIs(fct(None), None)
         self.assertIsInstance(fct(1), int)
-
-        try:
-            fct(0)
-            self.assertTrue(False)  # should have raised ValueError
-        except fg.exceptions.ParameterGuaranteesValueError:
-            self.assertTrue(True)  # successfully raised exception
+        self.assertRaises(fg.exceptions.ParameterGuaranteesValueError, fct, 0)

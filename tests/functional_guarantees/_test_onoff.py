@@ -12,21 +12,19 @@ class TestOnOff(unittest.TestCase):
         val = fct(1)
         self.assertIsInstance(val, int)
 
-        try:
-            fct("not an int!")
-            self.assertTrue(False)
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            fct, "not an int!"
+        )
 
         fg.decorator.settings.change_settings(active=False)
         fct("not an int!")
 
         fg.decorator.settings.change_settings(active=True)
-        try:
-            fct("not an int!")
-            self.assertTrue(False)
-        except fg.exceptions.ParameterGuaranteesTypeError:
-            self.assertTrue(True)
+        self.assertRaises(
+            fg.exceptions.ParameterGuaranteesTypeError,
+            fct, "not an int!"
+        )
 
 
 def test_onoff():

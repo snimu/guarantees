@@ -1,4 +1,4 @@
-import pyguarantees.test_guarantees as tg
+import src.pyguarantees.test_guarantees as tg
 
 
 @tg.guarantee_test()

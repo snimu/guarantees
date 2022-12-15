@@ -337,7 +337,7 @@ def add_one(num):
             dynamic_checks=[
                 fg.DynamicCheck(check=lambda x: x.min() > 0, description="min: 0"),
                 fg.DynamicCheck(check=lambda x: x.var() < 5, description="var < 5"),
-                fg.DynamicCheck(lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
+                fg.DynamicCheck(check=lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
             ],
             error_callback=your_custom_error_callback
         ),

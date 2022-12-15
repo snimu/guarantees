@@ -1,5 +1,6 @@
 # TODO: both
 
+- Rewrite tests using pytest
 - Ensure that everything is thread-save.
 - Docstrings!!!
 - Make `severity` part of `functional_guarantees`

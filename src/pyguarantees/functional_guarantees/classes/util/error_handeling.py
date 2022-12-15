@@ -1,6 +1,5 @@
 from typing import Union
 
-from pyguarantees.functional_guarantees.classes import TypeGuarantee
 from pyguarantees.functional_guarantees.exceptions import \
     ParameterGuaranteesTypeError, ParameterGuaranteesValueError, \
     ReturnGuaranteesValueError, ReturnGuaranteesTypeError, \
@@ -14,7 +13,7 @@ class ErrorHandler:
             self,
             where: str,
             type_or_value: str,
-            guarantee: TypeGuarantee,
+            guarantee,
             parameter_name: str,
             what_dict: dict
     ):
@@ -113,7 +112,7 @@ class ErrorHandler:
 def handle_error(
         where: str,
         type_or_value: str,
-        guarantee: TypeGuarantee,
+        guarantee,
         parameter_name: str,
         what_dict: dict
 ) -> None:

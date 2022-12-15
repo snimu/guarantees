@@ -1,7 +1,7 @@
 from typing import List, Tuple, Dict, Any
 import inspect
 
-from pyguarantees.functional_guarantees.classes import Guarantee, NoOp
+from pyguarantees.functional_guarantees import Guarantee, NoOp
 from pyguarantees.functional_guarantees.classes.util.typenames import \
     get_arg_type_name
 from pyguarantees.functional_guarantees.classes.util.error_handeling import \

@@ -1,6 +1,5 @@
 import unittest
 
-import pyguarantees.functional_guarantees.exceptions
 from pyguarantees import functional_guarantees as fg
 
 

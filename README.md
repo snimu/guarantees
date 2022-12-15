@@ -316,7 +316,7 @@ This example shows basic usage of the `fg` package for parameters of functions.
 
 ```python
 import numpy as np
-from pyguarantees import functional_guarantees as fg
+from src.pyguarantees import functional_guarantees as fg
 
 from your_module import your_custom_error_callback
 

@@ -25,5 +25,9 @@ repository = "https://github.com/snimu/guarantees"
 documentation = "https://github.com/snimu/guarantees#readme"
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["pyguarantees*"]
 exclude = ["venv", "tests", ".*", "*.md"]
+
+[tool.coverage.run]
+source = ["src"]

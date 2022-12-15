@@ -5,12 +5,9 @@ from dataclasses import dataclass
 from typing import Union
 
 from ._base import TypeGuarantee
-from pyguarantees.functional_guarantees.classes.util.error_handeling import \
-    handle_error
-from pyguarantees.functional_guarantees.classes.util.typenames import \
-    get_arg_type_name
+from pyguarantees.functional_guarantees.classes.util.typenames import get_arg_type_name
 from pyguarantees.functional_guarantees.classes.util.common_checks import \
-    check_type, enforce_dynamic_checks, check_forbidden_values
+    check_type, enforce_dynamic_checks, check_forbidden_values, handle_error
 
 
 @dataclass

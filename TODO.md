@@ -1,6 +1,7 @@
 # TODO: both
 
 - Ensure that everything is thread-save.
+- Improve test-coverage
 - Docstrings!!!
 - Make `severity` part of `functional_guarantees`
 - VSCode Plugin for syntax highlighting setting the `fg`-decorators apart from regular code

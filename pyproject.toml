@@ -8,10 +8,15 @@ version = "0.0.14"
 authors = [{name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}]
 description = "Guarantee unittests for functions and methods, guarantee types and their properties"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 keywords = ["python", "unittest", "test", "guarantees", "parameters"]
 classifiers = [
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]

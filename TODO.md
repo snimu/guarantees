@@ -3,7 +3,7 @@
 - Ensure that everything is thread-save.
 - Docstrings!!!
 - Make `severity` part of `functional_guarantees`
-- VSCode Plugin for syntax highlighting setting the `fg`- and `tg`-decorators apart from regular code
+- VSCode Plugin for syntax highlighting setting the `fg`-decorators apart from regular code
 - Good build system
   - Upload to PyPI
   - Upload to Conda

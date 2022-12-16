@@ -21,7 +21,9 @@ won't forget.
 package to make sure that a function/method will be called or a class instance constructed 
 in its respective `TestCase`.
 
-## Example
+Can be used for `unittest` and `pytest`.
+
+## Example unittest
 
 ```python 
 import unittest
@@ -94,14 +96,52 @@ and then checked by [tg.enforce](#enforce), or [tg.main](#main) is called to do 
 
 Currently doesn't work with nested functions (defined inside of other callables). This might be fixed at some point.
 
-The package consists of three decorators and two functions, as well as two `Exceptions`.
-All are explained below.
+
+## Example pytest
+
+```python
+# These imports are unused but necessary for pytest to find the tests that 
+#  enforce the guarantees from tg
+from pyguarantees.test_guarantees import \
+  test_all_tests_implemented, test_functions_used_in_tests
+from pyguarantees import test_guarantees as tg
+
+
+@tg.guarantee_test()
+def foo():
+    return 1
+
+
+@tg.guarantee_test()
+@tg.guarantee_usage()
+def bar():
+    return 1
+
+
+def test_foo():
+    assert foo() == 1
+
+
+def test_bar():
+    assert bar() == 1
+```
+
+This is even simpler: just use [@tg.guarantee_test](#guaranteetest), [@tg.guarantee_usage](#guaranteeusage),
+and [@tg.implements_test_for](#implementstestfor) as in [Example unittest](#example-unittest). No 
+need to call [tg.main](#main) or [tg.enforce](#enforce).
+
+**IMPORTANT**: If you use `pytest.mark.order` from the [pytest-order](https://pypi.org/project/pytest-order/)-package,
+don't use `pytest.mark.order(-1)` or `pytest.mark.order(-2)` on your tests&mdash;it is important that 
+[test_all_tests_implemented](#testalltestsimplemented) and [test_functions_used_in_tests](#testfunctionsusedintests) 
+are used last by `pytest`.
 
 
 ## Decorators
 
 The three decorators shown below have no effect without the [functions](#functions) 
-of this package.
+of this package, specifically running [main](#main) or [enforce](#enforce) for `unittest`, 
+and simply importing [test_all_tests_implemented](#testalltestsimplemented) and 
+[test_functions_used_in_tests](#testfunctionsusedintests) into one of your test-files.
 
 
 ### guarantee_test
@@ -152,10 +192,17 @@ def foo():
 with a unittest that looks something like this:
 
 ```python 
+# for unittest:
 class TestExample(unittest.TestCase):
     @tg.implements_test_for(foo)
     def test_foo(self):
         ...   # some code that doesn't call foo
+
+
+# for pytest:
+@tg.implements_test_for(foo)
+def test_foo():
+    ... # some code that doesn't call foo
 ```
 
 would lead to a [NotUsedInTestsError](#notusedintestserror) being raised. 
@@ -181,17 +228,31 @@ lead to a user-warning but are ignored otherwise.
 Usage might look as follows:
 
 ```python 
+# for unittest:
 class TestExample(unittest.TestCase):
-    @implements_test_for(function1, function2, this_key_is_ignored=function3)
+    @tg.implements_test_for(function1, function2, this_key_is_ignored=function3)
     def test_example(self):
         ...
+
+
+# for pytest:
+@tg.implements_test_for(function1, function2, this_key_is_ignored=function3)
+def test_example():
+    ...
 ```
 
 ## Functions
 
-Two functions are provided by `pyguarantees.test_guarantees`, both directly under
-`tg`. At least one has to be used for the [decorators](#decorators)
+Four functions are provided by `pyguarantees.test_guarantees`, all directly under
+`tg`. 
+
+For `unittest`, at least one of [main](#main) or [enforce](#enforce) 
+has to be used for the [decorators](#decorators)
 to have an effect. 
+
+For `pytest`, both [test_all_tests_implemented](#testalltestsimplemented) 
+and [test_functions_used_in_tests](#testfunctionsusedintests) have to be imported 
+into one of your test-files.
 
 ### enforce
 
@@ -209,6 +270,21 @@ When using `unittest.main()`, it is recommended to use `tg.main()` instead.
 Takes no arguments.
 
 Calls `unittest.main()` followed by [tg.enforce](#enforce).
+
+### test_all_tests_implemented
+
+Takes no arguments.
+
+Import this into one of your files for [@tg.guarantee_test](#guaranteetest) and 
+[@tg.implements_test_for](#implementstestfor) to have any effect.
+
+### test_functions_used_in_tests
+
+Takes no arguments.
+
+Import this and [test_all_tests_implemented](#testalltestsimplemented) 
+into one of your files for [@tg.guarantee_usage](#guaranteeusage) to 
+have any effect.
 
 ## Exceptions
 

@@ -12,7 +12,12 @@ requires-python = ">=3.8"
 requires = ["pytest>=6.2.4", "pytest-order>=1.0.1"]
 keywords = ["python", "unittest", "test", "guarantees", "parameters"]
 classifiers = [
+    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]

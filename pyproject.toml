@@ -31,3 +31,9 @@ exclude = ["venv", "tests", ".*", "*.md"]
 
 [tool.coverage.run]
 source = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=pyguarantees"
+testpaths = [
+    "tests",
+]

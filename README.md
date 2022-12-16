@@ -3,6 +3,7 @@
 ![License](https://img.shields.io/github/license/snimu/guarantees)
 ![PyPI Version](https://img.shields.io/pypi/v/pyguarantees)
 ![Tests](https://github.com/snimu/guarantees/actions/workflows/tests.yml/badge.svg)
+![Coverage](coverage.svg)
 ![Python Versions](https://img.shields.io/pypi/pyversions/pyguarantees)
 
 

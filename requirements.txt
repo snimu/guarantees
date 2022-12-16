@@ -1,0 +1,2 @@
+pytest >= 6.2.4
+pytest-order >= 1.0.1

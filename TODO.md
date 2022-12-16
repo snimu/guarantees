@@ -8,6 +8,7 @@
   - Upload to PyPI
   - Upload to Conda
   - Make Docker Image
+  - Add wheels
 - Version Numbers:
   - 1.x.x only when
     - No more API changes

@@ -20,16 +20,15 @@ def add_guarantees(
         if not settings.ACTIVE:
             return fct
 
-        if not ParameterHandler.contains(fct) and param_guarantees is not None:
-            register_parameter_guarantees(fct, param_guarantees)
-
-        if not ReturnHandler.contains(fct) and return_guarantee is not None:
-            register_return_guarantees(fct, return_guarantee)
+        _register_all(fct, param_guarantees, return_guarantee)
 
         @wraps(fct)
         def _enforce(*args, **kwargs):
             if not settings.ACTIVE:
                 return fct
+
+            # In case CACHE is False or was set to False in the progress of the program
+            _register_all(fct, param_guarantees, return_guarantee)
 
             if param_guarantees is not None:
                 args, kwargs = _enforce_parameter_guarantees(
@@ -47,6 +46,14 @@ def add_guarantees(
 
         return _enforce
     return _fct
+
+
+def _register_all(fct, param_guarantees, return_guarantee):
+    if not ParameterHandler.contains(fct) and param_guarantees is not None:
+        register_parameter_guarantees(fct, param_guarantees)
+
+    if not ReturnHandler.contains(fct) and return_guarantee is not None:
+        register_return_guarantees(fct, return_guarantee)
 
 
 def _enforce_parameter_guarantees(fct, is_staticmethod, *args, **kwargs):

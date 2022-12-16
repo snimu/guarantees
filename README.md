@@ -3,6 +3,7 @@
 ![License](https://img.shields.io/github/license/snimu/guarantees)
 ![PyPI Version](https://img.shields.io/pypi/v/pyguarantees)
 ![Maintainability](https://img.shields.io/codeclimate/maintainability/snimu/guarantees)
+![Tests](https://github.com/snimu/guarantees/actions/workflows/tests.yml/badge.svg)
 
 This package has two components: 
 

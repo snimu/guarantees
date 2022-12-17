@@ -162,9 +162,9 @@ it decorates, making it computationally inexpensive.
 Having a function (or method) decorated like follows:
 
 ```python
-@tg.guarantee_test()
+@tg.guaranteed()
 def foo():
-    pass
+  pass
 ```
 
 but not having a test in your `unittest.TestCase` decorated by `@implements_test_for(foo)` 
@@ -185,10 +185,10 @@ the decorator is computationally inexpensive.
 A function decorated as follows:
 
 ```python 
-@tg.guarantee_test()
-@tg.guarantee_usage()
+@tg.guaranteed()
+@tg.calls()
 def foo():
-    pass
+  pass
 ```
 
 with a unittest that looks something like this:
@@ -196,15 +196,15 @@ with a unittest that looks something like this:
 ```python 
 # for unittest:
 class TestExample(unittest.TestCase):
-    @tg.implements_test_for(foo)
-    def test_foo(self):
-        ...   # some code that doesn't call foo
+  @tg.covers(foo)
+  def test_foo(self):
+    ...  # some code that doesn't call foo
 
 
 # for pytest:
-@tg.implements_test_for(foo)
+@tg.covers(foo)
 def test_foo():
-    ... # some code that doesn't call foo
+  ...  # some code that doesn't call foo
 ```
 
 would lead to a [NotUsedInTestsError](#notusedintestserror) being raised. 
@@ -232,15 +232,15 @@ Usage might look as follows:
 ```python 
 # for unittest:
 class TestExample(unittest.TestCase):
-    @tg.implements_test_for(function1, function2, this_key_is_ignored=function3)
-    def test_example(self):
-        ...
+  @tg.covers(function1, function2, this_key_is_ignored=function3)
+  def test_example(self):
+    ...
 
 
 # for pytest:
-@tg.implements_test_for(function1, function2, this_key_is_ignored=function3)
+@tg.covers(function1, function2, this_key_is_ignored=function3)
 def test_example():
-    ...
+  ...
 ```
 
 ## Functions
@@ -401,32 +401,32 @@ from your_module import your_custom_error_callback
 
 
 # One of many built-in guarantees using one of many built-in options
-@fg.add_guarantees(param_guarantees=[fg.IsInt("num", minimum=3)])
+@fg.constrain(parameters=[fg.IsInt("num", minimum=3)])
 def add_one(num):
-    return num + 1
+  return num + 1
 
 
 # Use fg.IsClass to guarantee all types and classes that don't have specific guarantees 
 #  in fg. If they do, it is recommended to use those specific guarantees.
-@fg.add_guarantees(
-    param_guarantees=[
-        fg.IsClass(
-            "X",
-            class_type=np.ndarray,
-            dynamic_checks=[
-                fg.DynamicCheck(check=lambda x: x.min() > 0, description="min: 0"),
-                fg.DynamicCheck(check=lambda x: x.var() < 5, description="var < 5"),
-                fg.DynamicCheck(check=lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
-            ],
-            error_callback=your_custom_error_callback
-        ),
-        fg.IsClass("mean", class_type=np.ndarray),
-        fg.IsClass("std", class_type=np.ndarray)
-    ],
-    return_guarantee=fg.IsClass("", class_type=np.ndarray)
+@fg.constrain(
+  parameters=[
+    fg.IsClass(
+      "X",
+      class_type=np.ndarray,
+      dynamic_checks=[
+        fg.DynamicCheck(check=lambda x: x.min() > 0, description="min: 0"),
+        fg.DynamicCheck(check=lambda x: x.var() < 5, description="var < 5"),
+        fg.DynamicCheck(check=lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
+      ],
+      error_callback=your_custom_error_callback
+    ),
+    fg.IsClass("mean", class_type=np.ndarray),
+    fg.IsClass("std", class_type=np.ndarray)
+  ],
+  returns=fg.IsClass("", class_type=np.ndarray)
 )
 def normalize(X, mean, std):
-    return (X - mean) / std
+  return (X - mean) / std
 ```
 
 
@@ -439,21 +439,21 @@ import unittest
 from pyguarantees import functional_guarantees as fg
 
 
-@fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+@fg.constrain(returns=fg.IsInt("a"))
 def foo(a):
-    return a 
+  return a
 
 
-@fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+@fg.constrain(returns=fg.IsInt("a"))
 def bar(a):
-    return a 
+  return a
 
 
 class TestExample(unittest.TestCase):
-    def test_example(self):
-        # chain functions and automatically raise exceptions if at any point
-        #   the guarantees for parameters and/or return values aren't fulfilled.
-        foo(bar(1))   
+  def test_example(self):
+    # chain functions and automatically raise exceptions if at any point
+    #   the guarantees for parameters and/or return values aren't fulfilled.
+    foo(bar(1))   
 ```
 
 

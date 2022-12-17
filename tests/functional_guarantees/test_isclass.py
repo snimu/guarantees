@@ -1,5 +1,9 @@
 import pytest
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    NoOp,
+    IsClass
+)
 
 
 class ExampleClass:
@@ -10,10 +14,10 @@ class ExampleClass:
 example_class = ExampleClass()
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.NoOp("a"),
-    fg.IsClass("b", class_type=ExampleClass)
-])
+@pg.constrain.parameters(
+    a=NoOp(),
+    b=IsClass(class_type=ExampleClass)
+)
 def fct(a, b):
     return a, b
 
@@ -24,5 +28,5 @@ class TestIsClass:
         fct(example_class, example_class)
 
     def test_violations(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(1, 1)

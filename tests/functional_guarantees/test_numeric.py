@@ -1,12 +1,13 @@
 import pytest
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    IsInt,
+    IsFloat,
+    IsComplex
+)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt("a"),
-    fg.IsFloat("b"),
-    fg.IsComplex("c")
-])
+@pg.constrain.parameters(a=IsInt(), b=IsFloat(), c=IsComplex())
 def fct_base(a, b, c):
     return a, b, c
 
@@ -21,15 +22,15 @@ class TestNumericBase:
         false_input_complex = [1, 1., 1]
 
         for inputs in [false_input_int, false_input_flot, false_input_complex]:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
                 fct_base(*inputs)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt("a", force_conversion=True),
-    fg.IsFloat("b", force_conversion=True),
-    fg.IsComplex("c", force_conversion=True)
-])
+@pg.constrain.parameters(
+    a=IsInt(force_conversion=True),
+    b=IsFloat(force_conversion=True),
+    c=IsComplex(force_conversion=True)
+)
 def fct_force_conversion(a, b, c):
     return a, b, c
 
@@ -54,16 +55,16 @@ class TestNumericForceConversion:
         false_inputs_complex = [1, 1., "nope"]
 
         for inputs in [false_inputs_int, false_inputs_float, false_inputs_complex]:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
                 fct_force_conversion(*inputs)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt("a", minimum=0, maximum=5),
-    fg.IsFloat("b", minimum=0., maximum=5.),
-    fg.IsComplex("c", minimum=1., maximum=5., minimum_re=0.,
-                 maximum_re=5., minimum_im=0., maximum_im=5.)
-])
+@pg.constrain.parameters(
+    a=IsInt(minimum=0, maximum=5),
+    b=IsFloat(minimum=0., maximum=5.),
+    c=IsComplex(minimum=1., maximum=5., minimum_re=0.,
+                maximum_re=5., minimum_im=0., maximum_im=5.)
+)
 def fct_minmax(a, b, c):
     return a, b, c
 
@@ -90,15 +91,15 @@ class TestNumericMinMax:
         ]
 
         for inputs in false_inputs:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 fct_minmax(*inputs)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt("a", isin=[1, 2]),
-    fg.IsFloat("b", isin=[1., 2.]),
-    fg.IsComplex("c", isin=[complex(0., 0.), complex(1., 1.)])
-])
+@pg.constrain.parameters(
+    a=IsInt(isin=[1, 2]),
+    b=IsFloat(isin=[1., 2.]),
+    c=IsComplex(isin=[complex(0., 0.), complex(1., 1.)])
+)
 def fct_isin(a, b, c):
     return a, b, c
 
@@ -123,125 +124,111 @@ class TestNumericIsIn:
         ]
 
         for inputs in false_inputs:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 fct_isin(*inputs)
 
 
 class TestNumericIncorrectGuaranteeInputs:
     def test_min_int(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsInt("a", minimum="nope")])
+        @pg.constrain.parameters(a=IsInt(minimum="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(1)
 
     def test_min_float(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsFloat("a", minimum="nope")])
+        @pg.constrain.parameters(a=IsFloat(minimum="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(1.)
 
     def test_min_complex(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsComplex("a", minimum="nope")])
+        @pg.constrain.parameters(a=IsComplex(minimum="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))
 
     def test_min_re_complex(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsComplex("a", minimum_re="nope")
-        ])
+        @pg.constrain.parameters(a=IsComplex(minimum_re="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))
 
     def test_min_im_complex(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsComplex("a", minimum_im="nope")
-        ])
+        @pg.constrain.parameters(a=IsComplex(minimum_im="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))
 
     def test_max_int(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsInt("a", maximum="nope")])
+        @pg.constrain.parameters(a=IsInt(maximum="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(1)
 
     def test_max_float(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsFloat("a", maximum="nope")])
+        @pg.constrain.parameters(a=IsFloat(maximum="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(1.)
 
     def test_max_complex(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsComplex("a", maximum="nope")])
+        @pg.constrain.parameters(a=IsComplex(maximum="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))
 
     def test_max_complex_re(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsComplex("a", maximum_re="nope")
-        ])
+        @pg.constrain.parameters(a=IsComplex(maximum_re="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))
 
     def test_max_complex_im(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsComplex("a", maximum_im="nope")
-        ])
+        @pg.constrain.parameters(a=IsComplex(maximum_im="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))
 
     def test_isin_int(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsInt("a", isin="nope")
-        ])
+        @pg.constrain.parameters(a=IsInt(isin="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(1)
 
     def test_isin_float(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsFloat("a", isin="nope")
-        ])
+        @pg.constrain.parameters(a=IsFloat(isin="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(1.)
 
     def test_isin_complex(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsComplex("a", isin="nope")
-        ])
+        @pg.constrain.parameters(a=IsComplex(isin="nope"))
         def fct(a):
             return a
 
-        with pytest.raises(fg.exceptions.FunctionalGuaranteesUserTypeError):
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
             fct(complex(1., 1.))

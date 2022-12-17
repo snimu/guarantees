@@ -1,9 +1,10 @@
 import pytest
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsInt
 
 
 def test_onoff():
-    @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
+    @pg.constrain.parameters(a=IsInt())
     def fct(a):
         return a
 
@@ -11,31 +12,31 @@ def test_onoff():
     val = fct(1)
     assert isinstance(val, int)
 
-    with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+    with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
         fct("not an int!")
 
     # Shouldn't raise an exception when off
-    fg.settings.change_settings(active=False)
+    pg.settings.change_settings(active=False)
     fct("not an int!")
 
     # Turn on again
-    fg.settings.change_settings(active=True)
-    with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+    pg.settings.change_settings(active=True)
+    with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
         fct("not an int!")
 
 
 def test_cache():
-    @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
+    @pg.constrain.parameters(a=IsInt())
     def fct(a):
         return a
 
     assert fct(1) == 1
-    assert fg.decorator._guarantee_handler.ParameterHandler.handles != {}   # Guarantee should be saved
+    assert pg._constrain._guarantee_handler.ParameterHandler.handles != {}   # Guarantee should be saved
 
-    fg.settings.change_settings(cache=False)
-    assert fg.decorator._guarantee_handler.ParameterHandler.handles == {}
+    pg.settings.change_settings(cache=False)
+    assert pg._constrain._guarantee_handler.ParameterHandler.handles == {}
     assert fct(1) == 1
 
-    fg.settings.change_settings(cache=True)
+    pg.settings.change_settings(cache=True)
     assert fct(1) == 1
-    assert fg.decorator._guarantee_handler.ParameterHandler.handles != {}
+    assert pg._constrain._guarantee_handler.ParameterHandler.handles != {}

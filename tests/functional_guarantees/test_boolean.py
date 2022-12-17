@@ -1,11 +1,12 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsBool
 
 
 class TestBooleanGuarantee:
     def test_base(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsBool("a")])
+        @pg.constrain.parameters(a=IsBool())
         def fct(a):
             return a
 
@@ -14,13 +15,11 @@ class TestBooleanGuarantee:
         fct(False)
 
         # Check if incorrect inputs raise exceptions
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct("nope")
 
     def test_force_conversion(self):
-        @fg.add_guarantees(
-            param_guarantees=[fg.IsBool("a", force_conversion=True)]
-        )
+        @pg.constrain.parameters(a=IsBool(force_conversion=True))
         def fct(a):
             return a
 

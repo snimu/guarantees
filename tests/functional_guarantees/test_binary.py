@@ -1,22 +1,23 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsBytes, IsByteArray, IsMemoryView
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsBytes("a"),
-    fg.IsByteArray("b"),
-    fg.IsMemoryView("c")
-])
+@pg.constrain.parameters(
+    a=IsBytes(),
+    b=IsByteArray(),
+    c=IsMemoryView()
+)
 def fct(a, b, c):
     return a, b, c
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsBytes("a", force_conversion=True),
-    fg.IsByteArray("b", force_conversion=True),
-    fg.IsMemoryView("c", force_conversion=True)
-])
+@pg.constrain.parameters(
+    a=IsBytes(force_conversion=True),
+    b=IsByteArray(force_conversion=True),
+    c=IsMemoryView(force_conversion=True)
+)
 def fct_conversion(a, b, c):
     return a, b, c
 
@@ -30,13 +31,13 @@ class TestBinary:
         assert isinstance(mem, memoryview)
 
     def test_false_input_bytes(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(123, bytearray(b"123"), memoryview(b"123"))
 
     def test_false_input_bytearray(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(b"123", 123, memoryview(b"123"))
 
     def test_false_input_memoryview(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(b"123", bytearray(b"123"), 123)

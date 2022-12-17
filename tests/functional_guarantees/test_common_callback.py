@@ -1,6 +1,11 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    IsInt,
+    IsStr,
+    IsList
+)
 
 
 class CbException(Exception):
@@ -11,11 +16,11 @@ def cb(signal):
     raise CbException(f"success: {signal}")
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt("a", error_callback=cb),
-    fg.IsStr("b", error_callback=cb),
-    fg.IsList("c", error_callback=cb)
-])
+@pg.constrain.parameters(
+    a=IsInt(error_callback=cb),
+    b=IsStr(error_callback=cb),
+    c=IsList(error_callback=cb)
+)
 def fct(a, b, c):
     return a, b, c
 

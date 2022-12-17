@@ -1,13 +1,15 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    IsInt,
+    IsBytes
+)
 
 
-@fg.add_guarantees(
-    param_guarantees=[
-        fg.IsInt("a", forbidden_values=[1, 2, 3]),
-        fg.IsBytes("b", forbidden_values=[b"123", b"111"])
-    ]
+@pg.constrain.parameters(
+    a=IsInt(forbidden_values=[1, 2, 3]),
+    b=IsBytes(forbidden_values=[b"123", b"111"])
 )
 def fct(a, b):
     return a, b
@@ -21,5 +23,5 @@ class TestForbiddenValues:
 
     def test_forbidden_values(self):
         for inputs in [[1, b"000"], [0, b"123"]]:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 fct(*inputs)

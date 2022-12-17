@@ -1,17 +1,22 @@
 import pytest
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    IsUnion,
+    IsInt,
+    IsNone,
+    IsStr
+)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsUnion(
-        "a",
+@pg.constrain.parameters(
+    a=IsUnion(
         guarantees=[
-            fg.IsInt("a"),
-            fg.IsNone("a"),
-            fg.IsStr("a")
+            IsInt(),
+            IsNone(),
+            IsStr()
         ]
     )
-])
+)
 def fct(a):
     return a
 
@@ -26,24 +31,23 @@ class TestIsUnion:
         assert isinstance(out, str)
 
     def test_wrong_inputs(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(complex(1., 1.))
 
     def test_value_error(self):
-        @fg.add_guarantees(param_guarantees=[
-            fg.IsUnion(
-                "a",
+        @pg.constrain.parameters(
+            a=IsUnion(
                 guarantees=[
-                    fg.IsInt("a", minimum=1),
-                    fg.IsNone("a")
+                    IsInt(minimum=1),
+                    IsNone()
                 ]
             )
-        ])
+        )
         def fct_value_error(a):
             return a
 
         assert fct_value_error(None) is None
         assert isinstance(fct_value_error(1), int)
 
-        with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
             fct_value_error(0)

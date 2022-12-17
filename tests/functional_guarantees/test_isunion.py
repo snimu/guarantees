@@ -11,9 +11,9 @@ from pyguarantees.constraints import (
 @pg.constrain.parameters(
     a=IsUnion(
         guarantees=[
-            IsInt("a"),
-            IsNone("a"),
-            IsStr("a")
+            IsInt(),
+            IsNone(),
+            IsStr()
         ]
     )
 )

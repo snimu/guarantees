@@ -11,11 +11,8 @@ class TestReturnGuarantees:
             return a
 
         ret_val = fct(1)
-        import warnings
-        warnings.warn(str(ret_val))
         assert isinstance(ret_val, int)
 
-    @pytest.mark.skip
     def test_false(self):
         @pg.constrain.returns(IsInt())
         def fct(a):

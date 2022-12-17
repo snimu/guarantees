@@ -110,6 +110,7 @@ def register_return_constraints(fct, *constraints):
 
     ReturnHandler.handles[fct] = []
     for constraint in constraints:
+        _add_info_to_constraint(constraint, "", fct, "return")
         ReturnHandler.handles[fct].append(constraint)
 
 

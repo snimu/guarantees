@@ -11,7 +11,7 @@ from ._dynamic_check import _DynamicCheck
 
 @dataclass
 class _Guarantee:
-    parameter_name: str = None
+    parameter_name: str = field(init=False)
     where: str = field(init=False)
     guarantee_name: str = field(init=False)
     guaranteed_type: Type = field(init=False)

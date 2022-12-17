@@ -5,7 +5,7 @@ from pyguarantees.constraints import IsNone
 
 class TestIsNone:
     def test_is_none(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsNone("a")])
+        @pg.constrain.constrain(parameters=[IsNone("a")])
         def fct(a):
             return a
 

@@ -401,32 +401,32 @@ from your_module import your_custom_error_callback
 
 
 # One of many built-in guarantees using one of many built-in options
-@fg.add_guarantees(param_guarantees=[fg.IsInt("num", minimum=3)])
+@fg.constrain(parameters=[fg.IsInt("num", minimum=3)])
 def add_one(num):
-    return num + 1
+  return num + 1
 
 
 # Use fg.IsClass to guarantee all types and classes that don't have specific guarantees 
 #  in fg. If they do, it is recommended to use those specific guarantees.
-@fg.add_guarantees(
-    param_guarantees=[
-        fg.IsClass(
-            "X",
-            class_type=np.ndarray,
-            dynamic_checks=[
-                fg.DynamicCheck(check=lambda x: x.min() > 0, description="min: 0"),
-                fg.DynamicCheck(check=lambda x: x.var() < 5, description="var < 5"),
-                fg.DynamicCheck(check=lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
-            ],
-            error_callback=your_custom_error_callback
-        ),
-        fg.IsClass("mean", class_type=np.ndarray),
-        fg.IsClass("std", class_type=np.ndarray)
-    ],
-    return_guarantee=fg.IsClass("", class_type=np.ndarray)
+@fg.constrain(
+  parameters=[
+    fg.IsClass(
+      "X",
+      class_type=np.ndarray,
+      dynamic_checks=[
+        fg.DynamicCheck(check=lambda x: x.min() > 0, description="min: 0"),
+        fg.DynamicCheck(check=lambda x: x.var() < 5, description="var < 5"),
+        fg.DynamicCheck(check=lambda x: x.shape == (3, 80, 80), description="shape (3, 80, 80")
+      ],
+      error_callback=your_custom_error_callback
+    ),
+    fg.IsClass("mean", class_type=np.ndarray),
+    fg.IsClass("std", class_type=np.ndarray)
+  ],
+  returns=fg.IsClass("", class_type=np.ndarray)
 )
 def normalize(X, mean, std):
-    return (X - mean) / std
+  return (X - mean) / std
 ```
 
 
@@ -439,21 +439,21 @@ import unittest
 from pyguarantees import functional_guarantees as fg
 
 
-@fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+@fg.constrain(returns=fg.IsInt("a"))
 def foo(a):
-    return a 
+  return a
 
 
-@fg.add_guarantees(return_guarantee=fg.IsInt("a"))
+@fg.constrain(returns=fg.IsInt("a"))
 def bar(a):
-    return a 
+  return a
 
 
 class TestExample(unittest.TestCase):
-    def test_example(self):
-        # chain functions and automatically raise exceptions if at any point
-        #   the guarantees for parameters and/or return values aren't fulfilled.
-        foo(bar(1))   
+  def test_example(self):
+    # chain functions and automatically raise exceptions if at any point
+    #   the guarantees for parameters and/or return values aren't fulfilled.
+    foo(bar(1))   
 ```
 
 

@@ -4,8 +4,8 @@ import pyguarantees as pg
 from pyguarantees.constraints import IsInt
 
 
-@pg.constrain.add_guarantees(
-    param_guarantees=[
+@pg.constrain.constrain(
+    parameters=[
         IsInt("a"), IsInt("b"), IsInt("c")
     ]
 )

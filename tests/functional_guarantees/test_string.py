@@ -3,7 +3,7 @@ import pyguarantees as pg
 from pyguarantees.constraints import IsStr
 
 
-@pg.constrain.add_guarantees(param_guarantees=[IsStr("a")])
+@pg.constrain.constrain(parameters=[IsStr("a")])
 def fct_base(a):
     return a
 
@@ -19,7 +19,7 @@ class TestStringBasic:
 
 class TestStringForceConversion:
     def test_correct(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsStr("a", force_conversion=True)
         ])
         def fct(a):
@@ -34,7 +34,7 @@ class TestStringForceConversion:
         assert type(s) is str
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsStr("a", minimum_len=2, maximum_len=5)
 ])
 def fct_minmax_len(a):
@@ -55,7 +55,7 @@ class TestStringMinMaxLen:
             fct_minmax_len("123456")
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsStr("a", isin=["hi", "ciao"])
 ])
 def fct_isin(a):
@@ -74,7 +74,7 @@ class TestStringIsIn:
 
 class TestStringIncorrectParameters:
     def test_min(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsStr("a", minimum_len="nope")
         ])
         def fct(a):
@@ -84,7 +84,7 @@ class TestStringIncorrectParameters:
             fct("hi")
 
     def test_max(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsStr("a", maximum_len="nope")
         ])
         def fct(a):
@@ -94,7 +94,7 @@ class TestStringIncorrectParameters:
             fct("hi")
 
     def test_isin(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsStr("a", isin="nope")
         ])
         def fct(a):

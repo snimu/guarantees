@@ -7,8 +7,8 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.add_guarantees(
-    param_guarantees=[
+@pg.constrain.constrain(
+    parameters=[
         IsInt("a", forbidden_values=[1, 2, 3]),
         IsBytes("b", forbidden_values=[b"123", b"111"])
     ]

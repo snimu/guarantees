@@ -6,7 +6,7 @@ from pyguarantees.constraints import IsBool
 
 class TestBooleanGuarantee:
     def test_base(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsBool("a")])
+        @pg.constrain.constrain(parameters=[IsBool("a")])
         def fct(a):
             return a
 
@@ -19,8 +19,8 @@ class TestBooleanGuarantee:
             fct("nope")
 
     def test_force_conversion(self):
-        @pg.constrain.add_guarantees(
-            param_guarantees=[IsBool("a", force_conversion=True)]
+        @pg.constrain.constrain(
+            parameters=[IsBool("a", force_conversion=True)]
         )
         def fct(a):
             return a

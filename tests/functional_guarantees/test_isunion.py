@@ -8,7 +8,7 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsUnion(
         "a",
         guarantees=[
@@ -36,7 +36,7 @@ class TestIsUnion:
             fct(complex(1., 1.))
 
     def test_value_error(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsUnion(
                 "a",
                 guarantees=[

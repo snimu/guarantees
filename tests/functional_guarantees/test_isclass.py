@@ -14,7 +14,7 @@ class ExampleClass:
 example_class = ExampleClass()
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     NoOp("a"),
     IsClass("b", class_type=ExampleClass)
 ])

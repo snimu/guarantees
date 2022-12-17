@@ -7,7 +7,7 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt("a"),
     IsFloat("b"),
     IsComplex("c")
@@ -30,7 +30,7 @@ class TestNumericBase:
                 fct_base(*inputs)
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt("a", force_conversion=True),
     IsFloat("b", force_conversion=True),
     IsComplex("c", force_conversion=True)
@@ -63,7 +63,7 @@ class TestNumericForceConversion:
                 fct_force_conversion(*inputs)
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt("a", minimum=0, maximum=5),
     IsFloat("b", minimum=0., maximum=5.),
     IsComplex("c", minimum=1., maximum=5., minimum_re=0.,
@@ -99,7 +99,7 @@ class TestNumericMinMax:
                 fct_minmax(*inputs)
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt("a", isin=[1, 2]),
     IsFloat("b", isin=[1., 2.]),
     IsComplex("c", isin=[complex(0., 0.), complex(1., 1.)])
@@ -134,7 +134,7 @@ class TestNumericIsIn:
 
 class TestNumericIncorrectGuaranteeInputs:
     def test_min_int(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsInt("a", minimum="nope")])
+        @pg.constrain.constrain(parameters=[IsInt("a", minimum="nope")])
         def fct(a):
             return a
 
@@ -142,7 +142,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(1)
 
     def test_min_float(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsFloat("a", minimum="nope")])
+        @pg.constrain.constrain(parameters=[IsFloat("a", minimum="nope")])
         def fct(a):
             return a
 
@@ -150,7 +150,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(1.)
 
     def test_min_complex(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsComplex("a", minimum="nope")])
+        @pg.constrain.constrain(parameters=[IsComplex("a", minimum="nope")])
         def fct(a):
             return a
 
@@ -158,7 +158,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(complex(1., 1.))
 
     def test_min_re_complex(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsComplex("a", minimum_re="nope")
         ])
         def fct(a):
@@ -168,7 +168,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(complex(1., 1.))
 
     def test_min_im_complex(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsComplex("a", minimum_im="nope")
         ])
         def fct(a):
@@ -178,7 +178,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(complex(1., 1.))
 
     def test_max_int(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsInt("a", maximum="nope")])
+        @pg.constrain.constrain(parameters=[IsInt("a", maximum="nope")])
         def fct(a):
             return a
 
@@ -186,7 +186,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(1)
 
     def test_max_float(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsFloat("a", maximum="nope")])
+        @pg.constrain.constrain(parameters=[IsFloat("a", maximum="nope")])
         def fct(a):
             return a
 
@@ -194,7 +194,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(1.)
 
     def test_max_complex(self):
-        @pg.constrain.add_guarantees(param_guarantees=[IsComplex("a", maximum="nope")])
+        @pg.constrain.constrain(parameters=[IsComplex("a", maximum="nope")])
         def fct(a):
             return a
 
@@ -202,7 +202,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(complex(1., 1.))
 
     def test_max_complex_re(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsComplex("a", maximum_re="nope")
         ])
         def fct(a):
@@ -212,7 +212,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(complex(1., 1.))
 
     def test_max_complex_im(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsComplex("a", maximum_im="nope")
         ])
         def fct(a):
@@ -222,7 +222,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(complex(1., 1.))
 
     def test_isin_int(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsInt("a", isin="nope")
         ])
         def fct(a):
@@ -232,7 +232,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(1)
 
     def test_isin_float(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsFloat("a", isin="nope")
         ])
         def fct(a):
@@ -242,7 +242,7 @@ class TestNumericIncorrectGuaranteeInputs:
             fct(1.)
 
     def test_isin_complex(self):
-        @pg.constrain.add_guarantees(param_guarantees=[
+        @pg.constrain.constrain(parameters=[
             IsComplex("a", isin="nope")
         ])
         def fct(a):

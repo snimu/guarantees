@@ -12,16 +12,16 @@ from pyguarantees._constrain._guarantee_handler import \
 from pyguarantees import settings
 
 
-def add_guarantees(
-        param_guarantees=None,
-        return_guarantee=None,
+def constrain(
+        parameters=None,
+        returns=None,
         is_staticmethod: bool = False
 ):
     def _fct(fct):
         if not settings.ACTIVE:
             return fct
 
-        _register_all(fct, param_guarantees, return_guarantee)
+        _register_all(fct, parameters, returns)
 
         @wraps(fct)
         def _enforce(*args, **kwargs):
@@ -29,14 +29,14 @@ def add_guarantees(
                 return fct
 
             # In case CACHE is False or was set to False in the progress of the program
-            _register_all(fct, param_guarantees, return_guarantee)
+            _register_all(fct, parameters, returns)
 
-            if param_guarantees is not None:
+            if parameters is not None:
                 args, kwargs = _enforce_parameter_guarantees(
                     fct, is_staticmethod, *args, **kwargs)
 
             ret_val = fct(*args, **kwargs)
-            if return_guarantee is not None:
+            if returns is not None:
                 ret_val = enforce_return_guarantees(fct, ret_val)
 
             if not settings.CACHE:

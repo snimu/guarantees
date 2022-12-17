@@ -16,7 +16,7 @@ def cb(signal):
     raise CbException(f"success: {signal}")
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt("a", error_callback=cb),
     IsStr("b", error_callback=cb),
     IsList("c", error_callback=cb)

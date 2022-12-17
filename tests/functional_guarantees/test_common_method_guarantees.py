@@ -8,17 +8,17 @@ class ClassWithMethods:
     def __init__(self):
         self.const = 1
 
-    @pg.constrain.add_guarantees(param_guarantees=[IsInt("a")])
+    @pg.constrain.constrain(parameters=[IsInt("a")])
     def fct(self, a):
         return a + self.const
 
     @classmethod
-    @pg.constrain.add_guarantees(param_guarantees=[IsInt("a")])
+    @pg.constrain.constrain(parameters=[IsInt("a")])
     def classfct(cls, a):
         return a
 
     @staticmethod
-    @pg.constrain.add_guarantees(is_staticmethod=True, param_guarantees=[IsInt("a")])
+    @pg.constrain.constrain(is_staticmethod=True, parameters=[IsInt("a")])
     def staticfct(a):
         return a
 

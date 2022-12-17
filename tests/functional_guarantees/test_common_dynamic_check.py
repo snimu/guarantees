@@ -7,7 +7,7 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt(
         "a",
         dynamic_checks=[
@@ -19,7 +19,7 @@ def fct(a):
     return a
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt(
         "a",
         dynamic_checks=[
@@ -37,7 +37,7 @@ def fct_description(a):
     return a
 
 
-@pg.constrain.add_guarantees(param_guarantees=[
+@pg.constrain.constrain(parameters=[
     IsInt(
         "a",
         dynamic_checks=[

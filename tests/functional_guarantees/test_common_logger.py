@@ -17,8 +17,8 @@ class Logger(logging.Logger):
         logger_called = True
 
 
-@pg.constrain.add_guarantees(
-    param_guarantees=[
+@pg.constrain.constrain(
+    parameters=[
         IsInt("a", logger=Logger(), logger_only=True)
     ]
 )
@@ -26,7 +26,7 @@ def fct_logger_only(a):
     return a
 
 
-@pg.constrain.add_guarantees(param_guarantees=[IsInt("a", logger=Logger())])
+@pg.constrain.constrain(parameters=[IsInt("a", logger=Logger())])
 def fct_logger_and_error(a):
     return a
 

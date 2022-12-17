@@ -4,11 +4,7 @@ import pyguarantees as pg
 from pyguarantees.constraints import IsInt
 
 
-@pg.constrain.constrain(
-    parameters=[
-        IsInt("a"), IsInt("b"), IsInt("c")
-    ]
-)
+@pg.constrain.parameters(a=IsInt(), b=IsInt(), c=IsInt())
 def fct(a, b, c):
     return a, b, c
 

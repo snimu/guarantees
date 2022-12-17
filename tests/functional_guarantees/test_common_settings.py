@@ -4,7 +4,7 @@ from pyguarantees.constraints import IsInt
 
 
 def test_onoff():
-    @pg.constrain.constrain(parameters=[IsInt("a")])
+    @pg.constrain.parameters(a=IsInt())
     def fct(a):
         return a
 
@@ -26,7 +26,7 @@ def test_onoff():
 
 
 def test_cache():
-    @pg.constrain.constrain(parameters=[IsInt("a")])
+    @pg.constrain.parameters(a=IsInt())
     def fct(a):
         return a
 

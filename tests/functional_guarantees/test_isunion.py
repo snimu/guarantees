@@ -8,16 +8,15 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.constrain(parameters=[
-    IsUnion(
-        "a",
+@pg.constrain.parameters(
+    a=IsUnion(
         guarantees=[
             IsInt("a"),
             IsNone("a"),
             IsStr("a")
         ]
     )
-])
+)
 def fct(a):
     return a
 
@@ -36,15 +35,14 @@ class TestIsUnion:
             fct(complex(1., 1.))
 
     def test_value_error(self):
-        @pg.constrain.constrain(parameters=[
-            IsUnion(
-                "a",
+        @pg.constrain.parameters(
+            a=IsUnion(
                 guarantees=[
-                    IsInt("a", minimum=1),
-                    IsNone("a")
+                    IsInt(minimum=1),
+                    IsNone()
                 ]
             )
-        ])
+        )
         def fct_value_error(a):
             return a
 

@@ -16,16 +16,19 @@ class _NoOp(_Guarantee):
         self.guarantee_name = "NoOp"
         self.guaranteed_type = None
 
+    def enforce(self, arg):
+        return arg
+
 
 @dataclass
-class _Self(_Guarantee):
+class _Self(_NoOp):
     def __post_init__(self):
         self.guarantee_name = "Self"
         self.guaranteed_type = None
 
 
 @dataclass
-class _Cls(_Guarantee):
+class _Cls(_NoOp):
     def __post_init__(self):
         self.guarantee_name = "Cls"
         self.guaranteed_type = None

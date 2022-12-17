@@ -17,16 +17,12 @@ class Logger(logging.Logger):
         logger_called = True
 
 
-@pg.constrain.constrain(
-    parameters=[
-        IsInt("a", logger=Logger(), logger_only=True)
-    ]
-)
+@pg.constrain.parameters(a=IsInt(logger=Logger(), logger_only=True))
 def fct_logger_only(a):
     return a
 
 
-@pg.constrain.constrain(parameters=[IsInt("a", logger=Logger())])
+@pg.constrain.parameters(a=IsInt(logger=Logger()))
 def fct_logger_and_error(a):
     return a
 

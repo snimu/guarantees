@@ -16,11 +16,11 @@ def cb(signal):
     raise CbException(f"success: {signal}")
 
 
-@pg.constrain.constrain(parameters=[
-    IsInt("a", error_callback=cb),
-    IsStr("b", error_callback=cb),
-    IsList("c", error_callback=cb)
-])
+@pg.constrain.parameters(
+    a=IsInt(error_callback=cb),
+    b=IsStr(error_callback=cb),
+    c=IsList(error_callback=cb)
+)
 def fct(a, b, c):
     return a, b, c
 

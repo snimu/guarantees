@@ -7,21 +7,19 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.constrain(parameters=[
-    IsInt(
-        "a",
+@pg.constrain.parameters(
+    a=IsInt(
         dynamic_checks=[
             DynamicCheck(check=lambda x: x % 3 == 0),
             DynamicCheck(check=lambda x: x ** 2 - 2 * x < 1e4)
         ])
-])
+)
 def fct(a):
     return a
 
 
-@pg.constrain.constrain(parameters=[
-    IsInt(
-        "a",
+@pg.constrain.parameters(
+    a=IsInt(
         dynamic_checks=[
             DynamicCheck(
                 description="divisible by 3",
@@ -32,14 +30,13 @@ def fct(a):
                 check=lambda x: x**2 - 2 * x < 1e4
             )
         ])
-])
+)
 def fct_description(a):
     return a
 
 
-@pg.constrain.constrain(parameters=[
-    IsInt(
-        "a",
+@pg.constrain.parameters(
+    a=IsInt(
         dynamic_checks=[
             DynamicCheck(
                 description="divisible by 3",
@@ -52,7 +49,7 @@ def fct_description(a):
                 callback=lambda x: print(x)
             )
         ])
-])
+)
 def fct_description_callback(a):
     return a
 

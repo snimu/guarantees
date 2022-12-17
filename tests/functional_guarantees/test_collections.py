@@ -19,42 +19,42 @@ fst = frozenset(lst)
 rng = range(1, 3, 1)
 
 
-@pg.constrain.constrain(parameters=[
-    IsList("lst"),
-    IsTuple("tup"),
-    IsDict("dic"),
-    IsSet("st"),
-    IsFrozenSet("fst"),
-    IsRange("rng")
-])
+@pg.constrain.parameters(
+    lst=IsList(),
+    tup=IsTuple(),
+    dic=IsDict(),
+    st=IsSet(),
+    fst=IsFrozenSet(),
+    rng=IsRange()
+)
 def base_fct(lst, tup, dic, st, fst, rng):
     return lst, tup, dic, st, fst, rng
 
 
-@pg.constrain.constrain(parameters=[
-    IsList("lst", minimum_len=1, maximum_len=3),
-    IsTuple("tup", minimum_len=1, maximum_len=3),
-    IsDict("dic", minimum_len=1, maximum_len=3),
-    IsSet("st", minimum_len=1, maximum_len=3),
-    IsFrozenSet("fst", minimum_len=1, maximum_len=3)
-])
+@pg.constrain.parameters(
+    lst=IsList(minimum_len=1, maximum_len=3),
+    tup=IsTuple(minimum_len=1, maximum_len=3),
+    dic=IsDict(minimum_len=1, maximum_len=3),
+    st=IsSet(minimum_len=1, maximum_len=3),
+    fst=IsFrozenSet(minimum_len=1, maximum_len=3)
+)
 def minmax_fct(lst, tup, dic, st, fst):
     return lst, tup, dic, st, fst
 
 
-@pg.constrain.constrain(parameters=[
-    IsList("lst", contains=[1, 2, 3]),
-    IsTuple("tup", contains=[1, 2, 3]),
-    IsSet("st", contains=[1, 2, 3]),
-    IsFrozenSet("fst", contains=[1, 2, 3])
-])
+@pg.constrain.parameters(
+    lst=IsList(contains=[1, 2, 3]),
+    tup=IsTuple(contains=[1, 2, 3]),
+    st=IsSet(contains=[1, 2, 3]),
+    fst=IsFrozenSet(contains=[1, 2, 3])
+)
 def contains_fct(lst, tup, st, fst):
     return lst, tup, st, fst
 
 
-@pg.constrain.constrain(parameters=[
-    IsDict("dic", has_keys=[1, 2, 3], has_values=[1, 2, 3])
-])
+@pg.constrain.parameters(
+    dic=IsDict(has_keys=[1, 2, 3], has_values=[1, 2, 3])
+)
 def keysvals_fct(dic):
     return dic
 

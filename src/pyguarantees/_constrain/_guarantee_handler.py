@@ -1,7 +1,6 @@
-from typing import List, Tuple, Dict, Any
-import inspect
+from typing import Tuple, Dict, Any
 
-from pyguarantees.constraints import Guarantee, NoOp
+from pyguarantees.constraints import Guarantee, Self, Cls
 from pyguarantees._constraints._util.typenames import \
     get_arg_type_name
 from pyguarantees._constraints._util.error_handeling import \
@@ -43,110 +42,96 @@ class ReturnHandler:
         return False
 
 
-def register_parameter_guarantees(
-        fct,
-        param_guarantees: List[Guarantee]):
-    """Register the classes for the function."""
+def register_parameter_contraints(fct, self_or_cls, **constraints):
     if fct in ParameterHandler.handles.keys():
         # only need to register once
-        #   -> when more than one call to @pyguarantees.functional_guarantees
+        #   -> when more than one call to @pyguarantees.constrain.parameters
         #   is made on the same function / method, only the first will be used
         #   and the rest will be ignored.
         return
 
-    module, qualname = _get_module_qualname(fct)
-
-    if type(param_guarantees) is not list \
-            and not all(isinstance(g, Guarantee) for g in param_guarantees):
+    if type(constraints) is not dict \
+            and not all(isinstance(c, Guarantee) for c in constraints.values()):
         handle_error(
             where="internal",
             type_or_value="type",
             guarantee=None,
-            parameter_name="@pyguarantees.functional_guarantees.add_guarantees: "
-                           "param_guarantees",
+            parameter_name="@pyguarantees.constrain.parameters: "
+                           "constraints",
             what_dict={
+                "error": "All keyword-args to @pyguarantees.constrain.parameters must be of type Guarantee.",
                 "should_type": "List[Guarantee]",
-                "actual_type": f"{get_arg_type_name(param_guarantees)}"
+                "actual_type": f"{get_arg_type_name(constraints)}"
             }
         )
 
-    # Raise exception if duplicate names exist
-    _check_duplicate_names(param_guarantees)
-
-    # Prepare the handles
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
-    for param_guarantee in param_guarantees:
-        _add_info_to_guarantee(param_guarantee, qualname, module, "parameter")
-
-        ParameterHandler.handles[fct]["args"].append(param_guarantee)
-        ParameterHandler.handles[fct]["kwargs"][param_guarantee.parameter_name] = param_guarantee
-
-
-def register_return_guarantees(
-        fct,
-        return_guarantee: Guarantee):
-    if fct in ReturnHandler.handles.keys():
-        return
-
-    module, qualname = _get_module_qualname(fct)
-
-    _add_info_to_guarantee(return_guarantee, qualname, module, "return")
-    ReturnHandler.handles[fct] = return_guarantee
-
-
-def _add_info_to_guarantee(
-        guarantee: Guarantee,
-        qualname: str,
-        module: str,
-        where: str
-) -> None:
-    """Add the given info to the given Guarantee. Add it to pyguarantees in
-    IsUnion, if the Guarantee is IsUnion."""
-    guarantee.qualname = qualname
-    guarantee.module = module
-    guarantee.where = where
-
-    if isinstance(guarantee, IsUnion):
-        for g in guarantee.guarantees:
-            _add_info_to_guarantee(g, qualname, module, where)
-
-
-def _get_module_qualname(fct) -> Tuple[str, str]:
-    members = inspect.getmembers(fct)
-
-    module = ""
-    qualname = ""
-
-    for member in members:
-        if member[0] == "__qualname__":
-            qualname = member[1]
-            continue
-        if member[0] == "__module__":
-            module = member[1]
-
-    return module, qualname
-
-
-def _check_duplicate_names(value_guarantees):
-    names = []
-    for param_guarantee in value_guarantees:
-        if param_guarantee.parameter_name in names:
+    if self_or_cls is not None:
+        if type(self_or_cls) in [Self, Cls]:
+            ParameterHandler.handles[fct]["args"].append(self_or_cls)
+        else:
             handle_error(
                 where="internal",
-                type_or_value="value",
-                guarantee=param_guarantee,
-                parameter_name=f"{param_guarantee.guarantee_name}.name",
+                type_or_value="type",
+                guarantee=None,
+                parameter_name="@pyguarantees.constrain.parameters: "
+                               "self / cls",
                 what_dict={
-                    "error": f"duplicate parameter name "
-                             f"'{param_guarantee.parameter_name}'"
+                    "should_type": "Union[Self, Cls]",
+                    "actual_type": f"{get_arg_type_name(self_or_cls)}"
                 }
             )
 
-        names.append(param_guarantee.parameter_name)
+    for parameter_name, constraint in constraints.items():
+        _add_info_to_constraint(constraint, parameter_name, fct, "parameter")
+        ParameterHandler.handles[fct]["args"].append(constraint)
+        ParameterHandler.handles[fct]["kwargs"][constraint.parameter_name] = constraint
 
 
-def enforce_parameter_guarantees(
+def register_return_constraints(fct, *constraints):
+    if fct in ReturnHandler.handles.keys():
+        return
+
+    if type(constraints) is not list \
+            and not all(isinstance(c, Guarantee) for c in constraints):
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=None,
+            parameter_name="@pyguarantees.constrain.parameters: "
+                           "constraints",
+            what_dict={
+                "error": "All keyword-args to @pyguarantees.constrain.parameters must be of type Guarantee.",
+                "should_type": "List[Guarantee]",
+                "actual_type": f"{get_arg_type_name(constraints)}"
+            }
+        )
+
+    ReturnHandler.handles[fct] = []
+    for constraint in constraints:
+        ReturnHandler.handles[fct].append(constraint)
+
+
+def _add_info_to_constraint(
+        constraint: Guarantee,
+        parameter_name: str,
+        fct,
+        where: str
+) -> None:
+    """Add the given info to the given Constraint. Add it to pyguarantees in
+    IsUnion, if the Guarantee is IsUnion."""
+    constraint.qualname = fct.__qualname__
+    constraint.parameter_name = parameter_name
+    constraint.module = fct.__module__
+    constraint.where = where
+
+    if isinstance(constraint, IsUnion):
+        for g in constraint.guarantees:
+            _add_info_to_constraint(g, parameter_name, fct, where)
+
+
+def enforce_parameter_constraints(
         fct,
         *args,
         **kwargs
@@ -158,8 +143,8 @@ def enforce_parameter_guarantees(
     return_kwargs = {}
 
     # zip ensures that this only checks the args, and in the correct order
-    for param_guarantee, arg in zip(ParameterHandler.handles[fct]["args"], args):
-        return_args.append(_enforce_val(arg, param_guarantee))
+    for constraint, arg in zip(ParameterHandler.handles[fct]["args"], args):
+        return_args.append(_enforce_val(arg, constraint))
 
     # Python classes that the kwargs contain no duplicates of the args
     for key, val in kwargs.items():
@@ -169,18 +154,25 @@ def enforce_parameter_guarantees(
     return tuple(return_args), return_kwargs
 
 
-def enforce_return_guarantees(fct, val) -> Any:
-    return _enforce_val(val, ReturnHandler.handles[fct])
+def enforce_return_constraints(fct, *ret_vals) -> Any:
+    new_ret_vals = []
+    # In case of multiple return values:
+    for ret_val, constraint in zip(ret_vals, ReturnHandler.handles.get(fct)):
+        new_ret_vals.append(_enforce_val(ret_val, constraint))
+
+    # Can be single value or multiple
+    #   -> if single, just return the value, else tuple
+    if len(new_ret_vals) > 1:
+        return tuple(new_ret_vals)
+    else:
+        return new_ret_vals[0]
 
 
-def _enforce_val(val, param_guarantee: Guarantee):
+def _enforce_val(val, constraint: Guarantee):
     """Enforce the classes on a single value."""
-    if not isinstance(param_guarantee, Guarantee):
-        raise TypeError("Parameter pyguarantees is not a Guarantee. "
-                        "@functional_guarantees only takes Guarantees.")
+    if not isinstance(constraint, Guarantee):
+        raise TypeError("Parameter constraint is not a Guarantee. "
+                        "@constrain.parameters and @constrain.returns only take Guarantees.")
 
-    if isinstance(param_guarantee, NoOp):
-        return val
-
-    return param_guarantee.enforce(val)
+    return constraint.enforce(val)
 

@@ -4,20 +4,20 @@ import pyguarantees as pg
 from pyguarantees.constraints import IsBytes, IsByteArray, IsMemoryView
 
 
-@pg.constrain.constrain(parameters=[
-    IsBytes("a"),
-    IsByteArray("b"),
-    IsMemoryView("c")
-])
+@pg.constrain.parameters(
+    a=IsBytes(),
+    b=IsByteArray(),
+    c=IsMemoryView()
+)
 def fct(a, b, c):
     return a, b, c
 
 
-@pg.constrain.constrain(parameters=[
-    IsBytes("a", force_conversion=True),
-    IsByteArray("b", force_conversion=True),
-    IsMemoryView("c", force_conversion=True)
-])
+@pg.constrain.parameters(
+    a=IsBytes(force_conversion=True),
+    b=IsByteArray(force_conversion=True),
+    c=IsMemoryView(force_conversion=True)
+)
 def fct_conversion(a, b, c):
     return a, b, c
 

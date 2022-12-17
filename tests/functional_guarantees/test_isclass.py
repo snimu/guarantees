@@ -14,10 +14,10 @@ class ExampleClass:
 example_class = ExampleClass()
 
 
-@pg.constrain.constrain(parameters=[
-    NoOp("a"),
-    IsClass("b", class_type=ExampleClass)
-])
+@pg.constrain.parameters(
+    a=NoOp(),
+    b=IsClass(class_type=ExampleClass)
+)
 def fct(a, b):
     return a, b
 

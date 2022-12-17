@@ -7,11 +7,9 @@ from pyguarantees.constraints import (
 )
 
 
-@pg.constrain.constrain(
-    parameters=[
-        IsInt("a", forbidden_values=[1, 2, 3]),
-        IsBytes("b", forbidden_values=[b"123", b"111"])
-    ]
+@pg.constrain.parameters(
+    a=IsInt(forbidden_values=[1, 2, 3]),
+    b=IsBytes(forbidden_values=[b"123", b"111"])
 )
 def fct(a, b):
     return a, b

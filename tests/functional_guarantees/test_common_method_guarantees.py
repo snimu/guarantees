@@ -1,24 +1,24 @@
 import pytest
 
 import pyguarantees as pg
-from pyguarantees.constraints import IsInt
+from pyguarantees.constraints import IsInt, Cls, Self
 
 
 class ClassWithMethods:
     def __init__(self):
         self.const = 1
 
-    @pg.constrain.constrain(parameters=[IsInt("a")])
+    @pg.constrain.parameters(Self(), a=IsInt())
     def fct(self, a):
         return a + self.const
 
     @classmethod
-    @pg.constrain.constrain(parameters=[IsInt("a")])
+    @pg.constrain.parameters(Cls(), a=IsInt())
     def classfct(cls, a):
         return a
 
     @staticmethod
-    @pg.constrain.constrain(is_staticmethod=True, parameters=[IsInt("a")])
+    @pg.constrain.parameters(a=IsInt())
     def staticfct(a):
         return a
 

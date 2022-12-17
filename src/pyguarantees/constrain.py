@@ -21,8 +21,6 @@ def constrain(
         if not settings.ACTIVE:
             return fct
 
-        _register_all(fct, parameters, returns)
-
         @wraps(fct)
         def _enforce(*args, **kwargs):
             if not settings.ACTIVE:

@@ -1,6 +1,4 @@
-import inspect
-
-from ._decorators import fdata
+from pyguarantees.testcase import fdata
 
 
 class TestsNotImplementedError(Exception):

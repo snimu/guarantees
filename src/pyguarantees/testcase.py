@@ -4,10 +4,10 @@ import warnings
 
 
 fdata = {}   # all necessary data on guaranteed functions
-classmethods = {}   # needed for @tg.guarantee_usage
+_classmethods = {}   # needed for @tg.guarantee_usage
 
 
-def guarantee_test():
+def guaranteed():
     def _fct(fct):
         global fdata
         if fct not in fdata.keys():
@@ -16,27 +16,27 @@ def guarantee_test():
     return _fct
 
 
-def guarantee_usage():
+def calls():
     def _fct(fct):
-        global fdata, classmethods
+        global fdata, _classmethods
 
         @wraps(fct)
         def _run(*args, **kwargs):
             # If _run in fdata, incrementing the call_counter
-            #   allows @tg.implements_test_for to check if the callable was used in the test.
+            #   allows @testcase.covers to check if the callable was used in the test.
             # If _run is not in fdata, its callable might have been decorated with an @classmethod,
-            #   in which case @tg.implements_test_for has removed _run from fdata
+            #   in which case @testcase.covers has removed _run from fdata
             #   (by calling _choose_valid_functions, where this logic is implemented) and added
             #   the corresponding classmethod. This classmethod can then be found in classmethods,
             #   and the counter incremented for correct running.
             if _run in fdata.keys():
                 fdata[_run]["call_counter"] += 1
-            elif _run in classmethods:
-                fdata[classmethods[_run]]["call_counter"] += 1
+            elif _run in _classmethods:
+                fdata[_classmethods[_run]]["call_counter"] += 1
             return fct(*args, **kwargs)
 
         # Add _run here because it will be executed later;
-        #   but guarantee_test would add _fct -> neither would work.
+        #   but @testcase.guaranteed would add _fct -> neither would work.
         if _run not in fdata.keys():
             _add_fct_to_fdata(_run, usage_guaranteed=True)
         return _run
@@ -55,7 +55,7 @@ def _add_fct_to_fdata(fct: callable, usage_guaranteed: bool = False):
     }
 
 
-def implements_test_for(*functions, **kwfunctions):
+def covers(*functions, **kwfunctions):
     global fdata
 
     functions = _choose_valid_functions(*functions, **kwfunctions)
@@ -84,7 +84,7 @@ def implements_test_for(*functions, **kwfunctions):
 
 def _choose_valid_functions(*functions, **kwfunctions):
     """Add kwfunctions to functions, enable working with classmethods, only use
-    callables with @guarantee_test."""
+    callables with @testcase.guaranteed."""
     functions = list(functions)
     functions.extend(kwfunctions.values())
 
@@ -102,7 +102,7 @@ def _choose_valid_functions(*functions, **kwfunctions):
 
 def _handle_classmethods(function: callable, valid_functions: list) -> list:
     # This is meant for classmethods; in them , function is not function.__func__.
-    #   @classmethod is above @tg.guarantee_tests/@tg.guarantee_usage
+    #   @classmethod is above @testcase.guaranteed/@testcase.calls
     #   -> function.__func__ added to fdata, not function.
     #   Fix this here and use function from now on.
     if function is not function.__func__:
@@ -112,12 +112,12 @@ def _handle_classmethods(function: callable, valid_functions: list) -> list:
 
         # Add the relationship between function and function.__func__ to
         #   classmethods in order to allow @tg.guarantee_usage to work properly.
-        global classmethods
-        classmethods[function.__func__] = function
+        global _classmethods
+        _classmethods[function.__func__] = function
     else:
         warnings.warn(
-            f"The following function was given to implements_test_for "
-            f"but was not decorated with @guarantee_test: "
+            f"The following function was given to @testcase.covers "
+            f"but was not decorated with @testcase.guaranteed: "
             f" {function.__qualname__}")
 
     return valid_functions

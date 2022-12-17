@@ -1,36 +1,36 @@
 import pytest
-from pyguarantees import test_guarantees as tg
+import pyguarantees as pg
 
 
 @pytest.mark.order(0)
 def test_TestsNotImplementedError():
-    @tg.guarantee_test()
+    @pg.testcase.guaranteed()
     def fct(a):
         return a
 
-    with pytest.raises(tg.exceptions.TestsNotImplementedError):
-        tg.test_all_tests_implemented()
+    with pytest.raises(pg.exceptions.testcase.TestsNotImplementedError):
+        pg.pytests.test_all_tests_implemented()
 
-    @tg.implements_test_for(fct)
+    @pg.testcase.covers(fct)
     def ensure_no_exception_at_end_of_pytest():
         fct(1)
 
 
 @pytest.mark.order(1)
 def test_NotUsedInTestsError():
-    @tg.guarantee_test()
-    @tg.guarantee_usage()
+    @pg.testcase.guaranteed()
+    @pg.testcase.calls()
     def fct(a):
         return a
 
-    @tg.implements_test_for(fct)
+    @pg.testcase.covers(fct)
     def random_function():
         pass
 
     random_function()
 
-    with pytest.raises(tg.exceptions.NotUsedInTestsError):
-        tg.test_functions_used_in_tests()
+    with pytest.raises(pg.exceptions.testcase.NotUsedInTestsError):
+        pg.pytests.test_functions_used_in_tests()
 
     # test_functions_used_in_tests will be called at the end by pytest;
     #   make sure that it won't err
@@ -38,5 +38,5 @@ def test_NotUsedInTestsError():
 
 
 def _mark_as_used(fct):
-    tg._decorators.fdata[fct]["testcases_without_exec"] = None
+    pg.testcase.fdata[fct]["testcases_without_exec"] = None
 

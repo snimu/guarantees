@@ -162,9 +162,9 @@ it decorates, making it computationally inexpensive.
 Having a function (or method) decorated like follows:
 
 ```python
-@tg.guarantee_test()
+@tg.guaranteed()
 def foo():
-    pass
+  pass
 ```
 
 but not having a test in your `unittest.TestCase` decorated by `@implements_test_for(foo)` 
@@ -185,10 +185,10 @@ the decorator is computationally inexpensive.
 A function decorated as follows:
 
 ```python 
-@tg.guarantee_test()
-@tg.guarantee_usage()
+@tg.guaranteed()
+@tg.calls()
 def foo():
-    pass
+  pass
 ```
 
 with a unittest that looks something like this:
@@ -196,15 +196,15 @@ with a unittest that looks something like this:
 ```python 
 # for unittest:
 class TestExample(unittest.TestCase):
-    @tg.implements_test_for(foo)
-    def test_foo(self):
-        ...   # some code that doesn't call foo
+  @tg.covers(foo)
+  def test_foo(self):
+    ...  # some code that doesn't call foo
 
 
 # for pytest:
-@tg.implements_test_for(foo)
+@tg.covers(foo)
 def test_foo():
-    ... # some code that doesn't call foo
+  ...  # some code that doesn't call foo
 ```
 
 would lead to a [NotUsedInTestsError](#notusedintestserror) being raised. 
@@ -232,15 +232,15 @@ Usage might look as follows:
 ```python 
 # for unittest:
 class TestExample(unittest.TestCase):
-    @tg.implements_test_for(function1, function2, this_key_is_ignored=function3)
-    def test_example(self):
-        ...
+  @tg.covers(function1, function2, this_key_is_ignored=function3)
+  def test_example(self):
+    ...
 
 
 # for pytest:
-@tg.implements_test_for(function1, function2, this_key_is_ignored=function3)
+@tg.covers(function1, function2, this_key_is_ignored=function3)
 def test_example():
-    ...
+  ...
 ```
 
 ## Functions

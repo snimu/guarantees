@@ -18,6 +18,20 @@ class _NoOp(_Guarantee):
 
 
 @dataclass
+class _Self(_Guarantee):
+    def __post_init__(self):
+        self.guarantee_name = "Self"
+        self.guaranteed_type = None
+
+
+@dataclass
+class _Cls(_Guarantee):
+    def __post_init__(self):
+        self.guarantee_name = "Cls"
+        self.guaranteed_type = None
+
+
+@dataclass
 class _IsClass(_TypeGuarantee):
     class_type: Type = None
 

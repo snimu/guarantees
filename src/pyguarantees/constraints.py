@@ -26,6 +26,8 @@ from pyguarantees._constraints._numeric import (
 )
 from pyguarantees._constraints._other import (
     _NoOp,
+    _Cls,
+    _Self,
     _IsNone,
     _IsUnion,
     _IsClass
@@ -119,6 +121,16 @@ class IsClass(_IsClass, TypeGuarantee):
 
 @dataclass
 class NoOp(_NoOp, Guarantee):
+    pass
+
+
+@dataclass
+class Self(_Self, NoOp):   # so that it's ignored
+    pass
+
+
+@dataclass
+class Cls(_Cls, NoOp):   # so that it's ignored
     pass
 
 

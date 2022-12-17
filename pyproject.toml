@@ -4,9 +4,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyguarantees"
-version = "0.0.14"
+version = "0.1.0"
 authors = [{name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}]
-description = "Guarantee unittests for functions and methods, guarantee types and their properties"
+description = "guarantee testcases for callables, constrain parameters and return values of callables"
 readme = "README.md"
 requires-python = ">=3.8"
 keywords = ["python", "unittest", "test", "guarantees", "parameters"]

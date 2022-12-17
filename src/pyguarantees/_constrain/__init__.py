@@ -1,2 +1,1 @@
 import pyguarantees._constrain._guarantee_handler
-import pyguarantees._constrain._util

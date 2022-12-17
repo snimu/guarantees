@@ -18,8 +18,6 @@ def constrain(
         is_staticmethod: bool = False
 ):
     def _fct(fct):
-        if not settings.ACTIVE:
-            return fct
 
         @wraps(fct)
         def _enforce(*args, **kwargs):

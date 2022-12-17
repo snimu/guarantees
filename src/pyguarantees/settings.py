@@ -1,4 +1,4 @@
-from ._guarantee_handler import ParameterHandler, ReturnHandler
+from pyguarantees._constrain._guarantee_handler import ParameterHandler, ReturnHandler
 
 ACTIVE = True
 CACHE = True

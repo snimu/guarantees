@@ -1,7 +1,8 @@
 import logging
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsInt
 
 
 logger_called = False
@@ -16,16 +17,16 @@ class Logger(logging.Logger):
         logger_called = True
 
 
-@fg.add_guarantees(
+@pg.constrain.add_guarantees(
     param_guarantees=[
-        fg.IsInt("a", logger=Logger(), logger_only=True)
+        IsInt("a", logger=Logger(), logger_only=True)
     ]
 )
 def fct_logger_only(a):
     return a
 
 
-@fg.add_guarantees(param_guarantees=[fg.IsInt("a", logger=Logger())])
+@pg.constrain.add_guarantees(param_guarantees=[IsInt("a", logger=Logger())])
 def fct_logger_and_error(a):
     return a
 
@@ -39,7 +40,7 @@ class TestLogger:
         logger_called = False   # reset for other tests
 
     def test_logger_and_error(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct_logger_and_error(3.)
 
         global logger_called

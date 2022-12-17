@@ -1,24 +1,24 @@
 from dataclasses import dataclass
 from typing import Type, List, Union
 
-from ._base import Guarantee, TypeGuarantee
-from pyguarantees.functional_guarantees.classes.util.error_handeling import \
+from ._base import _Guarantee, _TypeGuarantee
+from pyguarantees._constraints._util.error_handeling import \
     handle_error
-from pyguarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees._constraints._util.typenames import \
     get_arg_type_name, get_type_name
-from pyguarantees.functional_guarantees.classes.util.common_checks import \
+from pyguarantees._constraints._util.common_checks import \
     enforce_dynamic_checks, check_forbidden_values
 
 
 @dataclass
-class NoOp(Guarantee):
+class _NoOp(_Guarantee):
     def __post_init__(self):
         self.guarantee_name = "NoOp"
         self.guaranteed_type = None
 
 
 @dataclass
-class IsClass(TypeGuarantee):
+class _IsClass(_TypeGuarantee):
     class_type: Type = None
 
     def __post_init__(self):
@@ -33,7 +33,7 @@ class IsClass(TypeGuarantee):
 
 
 @dataclass
-class IsNone(TypeGuarantee):
+class _IsNone(_TypeGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsNone"
         self.guaranteed_type = None
@@ -56,8 +56,8 @@ class IsNone(TypeGuarantee):
 
 
 @dataclass
-class IsUnion(TypeGuarantee):
-    guarantees: List[TypeGuarantee] = None
+class _IsUnion(_TypeGuarantee):
+    guarantees: List[_TypeGuarantee] = None
 
     def __post_init__(self):
         self.guarantee_name = "IsUnion"
@@ -117,7 +117,7 @@ class IsUnion(TypeGuarantee):
         return arg
 
     def __handle_noop(self, guarantee):
-        if not isinstance(guarantee, NoOp):
+        if not isinstance(guarantee, _NoOp):
             return
 
         handle_error(
@@ -129,7 +129,7 @@ class IsUnion(TypeGuarantee):
         )
 
     def __handle_isunion(self, guarantee):
-        if not isinstance(guarantee, IsUnion):
+        if not isinstance(guarantee, _IsUnion):
             return
 
         handle_error(
@@ -141,7 +141,7 @@ class IsUnion(TypeGuarantee):
         )
 
 
-def _check_isclass(arg: object, guarantee: IsClass) -> object:
+def _check_isclass(arg: object, guarantee: _IsClass) -> object:
     if guarantee.class_type is None or isinstance(arg, guarantee.class_type):
         return arg
 

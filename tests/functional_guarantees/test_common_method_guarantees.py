@@ -1,23 +1,24 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsInt
 
 
 class ClassWithMethods:
     def __init__(self):
         self.const = 1
 
-    @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
+    @pg.constrain.add_guarantees(param_guarantees=[IsInt("a")])
     def fct(self, a):
         return a + self.const
 
     @classmethod
-    @fg.add_guarantees(param_guarantees=[fg.IsInt("a")])
+    @pg.constrain.add_guarantees(param_guarantees=[IsInt("a")])
     def classfct(cls, a):
         return a
 
     @staticmethod
-    @fg.add_guarantees(is_staticmethod=True, param_guarantees=[fg.IsInt("a")])
+    @pg.constrain.add_guarantees(is_staticmethod=True, param_guarantees=[IsInt("a")])
     def staticfct(a):
         return a
 
@@ -31,7 +32,7 @@ class TestMethodGuarantees:
         assert isinstance(val, int)
 
     def test_self_error(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             class_with_methods.fct("not an int!")
 
     def test_cls_correct(self):
@@ -39,7 +40,7 @@ class TestMethodGuarantees:
         assert isinstance(val, int)
 
     def test_cls_error(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             class_with_methods.classfct("not an int!")
 
     def test_static_correct(self):
@@ -47,5 +48,5 @@ class TestMethodGuarantees:
         assert isinstance(val, int)
 
     def test_static_error(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             class_with_methods.staticfct("not an int!")

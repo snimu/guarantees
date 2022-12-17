@@ -3,12 +3,13 @@
 
 from functools import wraps
 
-from ._util import ismethod
-from ._guarantee_handler import enforce_parameter_guarantees, \
+from pyguarantees._constrain._util import ismethod
+from pyguarantees._constrain._guarantee_handler import \
+    enforce_parameter_guarantees, \
     register_parameter_guarantees, ParameterHandler, \
     register_return_guarantees, ReturnHandler, \
     enforce_return_guarantees
-from . import settings
+from pyguarantees import settings
 
 
 def add_guarantees(

@@ -1,11 +1,12 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsInt
 
 
-@fg.add_guarantees(
+@pg.constrain.add_guarantees(
     param_guarantees=[
-        fg.IsInt("a"), fg.IsInt("b"), fg.IsInt("c")
+        IsInt("a"), IsInt("b"), IsInt("c")
     ]
 )
 def fct(a, b, c):
@@ -19,5 +20,5 @@ class TestParameterMatching:
         fct(1, c=3, b=1)
 
     def test_raise_exceptions_with_mixed_params(self):
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(1, b=2., c=3)

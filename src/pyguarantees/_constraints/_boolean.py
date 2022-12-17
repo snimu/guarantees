@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from ._base import TypeGuarantee
-from pyguarantees.functional_guarantees.classes.util.common_checks import \
+from ._base import _TypeGuarantee
+from pyguarantees._constraints._util.common_checks import \
     enforce_dynamic_checks, check_type, check_forbidden_values
 
 
 @dataclass
-class IsBool(TypeGuarantee):
+class _IsBool(_TypeGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsBool"
         self.guaranteed_type = bool

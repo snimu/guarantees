@@ -1,29 +1,33 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    IsInt,
+    DynamicCheck
+)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt(
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsInt(
         "a",
         dynamic_checks=[
-            fg.DynamicCheck(check=lambda x: x % 3 == 0),
-            fg.DynamicCheck(check=lambda x: x ** 2 - 2 * x < 1e4)
+            DynamicCheck(check=lambda x: x % 3 == 0),
+            DynamicCheck(check=lambda x: x ** 2 - 2 * x < 1e4)
         ])
 ])
 def fct(a):
     return a
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt(
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsInt(
         "a",
         dynamic_checks=[
-            fg.DynamicCheck(
+            DynamicCheck(
                 description="divisible by 3",
                 check=lambda x: x % 3 == 0
             ),
-            fg.DynamicCheck(
+            DynamicCheck(
                 description="on correct side of decision boundary",
                 check=lambda x: x**2 - 2 * x < 1e4
             )
@@ -33,16 +37,16 @@ def fct_description(a):
     return a
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsInt(
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsInt(
         "a",
         dynamic_checks=[
-            fg.DynamicCheck(
+            DynamicCheck(
                 description="divisible by 3",
                 check=lambda x: x % 3 == 0,
                 callback=lambda x: print(x)
             ),
-            fg.DynamicCheck(
+            DynamicCheck(
                 description="on correct side of decision boundary",
                 check=lambda x: x ** 2 - 2 * x < 1e4,
                 callback=lambda x: print(x)
@@ -65,10 +69,10 @@ class TestDynamicChecks:
 
     def test_check1_err(self):
         for f in functions:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 f(2)
 
     def test_check2_err(self):
         for f in functions:
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 f(3**10)

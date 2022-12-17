@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from ._base import TypeGuarantee
-from pyguarantees.functional_guarantees.classes.util.common_checks import \
+from ._base import _TypeGuarantee
+from pyguarantees._constraints._util.common_checks import \
     enforce_dynamic_checks, check_type, check_forbidden_values
 
 
 @dataclass
-class IsBytes(TypeGuarantee):
+class _IsBytes(_TypeGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsBytes"
         self.guaranteed_type = bytes
@@ -19,7 +19,7 @@ class IsBytes(TypeGuarantee):
 
 
 @dataclass
-class IsByteArray(TypeGuarantee):
+class _IsByteArray(_TypeGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsByteArray"
         self.guaranteed_type = bytearray
@@ -32,7 +32,7 @@ class IsByteArray(TypeGuarantee):
 
 
 @dataclass
-class IsMemoryView(TypeGuarantee):
+class _IsMemoryView(_TypeGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsMemoryView"
         self.guaranteed_type = memoryview

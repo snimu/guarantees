@@ -1,15 +1,16 @@
 import pytest
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import IsNone
 
 
 class TestIsNone:
     def test_is_none(self):
-        @fg.add_guarantees(param_guarantees=[fg.IsNone("a")])
+        @pg.constrain.add_guarantees(param_guarantees=[IsNone("a")])
         def fct(a):
             return a
 
         out = fct(None)
         assert out is None
 
-        with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
             fct(1)

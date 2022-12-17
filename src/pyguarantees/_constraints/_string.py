@@ -1,17 +1,17 @@
 from dataclasses import dataclass
 from typing import List
 
-from ._base import TypeGuarantee
-from pyguarantees.functional_guarantees.classes.util.common_checks import \
+from ._base import _TypeGuarantee
+from pyguarantees._constraints._util.common_checks import \
     check_type, enforce_dynamic_checks, check_forbidden_values
-from pyguarantees.functional_guarantees.classes.util.error_handeling import \
+from pyguarantees._constraints._util.error_handeling import \
     handle_error
-from pyguarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees._constraints._util.typenames import \
     get_arg_type_name
 
 
 @dataclass
-class IsStr(TypeGuarantee):
+class _IsStr(_TypeGuarantee):
     minimum_len: int = None
     maximum_len: int = None
     isin: List = None
@@ -30,7 +30,7 @@ class IsStr(TypeGuarantee):
         return arg
 
 
-def _check_len(arg, guarantee: IsStr) -> None:
+def _check_len(arg, guarantee: _IsStr) -> None:
     if type(arg) is not str:   # Can happen if pyguarantees.warnings_only is True
         return
 
@@ -39,7 +39,7 @@ def _check_len(arg, guarantee: IsStr) -> None:
     _check_max_len(arg, guarantee)
 
 
-def _minimum_len_type_is_correct(guarantee: IsStr) -> bool:
+def _minimum_len_type_is_correct(guarantee: _IsStr) -> bool:
     if type(guarantee.minimum_len) is int:
         return True
 
@@ -57,7 +57,7 @@ def _minimum_len_type_is_correct(guarantee: IsStr) -> bool:
     return False   # in case of warnings_only
 
 
-def _maximum_len_type_is_correct(guarantee: IsStr) -> bool:
+def _maximum_len_type_is_correct(guarantee: _IsStr) -> bool:
     if type(guarantee.maximum_len) is int:
         return True
 
@@ -75,7 +75,7 @@ def _maximum_len_type_is_correct(guarantee: IsStr) -> bool:
     return False   # in case of warnings_only
 
 
-def _check_min_len_ge_max_len(guarantee: IsStr) -> None:
+def _check_min_len_ge_max_len(guarantee: _IsStr) -> None:
     if guarantee.minimum_len is None or guarantee.maximum_len is None:
         return
 
@@ -98,7 +98,7 @@ def _check_min_len_ge_max_len(guarantee: IsStr) -> None:
         )
 
 
-def _check_min_len(arg, guarantee: IsStr) -> None:
+def _check_min_len(arg, guarantee: _IsStr) -> None:
     if type(arg) is not str:
         return
 
@@ -123,7 +123,7 @@ def _check_min_len(arg, guarantee: IsStr) -> None:
         )
 
 
-def _check_max_len(arg, guarantee: IsStr) -> None:
+def _check_max_len(arg, guarantee: _IsStr) -> None:
     if type(arg) is not str:
         return
 
@@ -148,7 +148,7 @@ def _check_max_len(arg, guarantee: IsStr) -> None:
         )
 
 
-def _check_isin(arg: str, guarantee: IsStr) -> None:
+def _check_isin(arg: str, guarantee: _IsStr) -> None:
     if type(arg) is not str:
         return
 

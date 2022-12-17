@@ -1,6 +1,14 @@
 import pytest
 
-from pyguarantees import functional_guarantees as fg
+import pyguarantees as pg
+from pyguarantees.constraints import (
+    IsList,
+    IsTuple,
+    IsDict,
+    IsSet,
+    IsFrozenSet,
+    IsRange
+)
 
 
 lst = [1, 2, 3]
@@ -11,41 +19,41 @@ fst = frozenset(lst)
 rng = range(1, 3, 1)
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsList("lst"),
-    fg.IsTuple("tup"),
-    fg.IsDict("dic"),
-    fg.IsSet("st"),
-    fg.IsFrozenSet("fst"),
-    fg.IsRange("rng")
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsList("lst"),
+    IsTuple("tup"),
+    IsDict("dic"),
+    IsSet("st"),
+    IsFrozenSet("fst"),
+    IsRange("rng")
 ])
 def base_fct(lst, tup, dic, st, fst, rng):
     return lst, tup, dic, st, fst, rng
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsList("lst", minimum_len=1, maximum_len=3),
-    fg.IsTuple("tup", minimum_len=1, maximum_len=3),
-    fg.IsDict("dic", minimum_len=1, maximum_len=3),
-    fg.IsSet("st", minimum_len=1, maximum_len=3),
-    fg.IsFrozenSet("fst", minimum_len=1, maximum_len=3)
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsList("lst", minimum_len=1, maximum_len=3),
+    IsTuple("tup", minimum_len=1, maximum_len=3),
+    IsDict("dic", minimum_len=1, maximum_len=3),
+    IsSet("st", minimum_len=1, maximum_len=3),
+    IsFrozenSet("fst", minimum_len=1, maximum_len=3)
 ])
 def minmax_fct(lst, tup, dic, st, fst):
     return lst, tup, dic, st, fst
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsList("lst", contains=[1, 2, 3]),
-    fg.IsTuple("tup", contains=[1, 2, 3]),
-    fg.IsSet("st", contains=[1, 2, 3]),
-    fg.IsFrozenSet("fst", contains=[1, 2, 3])
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsList("lst", contains=[1, 2, 3]),
+    IsTuple("tup", contains=[1, 2, 3]),
+    IsSet("st", contains=[1, 2, 3]),
+    IsFrozenSet("fst", contains=[1, 2, 3])
 ])
 def contains_fct(lst, tup, st, fst):
     return lst, tup, st, fst
 
 
-@fg.add_guarantees(param_guarantees=[
-    fg.IsDict("dic", has_keys=[1, 2, 3], has_values=[1, 2, 3])
+@pg.constrain.add_guarantees(param_guarantees=[
+    IsDict("dic", has_keys=[1, 2, 3], has_values=[1, 2, 3])
 ])
 def keysvals_fct(dic):
     return dic
@@ -59,7 +67,7 @@ class TestCollectionsGuarantee:
         def type_test(index: int):
             inputs = [lst, tup, dic, st, fst, rng]
             inputs[index] = 1   # Add false type at the index
-            with pytest.raises(fg.exceptions.ParameterGuaranteesTypeError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
                 base_fct(*inputs)
 
         for i in range(6):
@@ -75,7 +83,7 @@ class TestCollectionsGuarantee:
         def len_test_min(index):
             inputs = [lst, tup, dic, st, fst]
             inputs[index] = too_shorts[index]   # add false input at index
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 minmax_fct(*inputs)
 
         for i in range(5):
@@ -89,7 +97,7 @@ class TestCollectionsGuarantee:
         def len_test_max(index):
             inputs = [lst, tup, dic, st, fst]
             inputs[index] = too_longs[index]
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 minmax_fct(*inputs)
 
         for i in range(5):
@@ -106,7 +114,7 @@ class TestCollectionsGuarantee:
         def contains_test(index):
             inputs = [lst, tup, st, fst]
             inputs[index] = false_inputs[index]
-            with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+            with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
                 contains_fct(*inputs)
 
         for i in range(4):
@@ -115,8 +123,8 @@ class TestCollectionsGuarantee:
     def test_has_keys_vals(self):
         keysvals_fct(dic)
 
-        with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
             keysvals_fct({1: 1, 2: 2, "nope": 3})
 
-        with pytest.raises(fg.exceptions.ParameterGuaranteesValueError):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
             keysvals_fct({1: 1, 2: 2, 3: "nope"})

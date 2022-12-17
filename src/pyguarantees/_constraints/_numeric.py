@@ -4,21 +4,21 @@
 from dataclasses import dataclass
 from typing import Union
 
-from ._base import TypeGuarantee
-from pyguarantees.functional_guarantees.classes.util.typenames import get_arg_type_name
-from pyguarantees.functional_guarantees.classes.util.common_checks import \
+from ._base import _TypeGuarantee
+from pyguarantees._constraints._util.typenames import get_arg_type_name
+from pyguarantees._constraints._util.common_checks import \
     check_type, enforce_dynamic_checks, check_forbidden_values, handle_error
 
 
 @dataclass
-class NumericGuarantee(TypeGuarantee):
+class _NumericGuarantee(_TypeGuarantee):
     isin: list = None
     minimum: float = None
     maximum: float = None
 
 
 @dataclass
-class IsInt(NumericGuarantee):
+class _IsInt(_NumericGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsInt"
         self.guaranteed_type = int
@@ -44,7 +44,7 @@ class IsInt(NumericGuarantee):
 
 
 @dataclass
-class IsFloat(NumericGuarantee):
+class _IsFloat(_NumericGuarantee):
     def __post_init__(self):
         self.guarantee_name = "IsFloat"
         self.guaranteed_type = float
@@ -70,7 +70,7 @@ class IsFloat(NumericGuarantee):
 
 
 @dataclass
-class IsComplex(NumericGuarantee):
+class _IsComplex(_NumericGuarantee):
     minimum_re: float = None
     maximum_re: float = None
     minimum_im: float = None
@@ -118,7 +118,7 @@ class IsComplex(NumericGuarantee):
 
 def _check_minimum_type(
         minimum: Union[int, float],
-        guarantee: NumericGuarantee
+        guarantee: _NumericGuarantee
 ) -> None:
     if type(minimum) not in [int, float]:
         handle_error(
@@ -128,7 +128,7 @@ def _check_minimum_type(
             parameter_name=f"{guarantee.guarantee_name}.minimum",
             what_dict={
                 "should_type": \
-                    "int" if isinstance(guarantee, IsInt) else "float",
+                    "int" if isinstance(guarantee, _IsInt) else "float",
                 "actual_type": get_arg_type_name(minimum)
             }
         )
@@ -136,7 +136,7 @@ def _check_minimum_type(
 
 def _check_maximum_type(
         maximum: Union[int, float],
-        guarantee: NumericGuarantee
+        guarantee: _NumericGuarantee
 ) -> None:
     if type(maximum) not in [int, float]:
         handle_error(
@@ -146,14 +146,14 @@ def _check_maximum_type(
             parameter_name=f"{guarantee.guarantee_name}.maximum",
             what_dict={
                 "should_type": \
-                    "int" if isinstance(guarantee, IsInt) else "float",
+                    "int" if isinstance(guarantee, _IsInt) else "float",
                 "actual_type": get_arg_type_name(maximum)
             }
         )
 
 
 def _check_min_ge_max(
-        guarantee: NumericGuarantee,
+        guarantee: _NumericGuarantee,
         minimum: Union[int, float, complex],
         maximum: Union[int, float, complex],
         minmax_type: str = "abs"
@@ -182,7 +182,7 @@ def _check_min_ge_max(
 def _check_min(
         arg: Union[int, float, complex],
         minimum: Union[int, float, complex],
-        guarantee: NumericGuarantee,
+        guarantee: _NumericGuarantee,
         min_type: str = "abs"
 ) -> None:
     if minimum is None:
@@ -209,7 +209,7 @@ def _check_min(
 def _check_max(
         arg: Union[int, float, complex],
         maximum: Union[int, float, complex],
-        guarantee: NumericGuarantee,
+        guarantee: _NumericGuarantee,
         max_type: str = "abs"
 ) -> None:
     if maximum is None:
@@ -233,7 +233,7 @@ def _check_max(
         )
 
 
-def _check_isin(arg: Union[int, float, complex], guarantee: NumericGuarantee):
+def _check_isin(arg: Union[int, float, complex], guarantee: _NumericGuarantee):
     if guarantee.isin is None:
         return
 

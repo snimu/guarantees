@@ -6,11 +6,11 @@ from dataclasses import dataclass, field
 from typing import Callable, Type, List
 from pyguarantees import severity
 
-from ._dynamic_check import DynamicCheck
+from ._dynamic_check import _DynamicCheck
 
 
 @dataclass
-class Guarantee:
+class _Guarantee:
     parameter_name: str
     where: str = field(init=False)
     guarantee_name: str = field(init=False)
@@ -23,11 +23,11 @@ class Guarantee:
 
 
 @dataclass
-class TypeGuarantee(Guarantee):
+class _TypeGuarantee(_Guarantee):
     force_conversion: bool = False
     logger: logging.Logger = None
     logger_only: bool = False
     error_severity: int = severity.ERROR
     error_callback: Callable = None
-    dynamic_checks: List[DynamicCheck] = None
+    dynamic_checks: List[_DynamicCheck] = None
     forbidden_values: list = None

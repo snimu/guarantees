@@ -1,8 +1,8 @@
 from typing import Union
 
-from pyguarantees.functional_guarantees.classes.util.error_handeling import \
+from pyguarantees._constraints._util.error_handeling import \
     handle_error
-from pyguarantees.functional_guarantees.classes.util.typenames import \
+from pyguarantees._constraints._util.typenames import \
     get_arg_type_name
 
 

@@ -1,5 +1,7 @@
-from .error_handeling import handle_error
-from .typenames import get_arg_type_name, get_type_name
+from pyguarantees._constraints._util.error_handeling import handle_error
+from pyguarantees._constraints._util.typenames import (
+    get_arg_type_name, get_type_name
+)
 
 
 def check_type(arg, guarantee):

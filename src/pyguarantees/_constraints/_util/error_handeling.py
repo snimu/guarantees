@@ -1,6 +1,6 @@
 from typing import Union
 
-from pyguarantees.functional_guarantees.exceptions import \
+from pyguarantees.exceptions.constraints import \
     ParameterGuaranteesTypeError, ParameterGuaranteesValueError, \
     ReturnGuaranteesValueError, ReturnGuaranteesTypeError, \
     FunctionalGuaranteesUserTypeError, FunctionalGuaranteesUserValueError

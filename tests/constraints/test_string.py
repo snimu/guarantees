@@ -1,6 +1,6 @@
 import pytest
 import pyguarantees as pg
-from pyguarantees.constraints import IsStr
+from pyguarantees.constraints import IsStr, DynamicCheck
 
 
 @pg.constrain.parameters(a=IsStr())
@@ -66,6 +66,36 @@ class TestStringIsIn:
             fct_isin("nope")
 
 
+@pg.constrain.parameters(a=IsStr(forbidden_values=["chocolate", "cookies"]))
+def fct_no_sweets(a):
+    return a
+
+
+class TestStringForbiddenValues:
+    def test_correct(self):
+        fct_no_sweets("kale")
+        fct_no_sweets("carrots")
+
+    def test_violation(self):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
+            fct_no_sweets("cookies")
+
+
+@pg.constrain.parameters(a=IsStr(dynamic_checks=[DynamicCheck(check=lambda x: x.endswith(".pdf"))]))
+def fct_dynamic_checks(a):
+    return a
+
+
+class TestStringDynamicChecks:
+    def test_correct(self):
+        fct_dynamic_checks("file1.pdf")
+        fct_dynamic_checks("file2.kkk.eee.www.pdf")
+
+    def test_violations(self):
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
+            fct_dynamic_checks("totallynotavirus.exe")
+
+
 class TestStringIncorrectParameters:
     def test_min(self):
         @pg.constrain.parameters(a=IsStr(minimum_len="nope"))
@@ -81,6 +111,14 @@ class TestStringIncorrectParameters:
             return a
 
         with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
+            fct("hi")
+
+    def test_mingemax(self):
+        @pg.constrain.parameters(a=IsStr(minimum_len=5, maximum_len=1))
+        def fct(a):
+            return a
+
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserValueError):
             fct("hi")
 
     def test_isin(self):

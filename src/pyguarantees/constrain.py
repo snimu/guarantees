@@ -1,4 +1,4 @@
-"""Defines the @pyguarantees.functional_guarantees decorator."""
+"""Defines the @pyguarantees.constraints decorator."""
 
 
 from functools import wraps

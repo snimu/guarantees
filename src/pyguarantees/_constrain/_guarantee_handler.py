@@ -18,7 +18,7 @@ class ParameterHandler:
     Instead, a dict has to be created with an entry for every function and
     method. For each fct, all classes will be entered into an args-list
     responsible for handling args (the order is determined by the order in
-    which the classes appear in the list given to @pyguarantees.functional_guarantees()),
+    which the classes appear in the list given to @pyguarantees.constraints()),
     and a kwargs-dict responsible for handling kwargs (where the key is the
     name given to the pyguarantees  ->  the parameter-names and pyguarantees-names
     must match for this library to handle keyword arguments!

@@ -36,59 +36,36 @@ import pyguarantees as pg
 from some_package import some_fct_with_test_guarantee
 
 
-class ExampleClass:
-  @pg.testcase.guaranteed()  # tg.main will raise exception if there is not test for this method
-  def foo(self):
-    return self
-
-  @classmethod  # works for classmethods
-  @pg.testcase.guaranteed()  # @pg.testcase.calls possible in any of these methods, but optional
-  def class_method(cls):
-    return cls
-
-  @staticmethod  # works for staticmethods
-  @pg.testcase.guaranteed()
-  def static_method():
-    return "static!"
-
-
 @pg.testcase.guaranteed()
 @pg.testcase.calls()  # make sure that this is called in all its tests
 def add_one(a):
-  return a + 1
+    return a + 1
 
 
 @pg.testcase.guaranteed()
 @pg.testcase.calls()  # Makes sure that __init__ is called in the test
 class RegularClass:
-  def __init__(self):
-    self.x = 2
+    def __init__(self):
+        self.x = 2
 
 
 class ExampleTest(unittest.TestCase):
-  @pg.testcase.covers(
-    ExampleClass.foo,
-    ExampleClass.class_method,
-    ExampleClass.static_method
-  )
-  def test_foo(self):
-    ExampleClass().foo()
-    ExampleClass.class_method()
-    ExampleClass.static_method()
+    @pg.testcase.covers(add_one, some_fct_with_test_guarantee)
+    def test_some_stuff(self):
+        val = add_one(1)
+        self.assertEqual(val, 2)
+        # some_fct_with_test_guarantees has no @pg.testcase.call
+        #   -> doesn't have to be called here.
+      
 
-  @pg.testcase.covers(add_one, some_fct_with_test_guarantee)
-  def test_other(self):
-    val = add_one(1)
-    self.assertEqual(val, 2)
-
-  @pg.testcase.covers(RegularClass)
-  def test_regular_class(self):
-    regular_class = RegularClass()
-    ...
+    @pg.testcase.covers(RegularClass)
+    def test_regular_class(self):
+        regular_class = RegularClass()
+        ...
 
 
 if __name__ == '__main__':
-  pg.unittests.main()
+    pg.unittests.main()
 ```
 
 As in the example, `pyguarantees` will be abbreviated with `pg` from here on out.
@@ -107,28 +84,35 @@ Currently doesn't work with nested functions (defined inside of other callables)
 ```python
 # These imports are unused but necessary for pytest to find the tests that 
 #  enforce the guarantees from tg
-from pyguarantees.pytests import \
-  test_all_tests_implemented, test_functions_used_in_tests
+from pyguarantees.pytests import
+    test_all_tests_implemented, test_functions_used_in_tests
 import pyguarantees as pg
 
 
-@pg.testcase.guaranteed()
-def foo():
-    return 1
+class ExampleClass:
+    @pg.testcase.guaranteed()  # tg.main will raise exception if there is not test for this method
+    def method(self):
+        return self
+
+    @classmethod  # works for classmethods
+    @pg.testcase.guaranteed()  # @pg.testcase.calls possible in any of these methods, but optional
+    def class_method(cls):
+        return cls
+
+    @staticmethod  # works for staticmethods
+    @pg.testcase.guaranteed()
+    @pg.testcase.calls()
+    def static_method():
+        return "static!"
 
 
-@pg.testcase.guaranteed()
-@pg.testcase.calls()
-def bar():
-    return 1
-
-
-def test_foo():
-    assert foo() == 1
-
-
-def test_bar():
-    assert bar() == 1
+@pg.testcase.covers(
+    ExampleClass.method,
+    ExampleClass.class_method,
+    ExampleClass.static_method
+)
+def test_example_class():
+    assert ExampleClass.static_method() == "static!"
 ```
 
 This is even simpler: just use [@pg.testcase.guaranteed](#guaranteed), [@pg.testcase.calls](#calls),

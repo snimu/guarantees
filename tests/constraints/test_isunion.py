@@ -4,8 +4,12 @@ from pyguarantees.constraints import (
     IsUnion,
     IsInt,
     IsNone,
-    IsStr
+    IsStr,
+    IsClass
 )
+
+class ExampleClass:
+    pass
 
 
 @pg.constrain.parameters(
@@ -13,7 +17,8 @@ from pyguarantees.constraints import (
         guarantees=[
             IsInt(),
             IsNone(),
-            IsStr()
+            IsStr(),
+            IsClass(class_type=ExampleClass)
         ]
     )
 )
@@ -29,6 +34,8 @@ class TestIsUnion:
         assert isinstance(out, int)
         out = fct("hi :)")
         assert isinstance(out, str)
+        out = fct(ExampleClass())
+        assert isinstance(out, ExampleClass)
 
     def test_wrong_inputs(self):
         with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):

@@ -3,16 +3,20 @@ import pyguarantees as pg
 from pyguarantees.constraints import Self
 
 
+class NotAConstraint:
+    pass
+
+
 class BadClass:
-    @pg.constrain.parameters(Self(), a=1)
+    @pg.constrain.parameters(Self(), a=NotAConstraint())
     def bad_parameter_constraint(self, a):
         return a
 
-    @pg.constrain.parameters(1)
+    @pg.constrain.parameters(NotAConstraint())
     def bad_self(self):
         return "hi"
 
-    @pg.constrain.returns(1)
+    @pg.constrain.returns(NotAConstraint())
     def bad_return_constraint(self):
         return "hi"
 

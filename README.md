@@ -1,16 +1,24 @@
 # pyguarantees
 
-![License](https://img.shields.io/github/license/snimu/guarantees)
+Guarantee testcases for callables, constrain parameters and return values of callables.
+
+**Project**
+
 ![PyPI Version](https://img.shields.io/pypi/v/pyguarantees)
 ![Wheel](https://img.shields.io/pypi/wheel/pyguarantees)
-![Tests](https://github.com/snimu/guarantees/actions/workflows/tests.yml/badge.svg)
-![Coverage](coverage.svg)
+
+**Info**
+
+
+![License](https://img.shields.io/github/license/snimu/guarantees)
 ![Python Versions](https://img.shields.io/pypi/pyversions/pyguarantees)
 
+**Tests**
 
-This package provides guarantees for tests, parameters, and return values.
+![Tests](https://github.com/snimu/guarantees/actions/workflows/tests.yml/badge.svg)
+![Coverage](coverage.svg)
 
-**Install&mdash;Pip**
+**Installation&mdash;Pip**
 
 ```bash
 pip3 install pyguarantees

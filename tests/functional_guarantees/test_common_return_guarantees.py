@@ -1,7 +1,7 @@
 import pytest
 
 import pyguarantees as pg
-from pyguarantees.constraints import IsInt
+from pyguarantees.constraints import IsInt, IsStr
 
 
 class TestReturnGuarantees:
@@ -35,3 +35,19 @@ class TestReturnGuarantees:
             return a, b
 
         assert fct(1, 1) == (1, 1)
+
+    def test_parameters_returns(self):
+        @pg.constrain.parameters(a=IsInt())
+        @pg.constrain.returns(IsStr())
+        def fct(a):
+            return str(a)
+
+        assert fct(1) == str(1)
+
+    def test_returns_paramters(self):
+        @pg.constrain.returns(IsStr())
+        @pg.constrain.parameters(a=IsInt())
+        def fct(a):
+            return str(a)
+
+        assert fct(2) == str(2)

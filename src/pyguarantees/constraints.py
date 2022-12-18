@@ -46,6 +46,13 @@ class TypeGuarantee(_TypeGuarantee, Guarantee):
 
 
 @dataclass
+class GuaranteeInternal(TypeGuarantee):
+    def __post_init__(self):
+        self.guaranteed_type = None
+        self.guarantee_name = "GuaranteeInternal"
+
+
+@dataclass
 class DynamicCheck(_DynamicCheck):
     pass
 

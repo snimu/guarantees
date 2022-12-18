@@ -1,11 +1,11 @@
 from typing import Tuple, Dict, Any
 
-from pyguarantees.constraints import Guarantee, Self, Cls
+from pyguarantees.constraints import Guarantee, Self, Cls, GuaranteeInternal, IsUnion
+from pyguarantees import severity
 from pyguarantees._constraints._util.typenames import \
     get_arg_type_name
 from pyguarantees._constraints._util.error_handeling import \
     handle_error
-from pyguarantees.constraints import IsUnion
 
 
 class ParameterHandler:
@@ -50,38 +50,13 @@ def register_parameter_contraints(fct, self_or_cls, **constraints):
         #   and the rest will be ignored.
         return
 
-    if type(constraints) is not dict \
-            and not all(isinstance(c, Guarantee) for c in constraints.values()):
-        handle_error(
-            where="internal",
-            type_or_value="type",
-            guarantee=None,
-            parameter_name="@pyguarantees.constrain.parameters: "
-                           "constraints",
-            what_dict={
-                "error": "All keyword-args to @pyguarantees.constrain.parameters must be of type Guarantee.",
-                "should_type": "List[Guarantee]",
-                "actual_type": f"{get_arg_type_name(constraints)}"
-            }
-        )
+    _type_check_constraints(fct, constraints)
+    _type_check_self_cls(fct, self_or_cls)
 
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
 
     if self_or_cls is not None:
-        if type(self_or_cls) in [Self, Cls]:
-            ParameterHandler.handles[fct]["args"].append(self_or_cls)
-        else:
-            handle_error(
-                where="internal",
-                type_or_value="type",
-                guarantee=None,
-                parameter_name="@pyguarantees.constrain.parameters: "
-                               "self / cls",
-                what_dict={
-                    "should_type": "Union[Self, Cls]",
-                    "actual_type": f"{get_arg_type_name(self_or_cls)}"
-                }
-            )
+        ParameterHandler.handles[fct]["args"].append(self_or_cls)
 
     for parameter_name, constraint in constraints.items():
         _add_info_to_constraint(constraint, parameter_name, fct, "parameter")
@@ -93,25 +68,73 @@ def register_return_constraints(fct, *constraints):
     if fct in ReturnHandler.handles.keys():
         return
 
-    if type(constraints) is not list \
-            and not all(isinstance(c, Guarantee) for c in constraints):
-        handle_error(
-            where="internal",
-            type_or_value="type",
-            guarantee=None,
-            parameter_name="@pyguarantees.constrain.parameters: "
-                           "constraints",
-            what_dict={
-                "error": "All keyword-args to @pyguarantees.constrain.parameters must be of type Guarantee.",
-                "should_type": "List[Guarantee]",
-                "actual_type": f"{get_arg_type_name(constraints)}"
-            }
-        )
+    _type_check_return_constraints(fct, constraints)
 
     ReturnHandler.handles[fct] = []
     for constraint in constraints:
         _add_info_to_constraint(constraint, "", fct, "return")
         ReturnHandler.handles[fct].append(constraint)
+
+
+def _type_check_constraints(fct, constraints):
+    if type(constraints) is not dict \
+            or not all(isinstance(c, Guarantee) for c in constraints.values()):
+        err_constraint = GuaranteeInternal()
+        _add_info_to_constraint(err_constraint, parameter_name="", fct=fct, where="internal")
+        err_constraint.error_severity = severity.ERROR
+
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=err_constraint,
+            parameter_name="@pyguarantees.constrain.parameters: "
+                           "constraints",
+            what_dict={
+                "error": "All keyword-args to @pyguarantees.constrain.parameters must be of type Guarantee.",
+                "should_type": "Dict[str, Guarantee]",
+                "actual_type": f"{get_arg_type_name(constraints)}"
+            }
+        )
+
+
+def _type_check_return_constraints(fct, constraints):
+    if type(constraints) is not list \
+            and not all(isinstance(c, Guarantee) for c in constraints):
+        err_constraint = GuaranteeInternal()
+        _add_info_to_constraint(err_constraint, parameter_name="", fct=fct, where="internal")
+        err_constraint.error_severity = severity.ERROR
+
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=err_constraint,
+            parameter_name="@pyguarantees.constrain.parameters: "
+                           "constraints",
+            what_dict={
+                "error": "All keyword-args to @pyguarantees.constrain.returns must be of type Guarantee.",
+                "should_type": "List[Guarantee]",
+                "actual_type": f"{get_arg_type_name(constraints)}"
+            }
+        )
+
+
+def _type_check_self_cls(fct, self_or_cls):
+    if self_or_cls is not None and type(self_or_cls) not in [Self, Cls]:
+        err_constraint = GuaranteeInternal()
+        _add_info_to_constraint(err_constraint, "", fct, "internal")
+        err_constraint.error_severity = severity.ERROR
+
+        handle_error(
+            where="internal",
+            type_or_value="type",
+            guarantee=err_constraint,
+            parameter_name="@pyguarantees.constrain.parameters: "
+                           "self / cls",
+            what_dict={
+                "should_type": "Union[Self, Cls]",
+                "actual_type": f"{get_arg_type_name(self_or_cls)}"
+            }
+        )
 
 
 def _add_info_to_constraint(

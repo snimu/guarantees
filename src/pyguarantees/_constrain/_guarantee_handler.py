@@ -50,7 +50,7 @@ def register_parameter_contraints(fct, self_or_cls, **constraints):
         #   and the rest will be ignored.
         return
 
-    _type_check_constraints(fct, constraints)
+    _type_check_parameter_constraints(fct, constraints)
     _type_check_self_cls(fct, self_or_cls)
 
     ParameterHandler.handles[fct] = {"args": [], "kwargs": {}}
@@ -76,30 +76,28 @@ def register_return_constraints(fct, *constraints):
         ReturnHandler.handles[fct].append(constraint)
 
 
-def _type_check_constraints(fct, constraints):
-    if type(constraints) is not dict \
-            or not all(isinstance(c, Guarantee) for c in constraints.values()):
-        err_constraint = GuaranteeInternal()
-        _add_info_to_constraint(err_constraint, parameter_name="", fct=fct, where="internal")
-        err_constraint.error_severity = severity.ERROR
-
-        handle_error(
-            where="internal",
-            type_or_value="type",
-            guarantee=err_constraint,
-            parameter_name="@pyguarantees.constrain.parameters: "
-                           "constraints",
-            what_dict={
-                "error": "All keyword-args to @pyguarantees.constrain.parameters must be of type Guarantee.",
-                "should_type": "Dict[str, Guarantee]",
-                "actual_type": f"{get_arg_type_name(constraints)}"
-            }
+def _type_check_parameter_constraints(fct, constraints):
+    for parameter, constraint in constraints.items():
+        _type_check_constraint(
+            fct,
+            parameter_name=parameter,
+            decorator_name="@pg.constrain.parameters",
+            constraint=constraint
         )
 
 
 def _type_check_return_constraints(fct, constraints):
-    if type(constraints) is not list \
-            and not all(isinstance(c, Guarantee) for c in constraints):
+    for i, constraint in enumerate(constraints):
+        _type_check_constraint(
+            fct,
+            parameter_name=f"return[{i}]",
+            decorator_name="@pg.constrain.returns",
+            constraint=constraint
+        )
+
+
+def _type_check_constraint(fct, parameter_name: str, decorator_name: str, constraint):
+    if not isinstance(constraint, Guarantee):
         err_constraint = GuaranteeInternal()
         _add_info_to_constraint(err_constraint, parameter_name="", fct=fct, where="internal")
         err_constraint.error_severity = severity.ERROR
@@ -108,12 +106,11 @@ def _type_check_return_constraints(fct, constraints):
             where="internal",
             type_or_value="type",
             guarantee=err_constraint,
-            parameter_name="@pyguarantees.constrain.parameters: "
-                           "constraints",
+            parameter_name=parameter_name,
             what_dict={
-                "error": "All keyword-args to @pyguarantees.constrain.returns must be of type Guarantee.",
-                "should_type": "List[Guarantee]",
-                "actual_type": f"{get_arg_type_name(constraints)}"
+                "error": f"All keyword-args to {decorator_name} must be of type Guarantee.",
+                "should_type": "Guarantee",
+                "actual_type": f"{get_arg_type_name(constraint)}"
             }
         )
 
@@ -128,8 +125,7 @@ def _type_check_self_cls(fct, self_or_cls):
             where="internal",
             type_or_value="type",
             guarantee=err_constraint,
-            parameter_name="@pyguarantees.constrain.parameters: "
-                           "self / cls",
+            parameter_name="self/cls",
             what_dict={
                 "should_type": "Union[Self, Cls]",
                 "actual_type": f"{get_arg_type_name(self_or_cls)}"
@@ -168,12 +164,12 @@ def enforce_parameter_constraints(
 
     # zip ensures that this only checks the args, and in the correct order
     for constraint, arg in zip(ParameterHandler.handles[fct]["args"], args):
-        return_args.append(_enforce_val(arg, constraint))
+        return_args.append(constraint.enforce(arg))
 
     # Python classes that the kwargs contain no duplicates of the args
     for key, val in kwargs.items():
-        return_kwargs[key] = \
-            _enforce_val(val, ParameterHandler.handles[fct]["kwargs"][key])
+        constraint = ParameterHandler.handles[fct]["kwargs"][key]
+        return_kwargs[key] = constraint.enforce(val)
 
     return tuple(return_args), return_kwargs
 
@@ -182,7 +178,7 @@ def enforce_return_constraints(fct, *ret_vals) -> Any:
     new_ret_vals = []
     # In case of multiple return values:
     for ret_val, constraint in zip(ret_vals, ReturnHandler.handles.get(fct)):
-        new_ret_vals.append(_enforce_val(ret_val, constraint))
+        new_ret_vals.append(constraint.enforce(ret_val))
 
     # Can be single value or multiple
     #   -> if single, just return the value, else tuple
@@ -190,13 +186,3 @@ def enforce_return_constraints(fct, *ret_vals) -> Any:
         return tuple(new_ret_vals)
     else:
         return new_ret_vals[0]
-
-
-def _enforce_val(val, constraint: Guarantee):
-    """Enforce the classes on a single value."""
-    if not isinstance(constraint, Guarantee):
-        raise TypeError("Parameter constraint is not a Guarantee. "
-                        "@constrain.parameters and @constrain.returns only take Guarantees.")
-
-    return constraint.enforce(val)
-

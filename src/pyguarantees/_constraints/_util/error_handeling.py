@@ -74,7 +74,7 @@ class ErrorHandler:
         if self.guarantee is None:
             raise self.exception
 
-        err_str = "\nThere was an error in pyguarantees.functional_guarantees: " + self.exception.err_str
+        err_str = "\nThere was an error in pyguarantees.constraints: " + self.exception.err_str
 
         if self.guarantee.logger is not None:
             self._log(err_str)

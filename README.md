@@ -1,6 +1,6 @@
 # pyguarantees
 
-Guarantee testcases for callables, constrain parameters and return values of callables.
+*Guarantee testcases for callables, constrain parameters and return values of callables.*
 
 **Project**
 

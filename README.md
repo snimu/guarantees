@@ -2,12 +2,19 @@
 
 ![License](https://img.shields.io/github/license/snimu/guarantees)
 ![PyPI Version](https://img.shields.io/pypi/v/pyguarantees)
+![Wheel](https://img.shields.io/pypi/wheel/pyguarantees)
 ![Tests](https://github.com/snimu/guarantees/actions/workflows/tests.yml/badge.svg)
 ![Coverage](coverage.svg)
 ![Python Versions](https://img.shields.io/pypi/pyversions/pyguarantees)
 
 
 This package provides guarantees for tests, parameters, and return values.
+
+**Install&mdash;Pip**
+
+```bash
+pip3 install pyguarantees
+```
 
 
 # tests

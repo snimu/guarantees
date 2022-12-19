@@ -18,7 +18,7 @@
 ![Tests](https://github.com/snimu/guarantees/actions/workflows/tests.yml/badge.svg)
 ![Coverage](coverage.svg)
 
-**Installation&mdash;Pip**
+**Installation: Pip**
 
 ```bash
 pip3 install pyguarantees

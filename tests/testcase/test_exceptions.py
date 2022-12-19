@@ -20,10 +20,15 @@ def test_TestsNotImplementedError():
 def test_NotUsedInTestsError():
     @pg.testcase.guaranteed()
     @pg.testcase.calls()
-    def fct(a):
+    def fct1(a):
         return a
 
-    @pg.testcase.covers(fct)
+    @pg.testcase.guaranteed()
+    @pg.testcase.calls()
+    def fct2(a):
+        return a
+
+    @pg.testcase.covers(fct1, fct2)
     def random_function():
         pass
 
@@ -34,9 +39,10 @@ def test_NotUsedInTestsError():
 
     # test_functions_used_in_tests will be called at the end by pytest;
     #   make sure that it won't err
-    _mark_as_used(fct)
+    _mark_as_used(fct1, fct2)
 
 
-def _mark_as_used(fct):
-    pg.testcase.fdata[fct]["testcases_without_exec"] = None
+def _mark_as_used(*functions):
+    for fct in functions:
+        pg.testcase.fdata[fct]["testcases_without_exec"] = None
 

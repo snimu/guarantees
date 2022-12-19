@@ -105,16 +105,17 @@ def _handle_classmethods(function: callable, valid_functions: list) -> list:
     #   @classmethod is above @testcase.guaranteed/@testcase.calls
     #   -> function.__func__ added to fdata, not function.
     #   Fix this here and use function from now on.
-    if function is not function.__func__:
-        valid_functions.append(function)
+    try:
         fdata[function] = copy.deepcopy(fdata[function.__func__])
         fdata.pop(function.__func__)
+
+        valid_functions.append(function)
 
         # Add the relationship between function and function.__func__ to
         #   classmethods in order to allow @tg.guarantee_usage to work properly.
         global _classmethods
         _classmethods[function.__func__] = function
-    else:
+    except AttributeError:
         warnings.warn(
             f"The following function was given to @testcase.covers "
             f"but was not decorated with @testcase.guaranteed: "

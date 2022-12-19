@@ -24,6 +24,10 @@ async def async_fct(item):
     return item
 
 
+def not_guaranteed_fct():
+    return "hello!"
+
+
 class ExampleClass:
     cls_var = True
 
@@ -72,7 +76,7 @@ class RegularClass:
         self.x = 3
 
 
-@pg.testcase.covers(foo)
+@pg.testcase.covers(foo, not_guaranteed_fct)
 def test_same_module():
     assert foo() == 1
 

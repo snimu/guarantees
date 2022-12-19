@@ -29,6 +29,14 @@ class TestReturnGuarantees:
         ret_val = fct(1)
         assert isinstance(ret_val, int)
 
+    def test_false_value(self):
+        @pg.constrain.returns(IsInt(minimum=3))
+        def fct(a):
+            return a
+
+        with pytest.raises(pg.exceptions.constraints.ReturnGuaranteesValueError):
+            fct(2)
+
     def test_multi(self):
         @pg.constrain.returns(IsInt(), IsInt())
         def fct(a, b):

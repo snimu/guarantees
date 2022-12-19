@@ -5,8 +5,11 @@ from pyguarantees.constraints import (
     IsInt,
     IsNone,
     IsStr,
-    IsClass
+    IsClass,
+    NoOp,
+    DynamicCheck
 )
+
 
 class ExampleClass:
     pass
@@ -58,3 +61,59 @@ class TestIsUnion:
 
         with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
             fct_value_error(0)
+
+    def test_dynamic_checks(self):
+        @pg.constrain.parameters(
+            a=IsUnion(
+                guarantees=[
+                    IsInt(
+                        dynamic_checks=[
+                            DynamicCheck(check=lambda x: x % 3 == 0, description="divisible by 3")
+                        ]
+                    )
+                ]
+            )
+        )
+        def fct(a):
+            return a
+
+        assert fct(3) == 3
+
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
+            fct(1)
+
+    def test_forbidden_values(self):
+        @pg.constrain.parameters(a=IsUnion(guarantees=[IsInt(forbidden_values=[0])]))
+        def fct(a):
+            return a
+
+        assert fct(1) == 1
+
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
+            fct(0)
+
+    def test_recursive(self):
+        @pg.constrain.parameters(
+            a=IsUnion(
+                guarantees=[
+                    IsUnion(
+                        guarantees=[
+                            IsInt()
+                        ]
+                    )
+                ]
+            )
+        )
+        def fct(a):
+            return a
+
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
+            fct(1)
+
+    def test_noop(self):
+        @pg.constrain.parameters(a=IsUnion(guarantees=[NoOp()]))
+        def fct(a):
+            return a
+
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
+            fct(1)

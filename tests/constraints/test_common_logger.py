@@ -12,7 +12,23 @@ class Logger(logging.Logger):
     def __init__(self):
         super().__init__("testLogger")
 
+    def debug(self, *args, **kwargs) -> None:
+        global logger_called
+        logger_called = True
+
+    def info(self, *args, **kwargs) -> None:
+        global logger_called
+        logger_called = True
+
+    def warning(self, *args, **kwargs) -> None:
+        global logger_called
+        logger_called = True
+
     def error(self, *args, **kwargs) -> None:
+        global logger_called
+        logger_called = True
+
+    def critical(self, *args, **kwargs) -> None:
         global logger_called
         logger_called = True
 
@@ -41,4 +57,29 @@ class TestLogger:
 
         global logger_called
         assert logger_called
+        logger_called = False
+
+    def test_debug_levels(self):
+        global logger_called
+        severity = [pg.severity.DEBUG, pg.severity.INFO, pg.severity.WARNING]
+
+        for severity in severity:
+            @pg.constrain.parameters(a=IsInt(logger=Logger(), error_severity=severity))
+            def fct(a):
+                return a
+
+            # Cause error output
+            fct("not an int")
+            assert logger_called
+            logger_called = False
+
+    def test_critical(self):
+        @pg.constrain.parameters(a=IsInt(logger=Logger(), error_severity=pg.severity.CRITICAL))
+        def fct(a):
+            return a
+
+        with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesTypeError):
+            fct("not an int")
+
+        global logger_called
         logger_called = False

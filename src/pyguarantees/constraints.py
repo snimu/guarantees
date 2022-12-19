@@ -24,14 +24,12 @@ from pyguarantees._constraints._numeric import (
     _IsFloat,
     _IsComplex
 )
-from pyguarantees._constraints._other import (
-    _NoOp,
-    _Cls,
-    _Self,
-    _IsNone,
-    _IsUnion,
-    _IsClass
-)
+from pyguarantees._constraints._union import _IsUnion
+from pyguarantees._constraints._class import _IsClass
+from pyguarantees._constraints._none import _IsNone
+from pyguarantees._constraints._no_op import _NoOp
+from pyguarantees._constraints._self import _Self
+from pyguarantees._constraints._cls import _Cls
 from pyguarantees._constraints._string import _IsStr
 
 

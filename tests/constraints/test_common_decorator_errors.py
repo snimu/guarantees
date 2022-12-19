@@ -36,3 +36,10 @@ def test_bad_return_constraint():
         BadClass().bad_return_constraint()
 
 
+def test_empty_decorators():
+    @pg.constrain.parameters()
+    @pg.constrain.returns()
+    def fct(a):
+        return a
+
+    assert fct(1) == 1

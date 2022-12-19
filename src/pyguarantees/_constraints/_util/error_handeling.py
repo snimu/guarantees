@@ -141,11 +141,12 @@ def handle_error(
 
     what_dict:  A dictionary for all other information.
     """
+    assert guarantee is not None
+
     error_handler = ErrorHandler(where, type_or_value, guarantee, parameter_name, what_dict)
 
-    if guarantee is not None and guarantee.error_callback is not None:
+    if guarantee.error_callback is not None:
         guarantee.error_callback(error_handler.exception)
-    elif guarantee is not None:
-        error_handler.output_exception()
     else:
-        raise error_handler.exception
+        error_handler.output_exception()
+

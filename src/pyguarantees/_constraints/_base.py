@@ -18,9 +18,6 @@ class _Guarantee:
     qualname: str = field(init=False)
     module: str = field(init=False)
 
-    def enforce(self, arg):
-        pass
-
 
 @dataclass
 class _TypeGuarantee(_Guarantee):

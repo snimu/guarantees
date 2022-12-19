@@ -53,8 +53,6 @@ class _IsUnion(_TypeGuarantee):
                     arg = guarantee.guaranteed_type(arg)   # might be int or float -> int(arg) or float(arg)
                 except ValueError:
                     continue
-                except TypeError:
-                    continue
 
             if type(arg) is guarantee.guaranteed_type:
                 return guarantee.enforce(arg)

@@ -5,7 +5,8 @@ from pyguarantees.constraints import (
     IsInt,
     IsNone,
     IsStr,
-    IsClass
+    IsClass,
+    NoOp
 )
 
 class ExampleClass:
@@ -58,3 +59,11 @@ class TestIsUnion:
 
         with pytest.raises(pg.exceptions.constraints.ParameterGuaranteesValueError):
             fct_value_error(0)
+
+    def test_noop(self):
+        @pg.constrain.parameters(a=IsUnion(guarantees=[NoOp()]))
+        def fct(a):
+            return a
+
+        with pytest.raises(pg.exceptions.constraints.FunctionalGuaranteesUserTypeError):
+            fct(1)

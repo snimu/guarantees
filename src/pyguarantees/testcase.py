@@ -109,12 +109,13 @@ def _handle_classmethods(function: callable, valid_functions: list) -> list:
         fdata[function] = copy.deepcopy(fdata[function.__func__])
         fdata.pop(function.__func__)
 
-        valid_functions.append(function)
-
         # Add the relationship between function and function.__func__ to
         #   classmethods in order to allow @tg.guarantee_usage to work properly.
         global _classmethods
         _classmethods[function.__func__] = function
+
+        # Add the function to valid_functions
+        valid_functions.append(function)
     except AttributeError:
         warnings.warn(
             f"The following function was given to @testcase.covers "

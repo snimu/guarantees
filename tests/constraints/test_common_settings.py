@@ -39,16 +39,20 @@ def test_onoff():
 
 def test_cache():
     @pg.constrain.parameters(a=IsInt())
+    @pg.constrain.returns(IsInt())
     def fct(a):
         return a
 
     assert fct(1) == 1
     assert pg._constrain._guarantee_handler.ParameterHandler.handles != {}   # Guarantee should be saved
+    assert pg._constrain._guarantee_handler.ReturnHandler.handles != {}
 
     pg.settings.change_settings(cache=False)
     assert pg._constrain._guarantee_handler.ParameterHandler.handles == {}
+    assert pg._constrain._guarantee_handler.ReturnHandler.handles == {}
     assert fct(1) == 1
 
     pg.settings.change_settings(cache=True)
     assert fct(1) == 1
     assert pg._constrain._guarantee_handler.ParameterHandler.handles != {}
+    assert pg._constrain._guarantee_handler.ReturnHandler.handles != {}

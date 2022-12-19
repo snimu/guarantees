@@ -19,6 +19,7 @@ def check_minmax_len(
     _check_min_len(arg, guarantee)
     _check_max_len(arg, guarantee)
 
+
 def _min_len_is_legitimate(guarantee) -> bool:
     if guarantee.minimum_len is None:
         return False

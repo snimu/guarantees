@@ -11,8 +11,6 @@ def check_type(arg, guarantee):
     if guarantee.force_conversion:
         try:
             return guarantee.guaranteed_type(arg)
-        except TypeError:
-            pass
         except ValueError:
             pass
 

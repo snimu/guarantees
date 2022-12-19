@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pyguarantees"
-version = "0.1.4"
+version = "0.1.5"
 authors = [{name="Sebastian Müller"}, {email="sebastian.nicolas.mueller@gmail.com"}]
 description = "guarantee testcases for callables, constrain parameters and return values of callables"
 readme = "README.md"
